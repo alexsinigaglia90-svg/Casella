@@ -1,0 +1,178 @@
+# Casella — Deferred Work Backlog
+
+Living document. Every deliberately-deferred decision or task lands here so future sessions (and future-Alex) don't lose track.
+
+**Review triggers** — read this file and propose items to move in-scope when:
+- Starting a new plan (Plan 1.1b, 1.2, 1.3, 2, 3, 4)
+- Finishing a plan (end of 1.1a, before PR merge)
+- User asks for a sanity check
+- Adding a task that touches the same surface as a deferred item
+
+**Entry format**:
+- **Title** — one-line summary
+- **Category** — Mobile-alignment / Tech-debt / Design-debt / UX-polish / Security / Test-coverage
+- **Deferred from** — where/when the decision was made
+- **Why deferred** — honest reason (YAGNI / cost / waiting-on / out-of-scope)
+- **Pickup trigger** — concrete condition that means "now time to do it"
+- **Estimated cost** — hours, ballpark
+- **Impact if skipped** — what breaks or gets worse
+- **Status** — `open` / `in-progress` / `done` (with commit SHA if done) / `abandoned` (with reason)
+
+---
+
+## Mobile-alignment (Fase 3 prep)
+
+### ML-1 — Lift design tokens from CSS variables to a TypeScript package
+- **Category**: Mobile-alignment
+- **Deferred from**: Fase 1.1a Task 3 + sanity check 2 (2026-04-23)
+- **Why deferred**: Current tokens live in `apps/web/app/globals.css` + `apps/web/tailwind.config.ts`. Refactoring mid-plan would have risked a 3-way sync between CSS, Tailwind, and a new TS source. Safer to lift after foundation is stable.
+- **Pickup trigger**: Start of Plan 1.1b OR first commit of Fase 3 (RN app scaffold).
+- **Estimated cost**: 2–4 hours.
+- **Impact if skipped**: RN app re-types every hex/rgb value by hand; every palette change needs two-file sync; design drift likely.
+- **Plan**: Create `packages/design-tokens/src/index.ts` exporting pure TS objects for palette, motion, type-scale, glow, density. Have `globals.css` and `tailwind.config.ts` derive from it (runtime `var(--*)` stays for the CSS side; Tailwind config imports TS directly; future RN imports TS directly).
+- **Status**: open
+
+### ML-2 — Use Route Handlers (not Server Actions) for all admin mutations
+- **Category**: Mobile-alignment
+- **Deferred from**: Plan 1.1a Task 16 (and dependent tasks 20, 25) — decision locked 2026-04-23 during sanity check 2
+- **Why deferred**: Plan snippets use Server Actions; controller overrides to Route Handlers at dispatch time instead of rewriting the plan file.
+- **Pickup trigger**: already in progress — applies to Tasks 16, 20, 25 at dispatch.
+- **Estimated cost**: ~4 hours over three tasks, vs plan-snippet baseline.
+- **Impact if skipped**: Every admin mutation needs a second implementation for mobile. Also blocks external integrations (AstraSign, future public API).
+- **Plan**: At dispatch of Task 16, rewrite the snippet to build `app/api/admin/employees/**/route.ts` with zod body-validation, cookie/session auth, and JSON responses. Web forms POST via `fetch`. Same pattern for Task 20 (drawer submit) and Task 25 (terminate).
+- **Status**: in-progress (scheduled for Task 16+)
+
+### ML-3 — Evaluate NativeWind for Tailwind-class portability
+- **Category**: Mobile-alignment
+- **Deferred from**: Sanity check 2 (2026-04-23)
+- **Why deferred**: Big architectural call; doesn't affect web; needs to be decided when starting Fase 3 alongside RN library choices (Expo Router, navigation, state).
+- **Pickup trigger**: First brainstorm session for Fase 3 RN app.
+- **Estimated cost**: Decision = 1 hour research. If yes, ongoing cost of occasional class-incompatibility fixes.
+- **Impact if skipped**: Every web component reimplemented from scratch in RN using Expo/native primitives. Higher consistency risk between web and mobile.
+- **Status**: open — not urgent until Fase 3 planning
+
+### ML-4 — Plan Expo AuthSession / Entra flow for mobile
+- **Category**: Mobile-alignment
+- **Deferred from**: Sanity check 2 (2026-04-23)
+- **Why deferred**: Web uses Auth.js v5; mobile needs a parallel Expo AuthSession flow. Same Entra app registration, different client implementation.
+- **Pickup trigger**: Start of Fase 3 RN planning.
+- **Estimated cost**: 1 day (including testing on iOS simulator + Android emulator).
+- **Impact if skipped**: Blocker for mobile MVP — no login.
+- **Status**: open
+
+### ML-5 — Theme preference bootstrapping from DB on login
+- **Category**: Mobile-alignment (also web polish)
+- **Deferred from**: Plan 1.1a Task 7 code review (2026-04-23)
+- **Why deferred**: Web today reads theme from cookie, writes to DB fire-and-forget. Works but: new device login doesn't pick up stored preference until next round-trip.
+- **Pickup trigger**: When building mobile login, or as polish on Task 21 (invite-flow Auth.js changes).
+- **Estimated cost**: ~1 hour — read `users.theme_preference` in the JWT callback, set cookie on initial login.
+- **Impact if skipped**: Web: cosmetic only. Mobile: must implement theme-from-DB anyway, so design once.
+- **Status**: open
+
+---
+
+## Tech debt
+
+### TD-1 — ESLint flat config + CI gate
+- **Category**: Tech-debt
+- **Deferred from**: Fase 0 (scaffold-gap), confirmed sanity check 1 (2026-04-23)
+- **Why deferred**: Fase 0 shipped with ESLint in devDeps but no config file. `next lint` was deprecated in Next 16 and requires interactive setup. Plan 1.1a removed the broken script (commit `82da919`); setup deferred to keep 1.1a focused.
+- **Pickup trigger**: Plan 1.1b, task 1.
+- **Estimated cost**: 2–3 hours (flat config for Next 15 + React 19 + TypeScript + monorepo; wire CI step; fix any violations).
+- **Impact if skipped**: No linting at all. Style drift, bug-prone patterns slip through, accessibility misses (jsx-a11y).
+- **Status**: open — Plan 1.1b task TBD
+
+### TD-2 — Test coverage for `apps/web` UI + API routes
+- **Category**: Test-coverage
+- **Deferred from**: Plan 1.1a (scope decision — smoke test in Task 31 only)
+- **Why deferred**: Plan explicitly relies on typecheck + Task 31 E2E smoke to validate web layer. Unit tests on RSC/Server Components are still awkward in Next 15.
+- **Pickup trigger**: Plan 1.2 or after production incident exposes coverage gap.
+- **Estimated cost**: 1–2 days for ~60% coverage on mutations, server actions/routes, and critical forms. Playwright for E2E.
+- **Impact if skipped**: Regressions in PDOK integration, drawer forms, or API validation could ship silently. Relies on manual smoke test per PR.
+- **Status**: open
+
+### TD-3 — Postgres `vector` container restart loop
+- **Category**: Tech-debt (operational)
+- **Deferred from**: Fase 0 carry-over
+- **Why deferred**: `supabase_vector_Casella` has been restarting in loop since Fase 0; not blocking any feature. Probably missing SCHEMA or extension config.
+- **Pickup trigger**: When doing AI/embeddings work (Fase 4 smart features) or if logs get noisy.
+- **Estimated cost**: 30 min investigation.
+- **Impact if skipped**: None today; blocks pgvector-based features (embedding-search, AI features).
+- **Status**: open
+
+---
+
+## Design debt
+
+### DD-1 — `text-text-*` stutter convention in Tailwind
+- **Category**: Design-debt
+- **Deferred from**: Task 4 code review (2026-04-23)
+- **Why deferred**: `colors.text.primary` produces `text-text-primary`; plan uses this stutter 30+ times downstream. Renaming to `fg.primary` means patching every plan-snippet.
+- **Pickup trigger**: If a developer new to the codebase reports confusion, or during Plan 1.1b writeup (chance to rename once before more components exist).
+- **Estimated cost**: ~30 min — rename token group, codemod all usages, update plan files.
+- **Impact if skipped**: Ugly but works. Risk: future dev types `text-primary` expecting ink, gets violet.
+- **Status**: open
+
+### DD-2 — Status amber (`--status-warning`) contrast on surface-base
+- **Category**: Design-debt
+- **Deferred from**: Task 3 code review (2026-04-23)
+- **Why deferred**: `#f5c55c` amber on cream has ~1.6:1 contrast — fails WCAG for text use. Status tokens are meant for backgrounds/icons, not text, but that's not documented.
+- **Pickup trigger**: First time a component uses `text-status-warning` / `text-status-pending` on surface bg.
+- **Estimated cost**: 1 hour — add `--status-warning-on-surface` darkened token, or document that status tokens are bg/icon-only.
+- **Impact if skipped**: Eventually a warning message renders illegible.
+- **Status**: open
+
+### DD-3 — Consider `role="group"` + keyboard arrow-nav on ThemeToggle (radiogroup polish)
+- **Category**: UX-polish
+- **Deferred from**: Task 7 fix-up scope (2026-04-23)
+- **Why deferred**: Implemented `role="radiogroup"` + `role="radio"` + `aria-checked` — correct semantics. Missing: arrow-key navigation between options (standard radio-group keyboard behavior).
+- **Pickup trigger**: Accessibility audit pass, Plan 1.1b final polish.
+- **Estimated cost**: 30 min.
+- **Impact if skipped**: Keyboard users tab through each button individually instead of arrow-navigating within group. Functional, not optimal.
+- **Status**: open
+
+---
+
+## Security
+
+### SEC-1 — Rate limiting on `/api/user/theme` (and future mutation routes)
+- **Category**: Security
+- **Deferred from**: Task 7 code review (2026-04-23)
+- **Why deferred**: Internal staff tool, low threat model. Will add to all mutation endpoints as a Fase 2 middleware.
+- **Pickup trigger**: Fase 2 (production infra) or when moving beyond single-tenant.
+- **Estimated cost**: 2–3 hours — add Upstash/Redis or Postgres-based rate limiter middleware.
+- **Impact if skipped**: A logged-in user could spam theme-change (or any) endpoint. Internal-only tool, so low risk.
+- **Status**: open
+
+### SEC-2 — `server-only` import guard on `apps/web/lib/theme-cookie.ts` (and future server-only helpers)
+- **Category**: Security
+- **Deferred from**: Task 7 code review (2026-04-23)
+- **Why deferred**: Adding the `server-only` npm package requires a new dep. Next.js already surfaces a (cryptic) error if a client component imports `next/headers`, so the guard is belt-and-suspenders.
+- **Pickup trigger**: When installing any other security-related lib (e.g. `zod-openapi` or Upstash).
+- **Estimated cost**: 10 min.
+- **Impact if skipped**: Less clear error message when a future import mistake happens.
+- **Status**: open
+
+---
+
+## Done (audit trail)
+
+### DONE — Task 3 color mismatch + focus-visible radius
+- **Status**: done, commit `bec3b6f`
+- **Category**: Design-debt
+- **Resolved**: 2026-04-23
+
+### DONE — Task 6 `secure` cookie flag + cookie-name deduplication
+- **Status**: done, commit `7ba4554`
+- **Category**: Security + tech-debt
+- **Resolved**: 2026-04-23
+
+### DONE — Task 7 JSON parse 500→400 + radiogroup a11y + lazy useState
+- **Status**: done, commit `e5b3a0b`
+- **Category**: Tech-debt + UX-polish
+- **Resolved**: 2026-04-23
+
+### DONE — Task 6/7 shared client-safe constants split (`theme-cookie-shared.ts`)
+- **Status**: done, commit `4a99caf`
+- **Category**: Architecture (client/server boundary)
+- **Resolved**: 2026-04-23
