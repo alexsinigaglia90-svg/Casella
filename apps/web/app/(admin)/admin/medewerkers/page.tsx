@@ -1,8 +1,10 @@
 import { listEmployees } from "./queries";
 import Link from "next/link";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import type { EmploymentStatus } from "@casella/types";
 import type { Route } from "next";
+import { EmployeeDrawer } from "@/features/employees/drawer/employee-drawer";
 
 const VALID_STATUS = new Set(["active", "on_leave", "sick", "terminated", "all"]);
 
@@ -96,6 +98,10 @@ export default async function MedewerkersPage({
           </Button>
         </div>
       )}
+
+      <Suspense fallback={null}>
+        <EmployeeDrawer />
+      </Suspense>
     </div>
   );
 }
