@@ -1,0 +1,40 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL",
+    "AUTH_SECRET",
+    "AUTH_URL",
+    "AUTH_TRUST_HOST",
+    "AUTH_MICROSOFT_ENTRA_ID_ID",
+    "AUTH_MICROSOFT_ENTRA_ID_SECRET",
+    "AUTH_MICROSOFT_ENTRA_ID_ISSUER",
+    "ENTRA_ADMIN_GROUP_ID",
+    "ENTRA_EMPLOYEE_GROUP_ID",
+    "MAPBOX_ACCESS_TOKEN",
+    "SMTP_HOST",
+    "SMTP_PORT",
+    "SMTP_USER",
+    "SMTP_PASS",
+    "SMTP_FROM",
+    "NMBRS_API_DOMAIN",
+    "NMBRS_API_TOKEN"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {},
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    }
+  }
+}
