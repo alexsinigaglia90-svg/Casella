@@ -23,7 +23,8 @@ export const addresses = pgTable("addresses", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 export const routeCache = pgTable(

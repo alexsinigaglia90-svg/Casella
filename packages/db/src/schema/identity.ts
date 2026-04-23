@@ -24,7 +24,8 @@ export const users = pgTable("users", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdate(() => new Date()),
   disabledAt: timestamp("disabled_at", { withTimezone: true }),
 });
 
@@ -51,5 +52,6 @@ export const employees = pgTable("employees", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });

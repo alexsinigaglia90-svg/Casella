@@ -29,7 +29,8 @@ export const leaveRequests = pgTable("leave_requests", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 export const sickReports = pgTable("sick_reports", {
@@ -46,5 +47,6 @@ export const sickReports = pgTable("sick_reports", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
