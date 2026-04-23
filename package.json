@@ -11,13 +11,17 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "db:up": "supabase start",
+    "db:down": "supabase stop",
+    "db:reset": "supabase db reset",
     "db:generate": "pnpm -F @casella/db generate",
     "db:migrate": "pnpm -F @casella/db migrate",
     "db:studio": "pnpm -F @casella/db studio"
   },
   "devDependencies": {
+    "@types/node": "^20.14.0",
+    "supabase": "^2.95.0",
     "turbo": "^2.1.0",
-    "typescript": "^5.5.0",
-    "@types/node": "^20.14.0"
+    "typescript": "^5.5.0"
   }
 }
