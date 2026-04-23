@@ -2,6 +2,18 @@
 -- Apply via: docker exec -i supabase_db_Casella psql -U postgres -d postgres < packages/db/sql/rls.sql
 -- Requires: all domain tables from 0000_thick_jackal.sql already exist
 
+-- Ensure `authenticated` role exists with required grants.
+-- Supabase creates this role automatically; vanilla Postgres (used in CI) does not.
+-- Application connections must SET ROLE authenticated for RLS to apply — superuser bypasses RLS.
+DO $$ BEGIN
+  CREATE ROLE authenticated NOLOGIN;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+GRANT USAGE ON SCHEMA public TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO authenticated;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+  GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO authenticated;
+
 -- Helper function: get current user ID from session var
 CREATE OR REPLACE FUNCTION app_current_user_id()
 RETURNS uuid
@@ -76,7 +88,7 @@ CREATE POLICY documents_access ON documents
   USING (
     app_current_user_is_admin()
     OR employee_id = app_current_employee_id()
-    OR employee_id IS NULL
+    OR (employee_id IS NULL AND app_current_user_id() IS NOT NULL)
   )
   WITH CHECK (app_current_user_is_admin());
 
