@@ -8,24 +8,36 @@ import {
   unique,
 } from "drizzle-orm/pg-core";
 
-export const addresses = pgTable("addresses", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  street: text("street").notNull(),
-  houseNumber: text("house_number").notNull(),
-  houseNumberAddition: text("house_number_addition"),
-  postalCode: text("postal_code").notNull(),
-  city: text("city").notNull(),
-  country: text("country").notNull().default("NL"),
-  lat: doublePrecision("lat"),
-  lng: doublePrecision("lng"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+export const addresses = pgTable(
+  "addresses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    pdokId: text("pdok_id"),
+    street: text("street").notNull(),
+    houseNumber: text("house_number").notNull(),
+    houseNumberAddition: text("house_number_addition"),
+    postalCode: text("postal_code").notNull(),
+    city: text("city").notNull(),
+    municipality: text("municipality"),
+    province: text("province"),
+    country: text("country").notNull().default("NL"),
+    fullAddressDisplay: text("full_address_display"),
+    lat: doublePrecision("lat"),
+    lng: doublePrecision("lng"),
+    rdX: doublePrecision("rd_x"),
+    rdY: doublePrecision("rd_y"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (t) => ({
+    pdokIdUnique: unique().on(t.pdokId),
+  }),
+);
 
 export const routeCache = pgTable(
   "route_cache",

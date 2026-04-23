@@ -71,3 +71,9 @@ export const documentTypeEnum = pgEnum("document_type", [
 ]);
 
 export const documentSourceEnum = pgEnum("document_source", ["nmbrs", "upload"]);
+
+export const themePreferenceEnum = pgEnum("theme_preference", [
+  "light",
+  "dark",
+  "system",
+]);

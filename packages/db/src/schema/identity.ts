@@ -10,6 +10,7 @@ import {
   userRoleEnum,
   employmentStatusEnum,
   compensationTypeEnum,
+  themePreferenceEnum,
 } from "./enums";
 import { addresses } from "./addresses";
 
@@ -19,6 +20,9 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   displayName: text("display_name").notNull(),
   role: userRoleEnum("role").notNull().default("employee"),
+  themePreference: themePreferenceEnum("theme_preference")
+    .notNull()
+    .default("system"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
