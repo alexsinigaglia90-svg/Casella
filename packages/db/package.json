@@ -10,7 +10,7 @@
     "studio": "drizzle-kit studio",
     "lint": "echo 'no lint'",
     "typecheck": "tsc --noEmit",
-    "test": "echo 'no tests yet'"
+    "test": "dotenv -e ../../.env -- vitest run"
   },
   "dependencies": {
     "drizzle-orm": "^0.36.0",
@@ -19,6 +19,8 @@
   "devDependencies": {
     "drizzle-kit": "^0.28.0",
     "typescript": "^5.5.0",
-    "@types/node": "^20.14.0"
+    "@types/node": "^20.14.0",
+    "vitest": "^2.0.0",
+    "dotenv-cli": "^7.4.0"
   }
 }
