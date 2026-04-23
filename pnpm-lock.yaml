@@ -23,6 +23,15 @@ importers:
 
   apps/web:
     dependencies:
+      '@casella/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@casella/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@casella/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@radix-ui/react-slot':
         specifier: ^1.2.4
         version: 1.2.4(@types/react@19.2.14)(react@19.2.5)
@@ -38,6 +47,9 @@ importers:
       next:
         specifier: ^15.0.0
         version: 15.5.15(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next-auth:
+        specifier: 5.0.0-beta.25
+        version: 5.0.0-beta.25(next@15.5.15(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)
       react:
         specifier: ^19.0.0
         version: 19.2.5

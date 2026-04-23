@@ -2,7 +2,7 @@ import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import type { NextAuthConfig } from "next-auth";
 import { resolveRoleFromGroups } from "./entra";
 import { upsertUserFromEntra } from "./upsert";
-import "./types"; // session/JWT module augmentation
+import "./types"; // session/JWT module augmentation (real .ts file so webpack can resolve it)
 
 function required(name: string): string {
   const value = process.env[name];
