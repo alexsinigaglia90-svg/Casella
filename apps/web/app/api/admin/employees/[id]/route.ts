@@ -33,8 +33,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const [before] = await tx.select().from(schema.employees).where(eq(schema.employees.id, input.id));
     if (!before) return { notFound: true } as const;
 
-    let homeAddressId = before.homeAddressId;
-    if (input.homeAddress) homeAddressId = await upsertAddress(tx, input.homeAddress);
+    const homeAddressId = "homeAddress" in input
+      ? input.homeAddress
+        ? await upsertAddress(tx, input.homeAddress)
+        : null
+      : before.homeAddressId;
 
     // Merge: undefined = leave as-is; explicit null = clear. Use `in` operator on the input object to detect "field was sent".
     const patch = {
