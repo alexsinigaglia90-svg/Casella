@@ -6,7 +6,9 @@ const middleware: NextMiddleware = auth((req) => {
   const isAuthed = !!session;
 
   const isPublic =
-    nextUrl.pathname === "/" || nextUrl.pathname.startsWith("/api/auth");
+    nextUrl.pathname === "/" ||
+    nextUrl.pathname === "/api/auth" ||
+    nextUrl.pathname.startsWith("/api/auth/");
 
   if (!isAuthed && !isPublic) {
     return Response.redirect(new URL("/", nextUrl));
