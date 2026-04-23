@@ -8,7 +8,8 @@ const middleware: NextMiddleware = auth((req) => {
   const isPublic =
     nextUrl.pathname === "/" ||
     nextUrl.pathname === "/api/auth" ||
-    nextUrl.pathname.startsWith("/api/auth/");
+    nextUrl.pathname.startsWith("/api/auth/") ||
+    nextUrl.pathname === "/onboarding-pending";
 
   if (!isAuthed && !isPublic) {
     return Response.redirect(new URL("/", nextUrl));
