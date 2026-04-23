@@ -186,6 +186,25 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@20.19.39)
 
+  packages/maps:
+    dependencies:
+      '@casella/types':
+        specifier: workspace:*
+        version: link:../types
+      zod:
+        specifier: ^3.23.0
+        version: 3.25.76
+    devDependencies:
+      dotenv-cli:
+        specifier: ^7.4.0
+        version: 7.4.4
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@20.19.39)
+
   packages/types:
     dependencies:
       zod:
