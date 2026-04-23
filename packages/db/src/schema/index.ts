@@ -1,2 +1,3 @@
-// Re-exports worden in Tasks 6–9 toegevoegd
-export {};
+export * from "./enums";
+export * from "./addresses";
+export * from "./identity";
