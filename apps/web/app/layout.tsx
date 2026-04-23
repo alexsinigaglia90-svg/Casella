@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
+import { HeadThemeScript } from "./head-theme-script";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -28,6 +29,9 @@ export default function RootLayout({
       className={`${GeistSans.variable} ${GeistMono.variable} ${cormorant.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <HeadThemeScript />
+      </head>
       <body>{children}</body>
     </html>
   );
