@@ -14,7 +14,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   }
 
-  const parsed = bodySchema.safeParse(await req.json());
+  const body = await req.json().catch(() => null);
+  const parsed = bodySchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: "invalid" }, { status: 400 });
   }

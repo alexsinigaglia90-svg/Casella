@@ -22,10 +22,11 @@ function applyTheme(pref: ThemePreference) {
 }
 
 export function useTheme() {
-  const [theme, setThemeState] = useState<ThemePreference>("system");
+  const [theme, setThemeState] = useState<ThemePreference>(() =>
+    typeof document === "undefined" ? "system" : readCookie()
+  );
 
   useEffect(() => {
-    setThemeState(readCookie());
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const handler = () => {
       if (readCookie() === "system") applyTheme("system");
