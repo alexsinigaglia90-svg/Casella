@@ -17,5 +17,6 @@ export async function setThemePreference(t: ThemePreference) {
     maxAge: 60 * 60 * 24 * 365,
     sameSite: "lax",
     httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
   });
 }
