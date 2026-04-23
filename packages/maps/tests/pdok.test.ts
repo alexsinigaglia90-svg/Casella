@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { suggestAddresses, lookupAddress } from "../src/pdok";
+import { PdokError } from "../src/errors";
 
 describe("PDOK suggest", () => {
   it("returns suggestions for a well-known address", async () => {
@@ -39,15 +40,11 @@ describe("PDOK lookup", () => {
   });
 
   it("throws PdokError with code 'no_results' for an unknown id", async () => {
-    const { PdokError } = await import("../src/errors");
-    await expect(
-      lookupAddress("adr-deadbeef-not-a-real-id")
-    ).rejects.toMatchObject({
+    const promise = lookupAddress("adr-deadbeef-not-a-real-id");
+    await expect(promise).rejects.toBeInstanceOf(PdokError);
+    await expect(promise).rejects.toMatchObject({
       name: "PdokError",
       code: "no_results",
     });
-    await expect(
-      lookupAddress("adr-deadbeef-not-a-real-id")
-    ).rejects.toBeInstanceOf(PdokError);
   });
 });
