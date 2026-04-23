@@ -14,23 +14,26 @@ export interface AuditInput {
   action: string;
   resourceType: string;
   resourceId: string;
-  changesJson?: Record<string, unknown> | null;
+  changesJson?: Record<string, unknown>;
 }
 
 /**
- * Write an audit-log entry inside an open transaction.
- * Must be called from within a db.transaction() block so the audit-log write
- * is atomic with the business mutation.
+ * Write a row into the `audit_log` table inside an open transaction.
+ * Must be called from within a `db.transaction()` block so the audit-log
+ * write is atomic with the business mutation.
+ *
+ * Pass `actorUserId: null` for actions triggered by system processes
+ * (cron jobs, webhooks, scheduled terminations) rather than a human user.
  */
 export async function auditMutation(
   tx: DbTransaction,
   input: AuditInput
 ): Promise<void> {
   await tx.insert(auditLog).values({
-    actorUserId: input.actorUserId ?? undefined,
+    actorUserId: input.actorUserId,
     action: input.action,
     resourceType: input.resourceType,
     resourceId: input.resourceId,
-    changesJson: input.changesJson ?? undefined,
+    changesJson: input.changesJson,
   });
 }
