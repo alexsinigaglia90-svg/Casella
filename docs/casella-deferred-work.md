@@ -100,6 +100,15 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: None today; blocks pgvector-based features (embedding-search, AI features).
 - **Status**: open
 
+### TD-4 — Align `zod` range across the monorepo (catalog or matching range)
+- **Category**: Tech-debt
+- **Deferred from**: Plan 1.1a Task 8 code review (2026-04-23)
+- **Why deferred**: `pnpm dlx shadcn@latest add ... form` bumped `apps/web/package.json` zod from `^3.23.0` to `^3.25.76`. `packages/types/package.json` still declares `^3.23.0`. Lockfile dedupes both to the same installed version today, so typechecks + runtime are unaffected. Aligning ranges mid-plan risks lockfile churn that obscures Task 8's scope.
+- **Pickup trigger**: Start of Plan 1.1b (alongside ML-1 design-tokens lift), OR when next adding/upgrading any package that depends on zod.
+- **Estimated cost**: 15 min — either bump `packages/types` to `^3.25.76`, or define a pnpm catalog entry (`pnpm.catalogs.default.zod`) and reference `"zod": "catalog:"` from both packages.
+- **Impact if skipped**: Maintenance smell. Risk: a future install on a fresh clone could resolve packages/types to a 3.23 install while apps/web pulls 3.25, then a Zod schema shared between them via `@casella/types` could behave differently per consumer. Currently masked by the lockfile.
+- **Status**: open
+
 ---
 
 ## Design debt
