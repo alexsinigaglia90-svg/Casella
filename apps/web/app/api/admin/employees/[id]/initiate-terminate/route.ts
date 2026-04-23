@@ -43,7 +43,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       action: "employees.terminate.initiate",
       resourceType: "employees",
       resourceId: input.id,
-      changesJson: { scheduledAt: input.pendingTerminationAt, reason: input.reason },
+      changesJson: { scheduledAt: input.pendingTerminationAt, reason: input.reason, confirmText: input.confirmText },
     });
 
     return { ok: true } as const;
