@@ -100,6 +100,24 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: None today; blocks pgvector-based features (embedding-search, AI features).
 - **Status**: open
 
+### TD-5 — Replace bare-table cursor SQL in `listEmployees` with Drizzle subquery
+- **Category**: Tech-debt
+- **Deferred from**: Plan 1.1a Task 16 code review (2026-04-24)
+- **Why deferred**: `apps/web/app/(admin)/admin/medewerkers/queries.ts` cursor branch uses `sql\`SELECT created_at FROM employees WHERE id = \${cursor}\`` — bare table name. Works today; would silently break if Drizzle schema ever moves to a non-`public` schema or aliased table name. Foundation phase, low risk now.
+- **Pickup trigger**: When adding a second cursor-paginated query (clients/projects in 1.1b), OR when Postgres `search_path` policy changes.
+- **Estimated cost**: 30 min — extract cursor row in a separate `tx.select()` query before building the where clause, OR use Drizzle's `sql.identifier(schema.employees, 'createdAt')`.
+- **Impact if skipped**: Future schema reorg breaks pagination silently. Today: zero impact.
+- **Status**: open
+
+### TD-6 — Standardize API error-response shape across Route Handlers
+- **Category**: Design-debt
+- **Deferred from**: Plan 1.1a Task 16 code review (2026-04-24)
+- **Why deferred**: Task 12 PDOK routes return `{ error: "Address service unavailable" }` (human-readable). Task 16 employees routes return `{ error: "validation_error", issues: ... }` (machine code). Both work; mixed style hurts client-side error mapping ergonomics.
+- **Pickup trigger**: Plan 1.1b polish, OR before opening the public-facing API to mobile (Fase 3).
+- **Estimated cost**: 1 hour — pick the snake_case-code shape (it serializes well for i18n + machine handling), update the four PDOK route responses + the shared `pdokErrorResponse` helper to match. Update Task 13's AddressInput error mapper accordingly.
+- **Impact if skipped**: Mobile and AstraSign clients each invent their own translation layer. Eventually a translation drifts and a user sees a code instead of a message.
+- **Status**: open
+
 ### TD-4 — Align `zod` range across the monorepo (catalog or matching range)
 - **Category**: Tech-debt
 - **Deferred from**: Plan 1.1a Task 8 code review (2026-04-23)
