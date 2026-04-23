@@ -20,5 +20,7 @@ export const bonusLedger = pgTable("bonus_ledger", {
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
-  createdBy: uuid("created_by").references(() => users.id),
+  createdBy: uuid("created_by").references(() => users.id, {
+    onDelete: "set null",
+  }),
 });

@@ -18,7 +18,9 @@ export const documents = pgTable("documents", {
   storagePath: text("storage_path").notNull(),
   fileName: text("file_name").notNull(),
   mimeType: text("mime_type").notNull(),
-  uploadedBy: uuid("uploaded_by").references(() => users.id),
+  uploadedBy: uuid("uploaded_by").references(() => users.id, {
+    onDelete: "set null",
+  }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -39,11 +41,13 @@ export const notifications = pgTable("notifications", {
 
 export const auditLog = pgTable("audit_log", {
   id: uuid("id").primaryKey().defaultRandom(),
-  actorUserId: uuid("actor_user_id").references(() => users.id),
+  actorUserId: uuid("actor_user_id").references(() => users.id, {
+    onDelete: "set null",
+  }),
   action: text("action").notNull(),
   resourceType: text("resource_type").notNull(),
   resourceId: text("resource_id").notNull(),
-  changesJson: jsonb("changes_json").$type<Record<string, unknown> | null>(),
+  changesJson: jsonb("changes_json").$type<Record<string, unknown>>(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

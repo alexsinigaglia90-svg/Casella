@@ -25,7 +25,9 @@ export const hourEntries = pgTable("hour_entries", {
   status: hourStatusEnum("status").notNull().default("draft"),
   submittedAt: timestamp("submitted_at", { withTimezone: true }),
   approvedAt: timestamp("approved_at", { withTimezone: true }),
-  approvedBy: uuid("approved_by").references(() => users.id),
+  approvedBy: uuid("approved_by").references(() => users.id, {
+    onDelete: "set null",
+  }),
   rejectionReason: text("rejection_reason"),
   nmbrsSyncedAt: timestamp("nmbrs_synced_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })

@@ -18,11 +18,16 @@ export const leaveRequests = pgTable("leave_requests", {
   endDate: date("end_date").notNull(),
   reason: text("reason"),
   status: leaveStatusEnum("status").notNull().default("pending"),
-  reviewedBy: uuid("reviewed_by").references(() => users.id),
+  reviewedBy: uuid("reviewed_by").references(() => users.id, {
+    onDelete: "set null",
+  }),
   reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
   reviewNote: text("review_note"),
   nmbrsSyncedAt: timestamp("nmbrs_synced_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
 });
@@ -37,6 +42,9 @@ export const sickReports = pgTable("sick_reports", {
   notes: text("notes"),
   nmbrsSyncedAt: timestamp("nmbrs_synced_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
 });

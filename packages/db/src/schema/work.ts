@@ -23,6 +23,9 @@ export const clients = pgTable("clients", {
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   archivedAt: timestamp("archived_at", { withTimezone: true }),
 });
 
@@ -39,7 +42,12 @@ export const projects = pgTable("projects", {
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
-  createdBy: uuid("created_by").references(() => users.id),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  createdBy: uuid("created_by").references(() => users.id, {
+    onDelete: "set null",
+  }),
 });
 
 export const projectAssignments = pgTable("project_assignments", {
@@ -55,6 +63,9 @@ export const projectAssignments = pgTable("project_assignments", {
   kmRateCents: integer("km_rate_cents"),
   compensationType: compensationTypeEnum("compensation_type"),
   createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
 });
