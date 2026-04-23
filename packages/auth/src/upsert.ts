@@ -19,7 +19,7 @@ export async function upsertUserFromEntra(profile: EntraProfile) {
 
   if (existing.length > 0) {
     const user = existing[0]!;
-    await db
+    const [updated] = await db
       .update(schema.users)
       .set({
         email: profile.email,
@@ -27,8 +27,13 @@ export async function upsertUserFromEntra(profile: EntraProfile) {
         role: profile.role,
         updatedAt: new Date(),
       })
-      .where(eq(schema.users.id, user.id));
-    return user;
+      .where(eq(schema.users.id, user.id))
+      .returning();
+
+    if (!updated) {
+      throw new Error("Failed to update user from Entra profile");
+    }
+    return updated;
   }
 
   const [created] = await db

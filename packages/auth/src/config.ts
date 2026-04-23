@@ -2,6 +2,7 @@ import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import type { NextAuthConfig } from "next-auth";
 import { resolveRoleFromGroups } from "./entra";
 import { upsertUserFromEntra } from "./upsert";
+import "./types"; // session/JWT module augmentation
 
 function required(name: string): string {
   const value = process.env[name];
@@ -39,10 +40,14 @@ export function buildAuthConfig(): NextAuthConfig {
           }
         );
         if (!groupsRes.ok) return false;
-        const groupsJson = (await groupsRes.json()) as {
-          value: { id: string }[];
-        };
-        const groupIds = groupsJson.value.map((g) => g.id);
+        const groupsJson: unknown = await groupsRes.json();
+        const groupIds: string[] = Array.isArray(
+          (groupsJson as { value?: unknown })?.value
+        )
+          ? (groupsJson as { value: { id: string }[] }).value
+              .map((g) => g.id)
+              .filter((id): id is string => typeof id === "string")
+          : [];
 
         const role = resolveRoleFromGroups(groupIds, {
           adminGroupId,
@@ -76,7 +81,7 @@ export function buildAuthConfig(): NextAuthConfig {
       },
       async session({ session, token }) {
         if (token.entraOid) {
-          (session as { entraOid?: string }).entraOid = token.entraOid as string;
+          session.entraOid = token.entraOid;
         }
         return session;
       },
