@@ -5,11 +5,68 @@ const config: Config = {
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
+    "./features/**/*.{ts,tsx}",
     "./lib/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-geist-sans)", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "monospace"],
+        display: ["var(--font-cormorant)", "serif"],
+      },
+      fontSize: {
+        hero: "var(--text-hero)",
+        display: "var(--text-display)",
+        title: "var(--text-title)",
+      },
       colors: {
+        /* Ascentra raw */
+        cream: {
+          base: "var(--cream-base)",
+          lift: "var(--cream-lift)",
+          deep: "var(--cream-deep)",
+        },
+        ink: {
+          DEFAULT: "var(--ink-deep)",
+          2: "var(--ink-2)",
+          3: "var(--ink-3)",
+          4: "var(--ink-4)",
+          5: "var(--ink-5)",
+        },
+        navy: "var(--navy)",
+        brown: "var(--brown)",
+        aurora: {
+          violet: "var(--aurora-violet)",
+          blue: "var(--aurora-blue)",
+          coral: "var(--aurora-coral)",
+          amber: "var(--aurora-amber)",
+          teal: "var(--aurora-teal)",
+          rose: "var(--aurora-rose)",
+        },
+
+        /* Semantic */
+        surface: {
+          base: "var(--surface-base)",
+          lift: "var(--surface-lift)",
+          deep: "var(--surface-deep)",
+        },
+        text: {
+          primary: "var(--text-primary)",
+          secondary: "var(--text-secondary)",
+          tertiary: "var(--text-tertiary)",
+          quaternary: "var(--text-quaternary)",
+        },
+        status: {
+          success: "var(--status-success)",
+          warning: "var(--status-warning)",
+          danger: "var(--status-danger)",
+          info: "var(--status-info)",
+          pending: "var(--status-pending)",
+          attention: "var(--status-attention)",
+        },
+
+        /* Shadcn compatibility */
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -40,6 +97,50 @@ const config: Config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        "glow-violet": "0 4px 24px var(--glow-violet)",
+        "glow-blue": "0 4px 24px var(--glow-blue)",
+        "glow-coral": "0 4px 24px var(--glow-coral)",
+        "glow-amber": "0 4px 24px var(--glow-amber)",
+        "glow-teal": "0 4px 24px var(--glow-teal)",
+        "glow-rose": "0 4px 24px var(--glow-rose)",
+      },
+      transitionTimingFunction: {
+        standard: "var(--ease-standard)",
+        draw: "var(--ease-draw)",
+        spring: "var(--ease-spring)",
+        "out-expo": "var(--ease-out-expo)",
+      },
+      transitionDuration: {
+        quick: "var(--duration-quick)",
+        standard: "var(--duration-standard)",
+        emphasized: "var(--duration-emphasized)",
+      },
+      keyframes: {
+        "aurora-drift": {
+          "0%, 100%": { transform: "translate(0, 0) rotate(0deg) scale(1)" },
+          "33%": { transform: "translate(-2%, 2%) rotate(1.5deg) scale(1.04)" },
+          "66%": { transform: "translate(2%, -1%) rotate(-1deg) scale(1.02)" },
+        },
+        "char-rise": {
+          from: { transform: "translateY(110%)" },
+          to: { transform: "translateY(0)" },
+        },
+        "status-pulse": {
+          "0%, 100%": { boxShadow: "0 0 0 0 rgba(61, 216, 168, 0.6)" },
+          "50%": { boxShadow: "0 0 0 6px rgba(61, 216, 168, 0)" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+      },
+      animation: {
+        "aurora-drift": "aurora-drift 24s var(--ease-standard) infinite alternate",
+        "char-rise": "char-rise 1200ms var(--ease-out-expo) forwards",
+        "status-pulse": "status-pulse 2500ms var(--ease-standard) infinite",
+        shimmer: "shimmer 1.5s var(--ease-standard) infinite",
       },
     },
   },
