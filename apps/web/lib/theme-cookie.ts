@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
+import { THEME_COOKIE, type ThemePreference } from "./theme-cookie-shared";
 
-export const THEME_COOKIE = "casella.theme";
-export type ThemePreference = "light" | "dark" | "system";
+export { THEME_COOKIE } from "./theme-cookie-shared";
+export type { ThemePreference } from "./theme-cookie-shared";
 
 export async function getThemePreference(): Promise<ThemePreference> {
   const store = await cookies();
