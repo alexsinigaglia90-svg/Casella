@@ -180,7 +180,13 @@ function CreateForm({ onDone }: { onDone: () => void }) {
       </section>
 
       <div className="sticky bottom-0 mt-auto flex gap-2 border-t border-border bg-surface-base p-4">
-        <Button type="button" variant="outline" onClick={onDone} className="flex-1">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onDone}
+          disabled={form.formState.isSubmitting}
+          className="flex-1"
+        >
           Annuleren
         </Button>
         <Button type="submit" disabled={form.formState.isSubmitting} className="flex-1">
