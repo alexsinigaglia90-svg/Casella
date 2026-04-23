@@ -14,6 +14,15 @@ import { cn } from "@/lib/utils";
 import type { PdokAddress, PdokSuggestion } from "@casella/maps";
 import { useDebounce } from "./use-debounce";
 
+class HttpError extends Error {
+  readonly status: number;
+  constructor(status: number, message?: string) {
+    super(message ?? `HTTP ${status}`);
+    this.name = "HttpError";
+    this.status = status;
+  }
+}
+
 interface Props {
   value: PdokAddress | null;
   onChange: (v: PdokAddress | null) => void;
@@ -41,15 +50,22 @@ export function AddressInput({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const abortRef = useRef<AbortController | null>(null);
+  const skipNextFetchRef = useRef(false);
   const debouncedQuery = useDebounce(query, 300);
 
   // Sync display value when controlled value changes externally
   useEffect(() => {
+    skipNextFetchRef.current = true;
     setQuery(value?.fullDisplay ?? "");
   }, [value]);
 
   // Fetch suggestions when debounced query changes
   useEffect(() => {
+    if (skipNextFetchRef.current) {
+      skipNextFetchRef.current = false;
+      return;
+    }
+
     if (debouncedQuery.length < 2) {
       setSuggestions([]);
       setErrorMessage(null);
@@ -66,8 +82,8 @@ export function AddressInput({
     })
       .then(async (r) => {
         if (!r.ok) {
-          const body = await r.json().catch(() => ({})) as { error?: string };
-          throw { http: true, status: r.status, message: body.error };
+          const body = (await r.json().catch(() => ({}))) as { error?: string };
+          throw new HttpError(r.status, body.error);
         }
         return r.json() as Promise<{ results: PdokSuggestion[] }>;
       })
@@ -83,12 +99,11 @@ export function AddressInput({
         )
           return;
         setSuggestions([]);
-        const httpErr = err as { http?: boolean; status?: number };
-        setErrorMessage(
-          httpErr.http
-            ? mapHttpErrorMessage(httpErr.status ?? 0)
-            : "Er ging iets mis bij het zoeken"
-        );
+        if (err instanceof HttpError) {
+          setErrorMessage(mapHttpErrorMessage(err.status));
+        } else {
+          setErrorMessage("Er ging iets mis bij het zoeken");
+        }
       })
       .finally(() => {
         if (!ctl.signal.aborted) setLoading(false);
@@ -100,25 +115,32 @@ export function AddressInput({
   }, [debouncedQuery]);
 
   async function handleSelect(suggestion: PdokSuggestion) {
-    setOpen(false);
-    setQuery(suggestion.weergavenaam);
-    setSuggestions([]);
+    setLoading(true);
     setErrorMessage(null);
-
     try {
       const r = await fetch(`/api/pdok/lookup/${encodeURIComponent(suggestion.id)}`);
       if (!r.ok) {
-        const body = await r.json().catch(() => ({})) as { error?: string };
-        setErrorMessage(mapHttpErrorMessage(r.status, true));
-        onChange(null);
-        return;
+        const body = (await r.json().catch(() => ({}))) as { error?: string };
+        throw new HttpError(r.status, body.error);
       }
-      const json = await r.json() as { address: PdokAddress };
-      onChange(json.address);
-    } catch {
-      setErrorMessage("Er ging iets mis bij het zoeken");
+      const json = (await r.json().catch(() => ({}))) as { address?: PdokAddress };
+      if (json.address) {
+        skipNextFetchRef.current = true;
+        onChange(json.address);
+        setQuery(json.address.fullDisplay);
+        setOpen(false);
+      }
+    } catch (err) {
+      if (err instanceof HttpError) {
+        setErrorMessage(mapHttpErrorMessage(err.status, true));
+      } else {
+        setErrorMessage(mapHttpErrorMessage(0));
+      }
       onChange(null);
+    } finally {
+      setLoading(false);
     }
+    setSuggestions([]);
   }
 
   function handleClear() {
