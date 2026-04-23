@@ -10,7 +10,6 @@
     "test": "dotenv -e ../../.env -- vitest run"
   },
   "dependencies": {
-    "@casella/types": "workspace:*",
     "zod": "^3.23.0"
   },
   "devDependencies": {
