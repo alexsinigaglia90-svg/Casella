@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Apply Drizzle migrations
+        run: pnpm db:migrate
+
+      - name: Apply RLS policies
+        env:
+          PGPASSWORD: postgres
+        run: psql -h localhost -U postgres -d postgres -f packages/db/sql/rls.sql
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build (with dummy auth env)
+        env:
+          AUTH_SECRET: ci-dummy-secret-at-least-32-chars-long
+          AUTH_URL: http://localhost:3000
+          AUTH_TRUST_HOST: "true"
+          AUTH_MICROSOFT_ENTRA_ID_ID: 00000000-0000-0000-0000-000000000000
+          AUTH_MICROSOFT_ENTRA_ID_SECRET: ci-dummy-secret
+          AUTH_MICROSOFT_ENTRA_ID_ISSUER: 00000000-0000-0000-0000-000000000000
+          ENTRA_ADMIN_GROUP_ID: 00000000-0000-0000-0000-000000000000
+          ENTRA_EMPLOYEE_GROUP_ID: 00000000-0000-0000-0000-000000000000
+        run: pnpm build
