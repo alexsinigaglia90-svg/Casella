@@ -12,11 +12,10 @@ export async function GET(req: NextRequest) {
   }
 
   const raw = req.nextUrl.searchParams.get("q") ?? "";
-  const q = raw.trim().slice(0, 100);
-
-  if (q.length === 0) {
-    return NextResponse.json({ error: "Invalid query" }, { status: 400 });
+  if (raw.length > 100) {
+    return NextResponse.json({ error: "Query too long" }, { status: 400 });
   }
+  const q = raw.trim();
 
   try {
     const results = await suggestAddresses(q, 8);

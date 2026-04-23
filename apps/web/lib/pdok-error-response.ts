@@ -20,6 +20,11 @@ export function pdokErrorResponse(err: unknown): NextResponse {
           { error: "Address service unavailable" },
           { status: 502 }
         );
+      default: {
+        const _exhaustive: never = err.code;
+        void _exhaustive;
+        return NextResponse.json({ error: "Internal error" }, { status: 500 });
+      }
     }
   }
   return NextResponse.json({ error: "Internal error" }, { status: 500 });
