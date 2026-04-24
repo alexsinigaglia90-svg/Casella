@@ -2,6 +2,7 @@
 
 import { Calendar, Clock } from "lucide-react";
 import { FieldWrap } from "../components/field-wrap";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import type { CreateEmployeeFormValues } from "../types";
 
 interface StepDienstverbandProps {
@@ -25,12 +26,14 @@ export function StepDienstverband({
     <div className="grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-2">
       <FieldWrap
         label="Startdatum"
+        htmlFor="emp-startDate"
         hint="Eerste werkdag bij Casella."
         error={touched.startDate ? errors.startDate : null}
         icon={<Calendar size={15} />}
         className="md:col-span-2"
       >
         <input
+          id="emp-startDate"
           type="date"
           value={form.startDate}
           onChange={(e) => update({ startDate: e.target.value })}
@@ -42,12 +45,14 @@ export function StepDienstverband({
 
       <FieldWrap
         label="Contract-uren per week"
+        htmlFor="emp-contractedHours"
         error={touched.contractedHours ? errors.contractedHours : null}
         icon={<Clock size={15} />}
         className="md:col-span-2"
       >
         <div className="flex items-center gap-3">
           <input
+            id="emp-contractedHours"
             type="number"
             min={1}
             max={60}
@@ -89,22 +94,24 @@ export function StepDienstverband({
       <FieldWrap
         label="Manager"
         hint="Optioneel — wie is hun aanspreekpunt?"
+        htmlFor="emp-manager"
         className="md:col-span-2"
       >
         {/* TODO 1.1b: replace dummy manager options with real admin-users query + send managerId UUID */}
-        <select
-          value={form.manager}
-          onChange={(e) => update({ manager: e.target.value })}
-          className="w-full cursor-pointer bg-transparent py-2 text-[15px] outline-none"
-          style={{
-            color: form.manager ? "var(--text-primary)" : "var(--text-tertiary)",
-          }}
-        >
-          <option value="">— Kies iemand —</option>
-          <option value="esmee">Esmée van der Velden</option>
-          <option value="sanne">Sanne Bakker</option>
-          <option value="maarten">Maarten de Groot</option>
-        </select>
+        <Select value={form.manager} onValueChange={(v) => update({ manager: v })}>
+          <SelectTrigger
+            id="emp-manager"
+            className="w-full bg-transparent border-0 outline-none focus:ring-0 px-0"
+            style={{ color: form.manager ? "var(--text-primary)" : "var(--text-tertiary)" }}
+          >
+            <SelectValue placeholder="— Kies iemand —" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="esmee">Esmée van der Velden</SelectItem>
+            <SelectItem value="sanne">Sanne Bakker</SelectItem>
+            <SelectItem value="maarten">Maarten de Groot</SelectItem>
+          </SelectContent>
+        </Select>
       </FieldWrap>
     </div>
   );

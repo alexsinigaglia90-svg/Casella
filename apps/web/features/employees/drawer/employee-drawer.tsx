@@ -34,10 +34,11 @@ export function EmployeeDrawer() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
-        className="fixed right-0 top-0 h-screen rounded-none border-l border-border-subtle p-0 gap-0 max-w-none data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right"
+        className="fixed right-0 top-0 h-screen rounded-none p-0 gap-0 max-w-none data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right"
         style={{
           width: "min(1080px, 92vw)",
           boxShadow: "-40px 0 80px -20px rgba(14, 22, 33, 0.28)",
+          borderLeft: "1px solid var(--border-subtle)",
         }}
       >
         <DialogTitle className="sr-only">
@@ -48,8 +49,8 @@ export function EmployeeDrawer() {
           <div className="flex h-full w-full flex-row">
             {/* Left: live preview — hidden on small screens */}
             <div
-              className="hidden md:block shrink-0 border-r border-border-subtle overflow-y-auto"
-              style={{ width: 400 }}
+              className="hidden md:block shrink-0 overflow-y-auto"
+              style={{ width: 400, borderRight: "1px solid var(--border-subtle)" }}
             >
               <LivePreviewCard form={form} step={step} />
             </div>

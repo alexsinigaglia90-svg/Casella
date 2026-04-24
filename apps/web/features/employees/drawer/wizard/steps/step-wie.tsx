@@ -28,11 +28,13 @@ export function StepWie({
       <FieldWrap
         className="md:col-span-2"
         label="E-mailadres"
+        htmlFor="emp-inviteEmail"
         hint="We sturen hier de uitnodiging naartoe."
         error={touched.inviteEmail ? errors.inviteEmail : null}
         icon={<Mail size={15} />}
       >
         <input
+          id="emp-inviteEmail"
           type="email"
           value={form.inviteEmail}
           onChange={(e) => update({ inviteEmail: e.target.value })}
@@ -49,10 +51,12 @@ export function StepWie({
 
       <FieldWrap
         label="Voornaam"
+        htmlFor="emp-firstName"
         error={touched.firstName ? errors.firstName : null}
         autoFilled={autoFillHint?.includes("firstName")}
       >
         <input
+          id="emp-firstName"
           type="text"
           value={form.firstName}
           onChange={(e) => update({ firstName: e.target.value })}
@@ -65,10 +69,12 @@ export function StepWie({
 
       <FieldWrap
         label="Achternaam"
+        htmlFor="emp-lastName"
         error={touched.lastName ? errors.lastName : null}
         autoFilled={autoFillHint?.includes("lastName")}
       >
         <input
+          id="emp-lastName"
           type="text"
           value={form.lastName}
           onChange={(e) => update({ lastName: e.target.value })}
@@ -81,12 +87,14 @@ export function StepWie({
 
       <FieldWrap
         label="Functietitel"
+        htmlFor="emp-jobTitle"
         hint="Staat straks op hun profiel."
         error={touched.jobTitle ? errors.jobTitle : null}
         icon={<Briefcase size={15} />}
         className="md:col-span-2"
       >
         <input
+          id="emp-jobTitle"
           type="text"
           value={form.jobTitle}
           onChange={(e) => update({ jobTitle: e.target.value })}
@@ -99,11 +107,13 @@ export function StepWie({
 
       <FieldWrap
         label="Telefoonnummer"
+        htmlFor="emp-phone"
         error={touched.phone ? errors.phone : null}
         icon={<Phone size={15} />}
         className="md:col-span-2"
       >
         <input
+          id="emp-phone"
           type="tel"
           value={form.phone}
           onChange={(e) => update({ phone: e.target.value })}

@@ -113,12 +113,13 @@ export function StepVergoeding({
 
       {/* Km rate — only visible for auto */}
       {form.compensationType === "auto" && (
-        <FieldWrap label="Km-tarief" hint="Standaard is 23 cent. Pas aan indien nodig.">
+        <FieldWrap label="Km-tarief" htmlFor="emp-kmRate" hint="Standaard is 23 cent. Pas aan indien nodig.">
           <div className="flex items-center gap-2">
             <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
               €
             </span>
             <input
+              id="emp-kmRate"
               type="number"
               step="0.01"
               min={0}
@@ -165,9 +166,11 @@ export function StepVergoeding({
       <div className="grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-2">
         <FieldWrap
           label="Noodcontact — naam"
+          htmlFor="emp-emergencyName"
           error={touched.emergencyName ? errors.emergencyName : null}
         >
           <input
+            id="emp-emergencyName"
             type="text"
             value={form.emergencyName}
             onChange={(e) => update({ emergencyName: e.target.value })}
@@ -177,8 +180,9 @@ export function StepVergoeding({
             style={{ color: "var(--text-primary)" }}
           />
         </FieldWrap>
-        <FieldWrap label="Noodcontact — telefoon">
+        <FieldWrap label="Noodcontact — telefoon" htmlFor="emp-emergencyPhone">
           <input
+            id="emp-emergencyPhone"
             type="tel"
             value={form.emergencyPhone}
             onChange={(e) => update({ emergencyPhone: e.target.value })}
@@ -189,8 +193,9 @@ export function StepVergoeding({
         </FieldWrap>
       </div>
 
-      <FieldWrap label="Admin-notitie" hint="Intern. Alleen zichtbaar voor admins.">
+      <FieldWrap label="Admin-notitie" htmlFor="emp-notes" hint="Intern. Alleen zichtbaar voor admins.">
         <textarea
+          id="emp-notes"
           rows={3}
           value={form.notes}
           onChange={(e) => update({ notes: e.target.value })}

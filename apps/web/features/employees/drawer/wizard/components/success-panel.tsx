@@ -3,7 +3,6 @@
 import { Check } from "lucide-react";
 import { PrimaryButton } from "./primary-button";
 import type { CreateEmployeeFormValues } from "../types";
-import { emptyForm } from "../types";
 
 interface SuccessPanelProps {
   form: CreateEmployeeFormValues;

@@ -5,6 +5,7 @@ import { Sparkles, AlertCircle } from "lucide-react";
 
 interface FieldWrapProps {
   label: string;
+  htmlFor?: string;
   hint?: string;
   error?: string | false | null;
   icon?: ReactNode;
@@ -15,6 +16,7 @@ interface FieldWrapProps {
 
 export function FieldWrap({
   label,
+  htmlFor,
   hint,
   error,
   icon,
@@ -26,7 +28,7 @@ export function FieldWrap({
 
   return (
     <div className={className}>
-      <label className="mb-1.5 flex items-baseline justify-between gap-2">
+      <label htmlFor={htmlFor} className="mb-1.5 flex items-baseline justify-between gap-2">
         <span
           className="whitespace-nowrap text-[11px] font-medium uppercase tracking-wider"
           style={{ color: "var(--text-tertiary)" }}

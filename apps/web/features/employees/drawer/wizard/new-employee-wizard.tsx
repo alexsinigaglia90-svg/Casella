@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useMemo, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { toast } from "sonner";
@@ -62,6 +62,7 @@ export function NewEmployeeWizard({
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [autoFillHint, setAutoFillHint] = useState<string[] | null>(null);
+  const autoFillTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const errors = useMemo(() => validateStep(step, form), [step, form]);
   const stepValid = Object.keys(errors).length === 0;
@@ -95,7 +96,8 @@ export function NewEmployeeWizard({
     if (Object.keys(patch).length) {
       update(patch);
       setAutoFillHint(Object.keys(patch));
-      setTimeout(() => setAutoFillHint(null), 3200);
+      clearTimeout(autoFillTimerRef.current);
+      autoFillTimerRef.current = setTimeout(() => setAutoFillHint(null), 3200);
     }
   }
 
@@ -179,6 +181,9 @@ export function NewEmployeeWizard({
     setSubmitted(false);
     setTouched({});
   }
+
+  // Cleanup autofill timer on unmount
+  useEffect(() => () => clearTimeout(autoFillTimerRef.current), []);
 
   // Keyboard shortcuts
   useEffect(() => {
