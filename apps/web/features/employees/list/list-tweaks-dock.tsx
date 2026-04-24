@@ -335,11 +335,6 @@ export function ListTweaksDock({ prefs, onChange }: ListTweaksDockProps) {
 
   const isDark = theme === "dark";
 
-  // Render nothing on the server / before hydration. Prevents the segmented
-  // aria-checked attribute from diverging between SSR (theme defaults to
-  // "system") and client (cookie-driven actual theme).
-  if (!mounted) return null;
-
   // Close popover on outside click
   useEffect(() => {
     if (!section) return;
@@ -349,6 +344,12 @@ export function ListTweaksDock({ prefs, onChange }: ListTweaksDockProps) {
     window.addEventListener("mousedown", onDown);
     return () => window.removeEventListener("mousedown", onDown);
   }, [section]);
+
+  // Render nothing on the server / before hydration. Must come AFTER all hooks
+  // (Rules of Hooks: hook order must be stable across renders).
+  // Prevents the segmented aria-checked attribute from diverging between SSR
+  // (theme defaults to "system") and client (cookie-driven actual theme).
+  if (!mounted) return null;
 
   // Drag by handle
   function onDragStart(e: React.MouseEvent) {
