@@ -17,7 +17,9 @@ export default async function AuthedLayout({ children }: { children: React.React
   return (
     <div className="flex min-h-screen">
       <Sidebar user={user} mode="employee" />
-      <main className="flex-1 p-8">{children}</main>
+      <main className="flex-1 overflow-x-hidden">
+        <div className="mx-auto max-w-[1180px] p-8">{children}</div>
+      </main>
     </div>
   );
 }

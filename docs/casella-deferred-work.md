@@ -198,6 +198,15 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: Less clear error message when a future import mistake happens.
 - **Status**: open
 
+### DD-5 — List tweaks: column visibility, statusVariant, full tweaks-panel
+- **Category**: Design-debt (UX-polish)
+- **Deferred from**: Plan 1.1a list-page Variant A implementation (2026-04-23)
+- **Why deferred**: 1.1a ships minimal 2-toggle tweaks dock (density + showAvatars). Column visibility toggles (email, function, status, startDate) and statusVariant switching (pill/dot/text) are fully designed in the tweaks-dock reference but would double implementation scope without material user value in alpha.
+- **Pickup trigger**: Plan 1.1b polish, after collecting feedback on column relevance from admin users.
+- **Estimated cost**: 2–3 hours — extend `ListPrefs` interface with `columns` bitmask + `statusVariant`, update `list-prefs-cookie-shared.ts`, add toggles to `ListTweaksDock`, thread visibility props through `EmployeesListShell` table headers/cells.
+- **Impact if skipped**: Users can't hide irrelevant columns. Acceptable for admin-only alpha; would degrade UX if list grows to 100+ employees.
+- **Status**: open
+
 ---
 
 ## Done (audit trail)
