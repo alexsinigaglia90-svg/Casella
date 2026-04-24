@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import type { Route } from "next";
@@ -211,18 +211,20 @@ export function EmployeesListShell({
                   onSort={handleSort}
                 />
               </th>
-              <th className="p-3 text-left font-medium">E-mail</th>
-              <th className="p-3 text-left font-medium">Functie</th>
-              <th className="p-3 text-left font-medium">Status</th>
-              <th className="p-3 text-left font-medium">
-                <SortableHeader
-                  label="Startdatum"
-                  sortKey="start"
-                  currentSort={currentSort}
-                  currentDir={currentDir}
-                  onSort={handleSort}
-                />
-              </th>
+              {prefs.columns.email && <th className="p-3 text-left font-medium">E-mail</th>}
+              {prefs.columns.function && <th className="p-3 text-left font-medium">Functie</th>}
+              {prefs.columns.status && <th className="p-3 text-left font-medium">Status</th>}
+              {prefs.columns.startDate && (
+                <th className="p-3 text-left font-medium">
+                  <SortableHeader
+                    label="Startdatum"
+                    sortKey="start"
+                    currentSort={currentSort}
+                    currentDir={currentDir}
+                    onSort={handleSort}
+                  />
+                </th>
+              )}
               <th className="w-10 p-3" />
             </tr>
           </thead>
@@ -267,24 +269,32 @@ export function EmployeesListShell({
                       </div>
                     </div>
                   </td>
-                  <td
-                    className={`p-3 font-mono text-xs ${rowPad}`}
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {emp.email}
-                  </td>
-                  <td className={`p-3 ${rowPad}`} style={{ color: "var(--text-secondary)" }}>
-                    {emp.jobTitle ?? "—"}
-                  </td>
-                  <td className={`p-3 ${rowPad}`}>
-                    <EmploymentBadge status={emp.employmentStatus} />
-                  </td>
-                  <td
-                    className={`p-3 font-mono text-xs tabular-nums ${rowPad}`}
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {fmtDate(emp.startDate)}
-                  </td>
+                  {prefs.columns.email && (
+                    <td
+                      className={`p-3 font-mono text-xs ${rowPad}`}
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      {emp.email}
+                    </td>
+                  )}
+                  {prefs.columns.function && (
+                    <td className={`p-3 ${rowPad}`} style={{ color: "var(--text-secondary)" }}>
+                      {emp.jobTitle ?? "—"}
+                    </td>
+                  )}
+                  {prefs.columns.status && (
+                    <td className={`p-3 ${rowPad}`}>
+                      <EmploymentBadge status={emp.employmentStatus} variant={prefs.statusVariant} />
+                    </td>
+                  )}
+                  {prefs.columns.startDate && (
+                    <td
+                      className={`p-3 font-mono text-xs tabular-nums ${rowPad}`}
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      {fmtDate(emp.startDate)}
+                    </td>
+                  )}
                   <td className={`p-3 ${rowPad}`}>
                     <div
                       className="flex items-center justify-end gap-1"
