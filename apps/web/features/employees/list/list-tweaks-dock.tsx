@@ -353,6 +353,7 @@ export function ListTweaksDock({ prefs, onChange }: ListTweaksDockProps) {
 
   // Drag by handle
   function onDragStart(e: React.MouseEvent) {
+    e.preventDefault(); // suppress browser text-selection drag that fights our handler
     const startX = e.clientX;
     const startY = e.clientY;
     const start = { ...pos };

@@ -54,8 +54,10 @@ export function EmployeeDrawer() {
             >
               <LivePreviewCard form={form} step={step} />
             </div>
-            {/* Right: wizard */}
-            <div className="flex-1 overflow-hidden">
+            {/* Right: wizard. min-w-0 lets the flex child constrain itself
+                so the inner wizard's flex-col can size its scrollable region
+                correctly (otherwise inner overflow-y-auto won't activate). */}
+            <div className="flex-1 min-w-0 overflow-hidden">
               <NewEmployeeWizard
                 onClose={handleClose}
                 form={form}

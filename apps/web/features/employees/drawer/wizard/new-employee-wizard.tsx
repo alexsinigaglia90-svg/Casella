@@ -244,8 +244,10 @@ export function NewEmployeeWizard({
         <Stepper step={step} form={form} onJump={goToStep} />
       </div>
 
-      {/* Scrollable step content — key forces remount on step change */}
-      <div className="flex-1 overflow-y-auto px-8 pb-6" key={`step-${step}`}>
+      {/* Scrollable step content — key forces remount on step change.
+          min-h-0 is critical: flex children default to min-height:auto which
+          breaks overflow-y-auto inside flex-col parents. */}
+      <div className="min-h-0 flex-1 overflow-y-auto px-8 pb-6" key={`step-${step}`}>
         <div className="mb-6 step-enter">
           <h3
             className="font-display mb-1"
