@@ -4,6 +4,15 @@ import React, { useState, useRef, useEffect } from "react";
 import type { ListPrefs, Density, StatusVariant } from "@/lib/list-prefs-cookie-shared";
 import { useTheme } from "@/lib/use-theme";
 
+// Defer mounting until after hydration so theme cookie (read client-side via
+// useTheme) cannot diverge from the server's "system" default and trip the
+// React hydration check on aria-checked / dot color attributes.
+function useMounted() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted;
+}
+
 const DOCK_CSS = `
   .tdock{position:fixed;z-index:2147483646;display:flex;align-items:stretch;gap:0;
     padding:4px;background:rgba(250,249,247,.82);
@@ -318,12 +327,18 @@ interface ListTweaksDockProps {
 }
 
 export function ListTweaksDock({ prefs, onChange }: ListTweaksDockProps) {
+  const mounted = useMounted();
   const { theme, setTheme } = useTheme();
   const [section, setSection] = useState<Section | null>(null);
   const [pos, setPos] = useState({ right: 20, bottom: 20 });
   const dockRef = useRef<HTMLDivElement>(null);
 
   const isDark = theme === "dark";
+
+  // Render nothing on the server / before hydration. Prevents the segmented
+  // aria-checked attribute from diverging between SSR (theme defaults to
+  // "system") and client (cookie-driven actual theme).
+  if (!mounted) return null;
 
   // Close popover on outside click
   useEffect(() => {

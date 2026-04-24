@@ -34,7 +34,7 @@ export function EmployeeDrawer() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
-        className="fixed right-0 top-0 h-screen rounded-none p-0 gap-0 max-w-none data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right"
+        className="fixed right-0 top-0 left-auto translate-x-0 translate-y-0 h-screen rounded-none p-0 gap-0 max-w-none data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right"
         style={{
           width: "min(1080px, 92vw)",
           boxShadow: "-40px 0 80px -20px rgba(14, 22, 33, 0.28)",
