@@ -1,0 +1,94 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Command } from "cmdk";
+import { useRouter } from "next/navigation";
+import type { Route } from "next";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Users, Briefcase, Folders, UserCheck, Plus, Settings } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+export function CommandPalette() {
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setOpen((o) => !o);
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
+
+  function runCommand(cb: () => void) {
+    setOpen(false);
+    cb();
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="max-w-xl p-0 gap-0">
+        <DialogTitle className="sr-only">Command palette</DialogTitle>
+        <Command className="rounded-xl bg-surface-base">
+          <Command.Input
+            placeholder="Zoek naar een pagina, actie of entity..."
+            className="w-full border-b border-border bg-transparent px-4 py-3 text-sm outline-none placeholder:text-text-tertiary"
+          />
+          <Command.List className="max-h-80 overflow-y-auto p-2">
+            <Command.Empty className="p-4 text-center text-sm text-text-tertiary">
+              Geen resultaten
+            </Command.Empty>
+
+            <Command.Group heading="Navigatie">
+              <CmdItem icon={Users} onSelect={() => runCommand(() => router.push("/admin/medewerkers" as Route))}>
+                Medewerkers
+              </CmdItem>
+              <CmdItem icon={Briefcase} onSelect={() => runCommand(() => router.push("/admin/klanten" as Route))}>
+                Klanten
+              </CmdItem>
+              <CmdItem icon={Folders} onSelect={() => runCommand(() => router.push("/admin/projecten" as Route))}>
+                Projecten
+              </CmdItem>
+              <CmdItem icon={UserCheck} onSelect={() => runCommand(() => router.push("/admin/toewijzingen" as Route))}>
+                Toewijzingen
+              </CmdItem>
+            </Command.Group>
+
+            <Command.Group heading="Acties">
+              <CmdItem icon={Plus} onSelect={() => runCommand(() => router.push("/admin/medewerkers?new=1" as Route))}>
+                Nieuwe medewerker
+              </CmdItem>
+              <CmdItem icon={Plus} onSelect={() => runCommand(() => router.push("/admin/klanten?new=1" as Route))}>
+                Nieuwe klant
+              </CmdItem>
+              <CmdItem icon={Plus} onSelect={() => runCommand(() => router.push("/admin/projecten?new=1" as Route))}>
+                Nieuw project
+              </CmdItem>
+            </Command.Group>
+
+            <Command.Group heading="Instellingen">
+              <CmdItem icon={Settings} onSelect={() => runCommand(() => router.push("/admin/settings" as Route))}>
+                Instellingen
+              </CmdItem>
+            </Command.Group>
+          </Command.List>
+        </Command>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function CmdItem({ icon: Icon, onSelect, children }: { icon: LucideIcon; onSelect: () => void; children: React.ReactNode }) {
+  return (
+    <Command.Item
+      onSelect={onSelect}
+      className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm aria-selected:bg-surface-deep"
+    >
+      <Icon className="h-4 w-4 text-text-tertiary" aria-hidden />
+      {children}
+    </Command.Item>
+  );
+}
