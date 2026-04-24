@@ -12,6 +12,7 @@
   "dependencies": {
     "@casella/auth": "workspace:*",
     "@casella/db": "workspace:*",
+    "@casella/email": "workspace:*",
     "@casella/maps": "workspace:*",
     "@casella/types": "workspace:*",
     "@hookform/resolvers": "^5.2.2",

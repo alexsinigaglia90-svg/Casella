@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/current-user";
 import { getDb, schema, auditMutation } from "@casella/db";
 import { createEmployeeSchema } from "@casella/types";
 import { upsertAddress } from "@/lib/employees/upsert-address";
+import { sendEmail, welcomeEmail } from "@casella/email";
 import { revalidatePath } from "next/cache";
 import { ZodError } from "zod";
 
@@ -54,6 +55,18 @@ export async function POST(req: NextRequest) {
 
     return created!.id;
   });
+
+  try {
+    const portalUrl = process.env.AUTH_URL ?? "http://localhost:3000";
+    const email = welcomeEmail({
+      displayName: input.inviteEmail.split("@")[0]!,
+      portalUrl,
+    });
+    await sendEmail({ to: input.inviteEmail, ...email });
+  } catch (err) {
+    console.error("Welcome email failed:", err);
+    // Do not fail the create — admin can resend later
+  }
 
   revalidatePath("/admin/medewerkers");
   return NextResponse.json({ id: employeeId }, { status: 201 });

@@ -29,6 +29,9 @@ importers:
       '@casella/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@casella/email':
+        specifier: workspace:*
+        version: link:../../packages/email
       '@casella/maps':
         specifier: workspace:*
         version: link:../../packages/maps
