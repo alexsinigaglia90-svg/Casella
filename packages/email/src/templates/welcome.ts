@@ -1,7 +1,8 @@
-export function welcomeEmail(params: { displayName: string; portalUrl: string }) {
-  const { displayName, portalUrl } = params;
+export function welcomeEmail(params: { displayName: string; portalUrl: string; firstName?: string | null }) {
+  const { displayName, portalUrl, firstName } = params;
+  const greetName = firstName?.trim() || displayName;
   const text = `
-Welkom bij Casella, ${displayName}!
+Welkom bij Casella, ${greetName}!
 
 Je bent uitgenodigd om het Ascentra-medewerkerportaal te gebruiken.
 Log in met je Microsoft-account via: ${portalUrl}
@@ -14,7 +15,7 @@ Ascentra HR
 
   const html = `
 <div style="font-family: system-ui, sans-serif; max-width: 520px; padding: 32px; color: #0e1621;">
-  <h1 style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 32px; margin: 0 0 16px;">Welkom bij <em>Casella</em>, ${displayName}!</h1>
+  <h1 style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 32px; margin: 0 0 16px;">Welkom bij <em>Casella</em>, ${greetName}!</h1>
   <p style="line-height: 1.6; font-size: 15px;">
     Je bent uitgenodigd om het Ascentra-medewerkerportaal te gebruiken.
     Log in met je Microsoft-account en zie meteen je persoonlijke dashboard.

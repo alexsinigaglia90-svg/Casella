@@ -53,6 +53,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       phone: "phone" in input ? input.phone ?? null : before.phone,
       emergencyContactName: "emergencyContactName" in input ? input.emergencyContactName ?? null : before.emergencyContactName,
       emergencyContactPhone: "emergencyContactPhone" in input ? input.emergencyContactPhone ?? null : before.emergencyContactPhone,
+      firstName: "firstName" in input ? input.firstName ?? null : before.firstName,
+      lastName: "lastName" in input ? input.lastName ?? null : before.lastName,
       notes: "notes" in input ? input.notes ?? null : before.notes,
       updatedAt: new Date(),
     };

@@ -42,6 +42,8 @@ export async function POST(req: NextRequest) {
       phone: input.phone ?? null,
       emergencyContactName: input.emergencyContactName ?? null,
       emergencyContactPhone: input.emergencyContactPhone ?? null,
+      firstName: input.firstName ?? null,
+      lastName: input.lastName ?? null,
       notes: input.notes ?? null,
     }).returning({ id: schema.employees.id });
 
@@ -59,8 +61,9 @@ export async function POST(req: NextRequest) {
   try {
     const portalUrl = process.env.AUTH_URL ?? "http://localhost:3000";
     const email = welcomeEmail({
-      displayName: input.inviteEmail.split("@")[0]!,
+      displayName: input.firstName?.trim() || input.inviteEmail.split("@")[0]!,
       portalUrl,
+      firstName: input.firstName ?? null,
     });
     await sendEmail({ to: input.inviteEmail, ...email });
   } catch (err) {

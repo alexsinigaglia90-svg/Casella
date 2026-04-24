@@ -43,6 +43,8 @@ export const createEmployeeSchema = z.object({
   phone: z.string().optional().nullable(),
   emergencyContactName: z.string().optional().nullable(),
   emergencyContactPhone: z.string().optional().nullable(),
+  firstName: z.string().optional().nullable(),
+  lastName: z.string().optional().nullable(),
   notes: z.string().max(5000).optional().nullable(),
 });
 export type CreateEmployeeInput = z.infer<typeof createEmployeeSchema>;
@@ -59,3 +61,24 @@ export const initiateTerminateSchema = z.object({
   confirmText: nonEmptyStringSchema,
 });
 export type InitiateTerminateInput = z.infer<typeof initiateTerminateSchema>;
+
+/**
+ * Fields that the new-employee wizard treats as REQUIRED at the UI level.
+ * The Zod schema itself stays permissive so mobile / AstraSign / Nmbrs sync
+ * can post partial records — but every web/mobile create-form should validate
+ * against this same list to avoid divergence between platforms.
+ */
+export const REQUIRED_CREATE_EMPLOYEE_FIELDS = [
+  "firstName",
+  "lastName",
+  "inviteEmail",
+  "phone",
+  "jobTitle",
+  "startDate",
+  "contractedHoursPerWeek",
+  "compensationType",
+  "homeAddress",
+  "emergencyContactName",
+] as const;
+
+export type RequiredCreateEmployeeField = (typeof REQUIRED_CREATE_EMPLOYEE_FIELDS)[number];
