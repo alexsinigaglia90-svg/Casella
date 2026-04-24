@@ -7,6 +7,7 @@ import type { LucideIcon } from "lucide-react";
 import { Users, Briefcase, Folders, UserCheck, Home, FileText, Clock, Calendar, Wallet } from "lucide-react";
 import { Brand } from "./brand";
 import { EnvBadge } from "./env-badge";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { cn } from "@/lib/utils";
 import type { CurrentUser } from "@/lib/current-user";
 
@@ -76,6 +77,10 @@ export function Sidebar({ user, mode }: { user: CurrentUser; mode: "employee" | 
           </Link>
         </div>
       )}
+
+      <div className="border-t border-border p-3">
+        <ThemeToggle />
+      </div>
     </nav>
   );
 }
