@@ -60,6 +60,15 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: Blocker for mobile MVP — no login.
 - **Status**: open
 
+### ML-6 — Mobile + web share `REQUIRED_CREATE_EMPLOYEE_FIELDS` constant
+- **Category**: Mobile-alignment
+- **Deferred from**: Claude Design wizard handoff (2026-04-24)
+- **Why deferred**: Mobile (Fase 3) doesn't exist yet, so the consumer side of the constant is theoretical. The constant IS already exported from `@casella/types` (commit `af666f2`) and the web wizard validates against the same field-set the constant lists. When the RN app is built, it imports `REQUIRED_CREATE_EMPLOYEE_FIELDS` and renders its own create-form with identical required-set — zero drift.
+- **Pickup trigger**: First commit of mobile create-employee form (Fase 3).
+- **Estimated cost**: 0h on the web side (already done). Mobile side: ~30 min to wire the constant into RN form validation.
+- **Impact if skipped**: Mobile reimplements its own ad-hoc required list that drifts from web over time, leading to "you can create a record on web that you can't on mobile" inconsistencies.
+- **Status**: open (web side ready, mobile side pending Fase 3)
+
 ### ML-5 — Theme preference bootstrapping from DB on login
 - **Category**: Mobile-alignment (also web polish)
 - **Deferred from**: Plan 1.1a Task 7 code review (2026-04-23)
@@ -148,6 +157,15 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Estimated cost**: 1 hour — add `--status-warning-on-surface` darkened token, or document that status tokens are bg/icon-only.
 - **Impact if skipped**: Eventually a warning message renders illegible.
 - **Status**: open
+
+### DD-4 — Manager-select in EmployeeDrawer wizard uses dummy options
+- **Category**: Design-debt (UX-feature gap)
+- **Deferred from**: Claude Design wizard handoff Step 2 — Dienstverband (2026-04-24)
+- **Why deferred**: Wizard step 2 has a Manager `<Select>` with 3 hardcoded names (Esmée van der Velden / Sanne Bakker / Maarten de Groot) per the design prototype. Real implementation needs a query for users with role=admin (or a managers-only role to be defined). Wizard currently persists the selection in local state but does NOT send `managerId` to the API (intentional — the dummy strings aren't valid UUIDs and would fail the Zod schema parse).
+- **Pickup trigger**: Plan 1.1b (alongside Clients/Projects CRUDs which will likely also need manager pickers).
+- **Estimated cost**: ~1.5 hour — define managers query in `apps/web/lib/employees/managers.ts`, server-fetch in the wizard or pass down from the page, replace the 3 SelectItems with a mapped list, send the real UUID as `managerId` in the POST body, drop the TODO comments.
+- **Impact if skipped**: Admin can't actually pick a manager during create — has to edit the employee later (and edit-mode is also deferred to 1.1b). Combined: no manager assignment in 1.1a at all.
+- **Status**: open — TODO comments in `apps/web/features/employees/drawer/wizard/steps/step-dienstverband.tsx` mark the spot
 
 ### DD-3 — Consider `role="group"` + keyboard arrow-nav on ThemeToggle (radiogroup polish)
 - **Category**: UX-polish
