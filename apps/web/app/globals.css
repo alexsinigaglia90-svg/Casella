@@ -4,46 +4,243 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.5rem;
+    /* === RAW TOKENS === */
+    /* Cream base palette */
+    --cream-base: #f6f2ea;
+    --cream-lift: #faf6ee;
+    --cream-deep: #efe8d9;
+
+    /* Ink (dark text) */
+    --ink-deep: #0e1621;
+    --ink-2: rgba(14, 22, 33, 0.68);
+    --ink-3: rgba(14, 22, 33, 0.45);
+    --ink-4: rgba(14, 22, 33, 0.22);
+    --ink-5: rgba(14, 22, 33, 0.10);
+
+    /* Structural accents */
+    --navy: #1e3a5f;
+    --brown: #6b4e3d;
+
+    /* Aurora accent palette */
+    --aurora-violet: #7b5cff;
+    --aurora-blue: #4ba3ff;
+    --aurora-coral: #ff8a4c;
+    --aurora-amber: #f5c55c;
+    --aurora-teal: #3dd8a8;
+    --aurora-rose: #ff5a8a;
+
+    /* Glows */
+    --glow-violet: rgba(123, 92, 255, 0.35);
+    --glow-blue: rgba(75, 163, 255, 0.35);
+    --glow-coral: rgba(255, 138, 76, 0.35);
+    --glow-amber: rgba(245, 197, 92, 0.40);
+    --glow-teal: rgba(61, 216, 168, 0.35);
+    --glow-rose: rgba(255, 90, 138, 0.35);
+
+    /* === SEMANTIC TOKENS === */
+    --surface-base: var(--cream-base);
+    --surface-lift: var(--cream-lift);
+    --surface-deep: var(--cream-deep);
+    --surface-glass: rgba(251, 248, 241, 0.58);
+    --surface-card: rgba(255, 255, 255, 0.65);
+
+    --text-primary: var(--ink-deep);
+    --text-secondary: var(--ink-2);
+    --text-tertiary: var(--ink-3);
+    --text-quaternary: var(--ink-4);
+
+    --border-subtle: var(--ink-5);
+    --border-muted: var(--ink-4);
+
+    --action-primary: var(--aurora-violet);
+    --action-primary-fg: #ffffff;
+    --status-success: var(--aurora-teal);
+    --status-warning: var(--aurora-amber);
+    --status-danger: var(--aurora-rose);
+    --status-info: var(--aurora-blue);
+    --status-pending: var(--aurora-amber);
+    --status-attention: var(--aurora-coral);
+
+    /* === SHADCN-COMPATIBLE TOKENS (voor ingebouwde radix/shadcn components) === */
+    --background: 40 40% 94%;               /* cream */
+    --foreground: 213 40% 10%;               /* deep ink */
+    --card: 40 48% 97%;
+    --card-foreground: 213 40% 10%;
+    --popover: 40 48% 97%;
+    --popover-foreground: 213 40% 10%;
+    --primary: 255 100% 68%;                  /* aurora-violet HSL */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 30% 92%;
+    --secondary-foreground: 213 40% 10%;
+    --muted: 40 30% 92%;
+    --muted-foreground: 213 10% 40%;
+    --accent: 40 30% 90%;
+    --accent-foreground: 213 40% 10%;
+    --destructive: 342 100% 68%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 213 10% 85%;
+    --input: 213 10% 85%;
+    --ring: 255 100% 68%;
+    --radius: 0.75rem;
+
+    /* === MOTION TOKENS === */
+    --ease-standard: cubic-bezier(0.165, 0.84, 0.44, 1);
+    --ease-draw: cubic-bezier(0.625, 0.05, 0, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+    --duration-quick: 80ms;
+    --duration-standard: 200ms;
+    --duration-emphasized: 400ms;
+
+    /* === TYPE-SCALE (fluid via clamp) === */
+    --text-hero: clamp(3rem, 2rem + 2vw, 4.25rem);
+    --text-display: clamp(1.75rem, 1.5rem + 1vw, 2.5rem);
+    --text-title: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+
+    /* === DENSITY (comfortable default) === */
+    --density-scale: 1;
+    --space-1: calc(0.25rem * var(--density-scale));
+    --space-2: calc(0.5rem * var(--density-scale));
+    --space-3: calc(0.75rem * var(--density-scale));
+    --space-4: calc(1rem * var(--density-scale));
+    --space-6: calc(1.5rem * var(--density-scale));
+    --space-8: calc(2rem * var(--density-scale));
+  }
+
+  html[data-density="compact"] {
+    --density-scale: 0.8;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    /* Semantic overrides for dark mode */
+    --surface-base: #13100c;
+    --surface-lift: #1a1612;
+    --surface-deep: #0a0806;
+    --surface-glass: rgba(26, 22, 18, 0.65);
+    --surface-card: rgba(30, 25, 20, 0.55);
+
+    --text-primary: #f5ecde;
+    --text-secondary: rgba(245, 236, 222, 0.72);
+    --text-tertiary: rgba(245, 236, 222, 0.50);
+    --text-quaternary: rgba(245, 236, 222, 0.28);
+
+    --border-subtle: rgba(245, 236, 222, 0.12);
+    --border-muted: rgba(245, 236, 222, 0.22);
+
+    /* Slightly stronger glows in dark */
+    --glow-violet: rgba(123, 92, 255, 0.45);
+    --glow-blue: rgba(75, 163, 255, 0.45);
+    --glow-coral: rgba(255, 138, 76, 0.45);
+    --glow-amber: rgba(245, 197, 92, 0.50);
+    --glow-teal: rgba(61, 216, 168, 0.45);
+    --glow-rose: rgba(255, 90, 138, 0.45);
+
+    /* Shadcn tokens */
+    --background: 34 23% 6%;
+    --foreground: 40 50% 92%;
+    --card: 30 16% 10%;
+    --card-foreground: 40 50% 92%;
+    --popover: 30 16% 10%;
+    --popover-foreground: 40 50% 92%;
+    --primary: 255 100% 72%;
+    --primary-foreground: 30 16% 7%;
+    --secondary: 30 8% 18%;
+    --secondary-foreground: 40 50% 92%;
+    --muted: 30 8% 18%;
+    --muted-foreground: 40 20% 60%;
+    --accent: 30 8% 20%;
+    --accent-foreground: 40 50% 92%;
+    --destructive: 342 80% 55%;
+    --destructive-foreground: 40 50% 92%;
+    --border: 30 8% 22%;
+    --input: 30 8% 22%;
+    --ring: 255 100% 72%;
   }
 
   * {
     @apply border-border;
   }
+
+  html {
+    font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    background: var(--surface-base);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    min-height: 100vh;
+    font-feature-settings: "tnum";
+  }
+
+  .font-display {
+    font-family: var(--font-cormorant), Georgia, serif;
+    font-style: italic;
+  }
+
+  .font-mono {
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+  }
+
+  ::selection {
+    background: var(--aurora-amber);
+    color: var(--ink-deep);
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--aurora-violet);
+    outline-offset: 2px;
   }
 }
+
+@layer utilities {
+  .glass {
+    background: var(--surface-glass);
+    backdrop-filter: blur(28px) saturate(1.4);
+    -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  }
+
+  .glass-card {
+    background: var(--surface-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    .ambient-aurora,
+    .ambient-spotlight {
+      display: none;
+    }
+  }
+}
+
+/* === Wizard animations === */
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.step-enter { animation: stepIn 380ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes drawerIn {
+  from { transform: translateX(30px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+.drawer-in { animation: drawerIn 500ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.fade-in { animation: fadeIn 260ms ease both; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.animate-spin-700 { animation: spin 700ms linear infinite; }

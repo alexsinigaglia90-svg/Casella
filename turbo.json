@@ -18,7 +18,9 @@
     "SMTP_PASS",
     "SMTP_FROM",
     "NMBRS_API_DOMAIN",
-    "NMBRS_API_TOKEN"
+    "NMBRS_API_TOKEN",
+    "CASELLA_ENV",
+    "NEXT_PUBLIC_CASELLA_ENV"
   ],
   "tasks": {
     "build": {
