@@ -11,6 +11,7 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "e2e": "turbo run e2e",
     "db:up": "supabase start",
     "db:down": "supabase stop",
     "db:reset": "supabase db reset",
