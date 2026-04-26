@@ -12,29 +12,15 @@ import {
 import { MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PdokAddress, PdokSuggestion } from "@casella/maps";
+import type { ApiError } from "@casella/types";
+import { mapAddressError } from "@/features/address-input/error-mapper";
 import { useDebounce } from "./use-debounce";
-
-class HttpError extends Error {
-  readonly status: number;
-  constructor(status: number, message?: string) {
-    super(message ?? `HTTP ${status}`);
-    this.name = "HttpError";
-    this.status = status;
-  }
-}
 
 interface Props {
   value: PdokAddress | null;
   onChange: (v: PdokAddress | null) => void;
   placeholder?: string;
   disabled?: boolean;
-}
-
-function mapHttpErrorMessage(status: number, isLookup = false): string {
-  if (status === 504) return "Adresservice reageert niet, probeer opnieuw";
-  if (status === 502) return "Adresservice tijdelijk niet beschikbaar";
-  if (status === 404 && isLookup) return "Adres niet gevonden";
-  return "Er ging iets mis bij het zoeken";
 }
 
 export function AddressInput({
@@ -82,8 +68,11 @@ export function AddressInput({
     })
       .then(async (r) => {
         if (!r.ok) {
-          const body = (await r.json().catch(() => ({}))) as { error?: string };
-          throw new HttpError(r.status, body.error);
+          const body = (await r.json().catch(() => ({}))) as Partial<ApiError>;
+          const mapped = body.error && body.message
+            ? mapAddressError(body as ApiError)
+            : "Er ging iets mis bij het zoeken";
+          throw new Error(mapped);
         }
         return r.json() as Promise<{ results: PdokSuggestion[] }>;
       })
@@ -99,11 +88,7 @@ export function AddressInput({
         )
           return;
         setSuggestions([]);
-        if (err instanceof HttpError) {
-          setErrorMessage(mapHttpErrorMessage(err.status));
-        } else {
-          setErrorMessage("Er ging iets mis bij het zoeken");
-        }
+        setErrorMessage(err instanceof Error ? err.message : "Er ging iets mis bij het zoeken");
       })
       .finally(() => {
         if (!ctl.signal.aborted) setLoading(false);
@@ -120,8 +105,11 @@ export function AddressInput({
     try {
       const r = await fetch(`/api/pdok/lookup/${encodeURIComponent(suggestion.id)}`);
       if (!r.ok) {
-        const body = (await r.json().catch(() => ({}))) as { error?: string };
-        throw new HttpError(r.status, body.error);
+        const body = (await r.json().catch(() => ({}))) as Partial<ApiError>;
+        const mapped = body.error && body.message
+          ? mapAddressError(body as ApiError)
+          : "Er ging iets mis bij het zoeken";
+        throw new Error(mapped);
       }
       const json = (await r.json().catch(() => ({}))) as { address?: PdokAddress };
       if (json.address) {
@@ -131,11 +119,7 @@ export function AddressInput({
         setOpen(false);
       }
     } catch (err) {
-      if (err instanceof HttpError) {
-        setErrorMessage(mapHttpErrorMessage(err.status, true));
-      } else {
-        setErrorMessage(mapHttpErrorMessage(0));
-      }
+      setErrorMessage(err instanceof Error ? err.message : "Er ging iets mis bij het zoeken");
       onChange(null);
     } finally {
       setLoading(false);

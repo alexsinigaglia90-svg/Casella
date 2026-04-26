@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { lookupAddress } from "@casella/maps";
 import { pdokErrorResponse } from "@/lib/pdok-error-response";
+import { apiError } from "@casella/types";
 
 export const dynamic = "force-dynamic";
 
@@ -11,12 +12,12 @@ export async function GET(
 ) {
   const session = await auth();
   if (!session) {
-    return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
+    return NextResponse.json(apiError("unauthenticated", "Niet ingelogd"), { status: 401 });
   }
 
   const { id } = await params;
   if (!id || id.length > 200) {
-    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    return NextResponse.json(apiError("pdok_invalid_query", "Ongeldig adres-ID"), { status: 400 });
   }
 
   try {

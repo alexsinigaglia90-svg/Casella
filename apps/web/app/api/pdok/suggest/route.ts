@@ -2,18 +2,19 @@ import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { suggestAddresses } from "@casella/maps";
 import { pdokErrorResponse } from "@/lib/pdok-error-response";
+import { apiError } from "@casella/types";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   const session = await auth();
   if (!session) {
-    return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
+    return NextResponse.json(apiError("unauthenticated", "Niet ingelogd"), { status: 401 });
   }
 
   const raw = req.nextUrl.searchParams.get("q") ?? "";
   if (raw.length > 100) {
-    return NextResponse.json({ error: "Query too long" }, { status: 400 });
+    return NextResponse.json(apiError("pdok_invalid_query", "Zoekopdracht is te lang"), { status: 400 });
   }
   const q = raw.trim();
 
