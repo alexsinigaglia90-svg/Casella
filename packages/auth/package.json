@@ -16,6 +16,9 @@
     "@auth/core": "^0.37.0",
     "drizzle-orm": "^0.36.0"
   },
+  "peerDependencies": {
+    "next": ">=15.0.0"
+  },
   "devDependencies": {
     "typescript": "^5.5.0",
     "vitest": "^2.0.0"
