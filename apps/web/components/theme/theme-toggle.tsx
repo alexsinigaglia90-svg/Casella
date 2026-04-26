@@ -29,8 +29,8 @@ export function ThemeToggle() {
             className={cn(
               "flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-colors duration-standard ease-standard",
               active
-                ? "bg-surface-base text-text-primary shadow-sm"
-                : "text-text-tertiary hover:text-text-secondary"
+                ? "bg-surface-base text-fg-primary shadow-sm"
+                : "text-fg-tertiary hover:text-fg-secondary"
             )}
             aria-checked={active}
           >

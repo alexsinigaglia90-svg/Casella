@@ -48,6 +48,9 @@ jobs:
       - name: Create .env (so dotenv-cli in package scripts finds it)
         run: echo "DATABASE_URL=$DATABASE_URL" > .env
 
+      - name: Tokens drift check
+        run: pnpm tokens:check
+
       - name: Typecheck
         run: pnpm typecheck
 

@@ -73,7 +73,7 @@ export function CriticalConfirmDialog({
                 i === 0 ? [part] : [<em key={i} className={color}>{emphasisWord}</em>, part]
               ))}
             </DialogTitle>
-            <DialogDescription className="text-sm text-text-secondary">
+            <DialogDescription className="text-sm text-fg-secondary">
               Dit is een kritieke actie. Lees de impact-samenvatting, kies een
               datum, en bevestig door <strong>{confirmPhrase}</strong> exact over
               te typen.

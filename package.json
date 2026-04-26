@@ -7,11 +7,14 @@
   },
   "scripts": {
     "dev": "turbo run dev",
+    "prebuild": "tsx scripts/generate-css-vars.ts",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "e2e": "turbo run e2e",
+    "tokens:gen": "tsx scripts/generate-css-vars.ts",
+    "tokens:check": "tsx scripts/generate-css-vars.ts && git diff --exit-code apps/web/app/globals.css",
     "db:up": "supabase start",
     "db:down": "supabase stop",
     "db:reset": "supabase db reset",
@@ -22,6 +25,7 @@
   "devDependencies": {
     "@types/node": "^20.14.0",
     "supabase": "^2.95.0",
+    "tsx": "^4.21.0",
     "turbo": "^2.1.0",
     "typescript": "^5.5.0"
   }

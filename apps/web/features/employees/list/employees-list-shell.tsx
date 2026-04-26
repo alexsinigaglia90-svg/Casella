@@ -151,7 +151,7 @@ export function EmployeesListShell({
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Zoek op naam, e-mail of project…"
-            className="flex-1 bg-transparent text-sm outline-none placeholder:text-text-tertiary"
+            className="flex-1 bg-transparent text-sm outline-none placeholder:text-fg-tertiary"
           />
           <kbd
             className="rounded border px-1.5 py-0.5 font-mono text-[10px]"
@@ -373,7 +373,7 @@ function SortableHeader({
   return (
     <button
       onClick={() => onSort(sortKey)}
-      className="inline-flex items-center gap-1 uppercase tracking-wide transition-colors hover:text-text-primary"
+      className="inline-flex items-center gap-1 uppercase tracking-wide transition-colors hover:text-fg-primary"
       style={{ color: active ? "var(--text-primary)" : "inherit" }}
     >
       {label}

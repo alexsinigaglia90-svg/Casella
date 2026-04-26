@@ -8,8 +8,8 @@ export function Toaster() {
       toastOptions={{
         classNames: {
           toast: "glass-card border border-border",
-          title: "text-text-primary text-sm",
-          description: "text-text-secondary",
+          title: "text-fg-primary text-sm",
+          description: "text-fg-secondary",
         },
       }}
       closeButton

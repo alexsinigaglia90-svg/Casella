@@ -58,7 +58,7 @@ export function EmploymentBadge({ status, variant = "pill" }: EmploymentBadgePro
           }}
           aria-hidden
         />
-        <span className="text-text-secondary">{m.label}</span>
+        <span className="text-fg-secondary">{m.label}</span>
       </span>
     );
   }

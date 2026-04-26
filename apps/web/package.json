@@ -15,6 +15,7 @@
   "dependencies": {
     "@casella/auth": "workspace:*",
     "@casella/db": "workspace:*",
+    "@casella/design-tokens": "workspace:^",
     "@casella/email": "workspace:*",
     "@casella/maps": "workspace:*",
     "@casella/types": "workspace:*",

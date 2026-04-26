@@ -1,4 +1,8 @@
 import type { Config } from "tailwindcss";
+// Tokens are imported as TS source-of-truth. CSS-vars in :root/.dark are
+// generated from the same package by scripts/generate-css-vars.ts (run via
+// `pnpm prebuild` and asserted by CI via `pnpm tokens:check`).
+import { motion, glowLight } from "@casella/design-tokens";
 
 const config: Config = {
   darkMode: ["class"],
@@ -21,7 +25,8 @@ const config: Config = {
         title: "var(--text-title)",
       },
       colors: {
-        /* Ascentra raw */
+        /* Ascentra raw — values consumed via CSS-vars at runtime; literal
+           hexes are present in the TS package for type-safety + RN reuse. */
         cream: {
           base: "var(--cream-base)",
           lift: "var(--cream-lift)",
@@ -51,11 +56,11 @@ const config: Config = {
           lift: "var(--surface-lift)",
           deep: "var(--surface-deep)",
         },
-        text: {
-          primary: "var(--text-primary)",
-          secondary: "var(--text-secondary)",
-          tertiary: "var(--text-tertiary)",
-          quaternary: "var(--text-quaternary)",
+        fg: {
+          primary: "var(--fg-primary)",
+          secondary: "var(--fg-secondary)",
+          tertiary: "var(--fg-tertiary)",
+          quaternary: "var(--fg-quaternary)",
         },
         status: {
           success: "var(--status-success)",
@@ -66,7 +71,7 @@ const config: Config = {
           attention: "var(--status-attention)",
         },
 
-        /* Shadcn compatibility */
+        /* Shadcn compatibility — separate HSL system */
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -128,7 +133,7 @@ const config: Config = {
           to: { transform: "translateY(0)" },
         },
         "status-pulse": {
-          "0%, 100%": { boxShadow: "0 0 0 0 rgba(61, 216, 168, 0.6)" },
+          "0%, 100%": { boxShadow: `0 0 0 0 ${glowLight.teal}` },
           "50%": { boxShadow: "0 0 0 6px rgba(61, 216, 168, 0)" },
         },
         shimmer: {
@@ -138,7 +143,7 @@ const config: Config = {
       },
       animation: {
         "aurora-drift": "aurora-drift 24s var(--ease-standard) infinite alternate",
-        "char-rise": "char-rise 1200ms var(--ease-out-expo) forwards",
+        "char-rise": `char-rise 1200ms ${motion.easing.outExpo} forwards`,
         "status-pulse": "status-pulse 2500ms var(--ease-standard) infinite",
         shimmer: "shimmer 1.5s var(--ease-standard) infinite",
       },

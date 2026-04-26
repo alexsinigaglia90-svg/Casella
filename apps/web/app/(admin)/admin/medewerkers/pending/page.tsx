@@ -27,17 +27,17 @@ export default async function PendingOnboardingPage() {
         <h1 className="font-display text-display">
           <em>Pending</em> onboarding
         </h1>
-        <p className="mt-1 text-sm text-text-secondary">
+        <p className="mt-1 text-sm text-fg-secondary">
           Users die zijn ingelogd maar nog geen employee-record hebben.
         </p>
       </header>
 
       <div className="rounded-lg border border-border glass-card">
         {list.length === 0 ? (
-          <p className="p-6 text-sm text-text-secondary">Niemand wacht op onboarding.</p>
+          <p className="p-6 text-sm text-fg-secondary">Niemand wacht op onboarding.</p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="border-b border-border text-xs uppercase tracking-wide text-text-tertiary">
+            <thead className="border-b border-border text-xs uppercase tracking-wide text-fg-tertiary">
               <tr>
                 <th className="p-3 text-left">Naam</th>
                 <th className="p-3 text-left">E-mail</th>

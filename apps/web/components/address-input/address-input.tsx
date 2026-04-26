@@ -164,7 +164,7 @@ export function AddressInput({
         <div className="flex items-center gap-2 px-3">
           <MapPin
             aria-hidden
-            className="h-4 w-4 shrink-0 text-text-tertiary"
+            className="h-4 w-4 shrink-0 text-fg-tertiary"
           />
           <CommandInput
             value={query}
@@ -178,13 +178,13 @@ export function AddressInput({
             onBlur={() => setTimeout(() => setOpen(false), 150)}
             placeholder={placeholder}
             disabled={disabled}
-            className="flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-text-tertiary"
+            className="flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-fg-tertiary"
           />
           {value && !disabled && (
             <button
               type="button"
               onClick={handleClear}
-              className="text-xs text-text-tertiary hover:text-text-secondary"
+              className="text-xs text-fg-tertiary hover:text-fg-secondary"
             >
               Wissen
             </button>
@@ -195,13 +195,13 @@ export function AddressInput({
           <div className="absolute left-0 top-full z-50 mt-1 w-full rounded-md border border-border bg-surface-base shadow-md">
             <CommandList>
               {loading && (
-                <div className="px-4 py-2 text-sm text-text-tertiary">
+                <div className="px-4 py-2 text-sm text-fg-tertiary">
                   Laden…
                 </div>
               )}
 
               {showEmpty && (
-                <CommandEmpty className="px-4 py-2 text-sm text-text-tertiary">
+                <CommandEmpty className="px-4 py-2 text-sm text-fg-tertiary">
                   {debouncedQuery.length < 2
                     ? "Typ minimaal 2 tekens"
                     : "Geen resultaten"}
@@ -209,7 +209,7 @@ export function AddressInput({
               )}
 
               {!loading && debouncedQuery.length < 2 && (
-                <div className="px-4 py-2 text-sm text-text-tertiary">
+                <div className="px-4 py-2 text-sm text-fg-tertiary">
                   Typ minimaal 2 tekens
                 </div>
               )}

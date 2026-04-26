@@ -35,10 +35,10 @@ export function CommandPalette() {
         <Command className="rounded-xl bg-surface-base">
           <Command.Input
             placeholder="Zoek naar een pagina, actie of entity..."
-            className="w-full border-b border-border bg-transparent px-4 py-3 text-sm outline-none placeholder:text-text-tertiary"
+            className="w-full border-b border-border bg-transparent px-4 py-3 text-sm outline-none placeholder:text-fg-tertiary"
           />
           <Command.List className="max-h-80 overflow-y-auto p-2">
-            <Command.Empty className="p-4 text-center text-sm text-text-tertiary">
+            <Command.Empty className="p-4 text-center text-sm text-fg-tertiary">
               Geen resultaten
             </Command.Empty>
 
@@ -87,7 +87,7 @@ function CmdItem({ icon: Icon, onSelect, children }: { icon: LucideIcon; onSelec
       onSelect={onSelect}
       className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm aria-selected:bg-surface-deep"
     >
-      <Icon className="h-4 w-4 text-text-tertiary" aria-hidden />
+      <Icon className="h-4 w-4 text-fg-tertiary" aria-hidden />
       {children}
     </Command.Item>
   );

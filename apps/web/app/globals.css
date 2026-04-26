@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer base {
+  /* @tokens:start */
   :root {
     /* === RAW TOKENS === */
     /* Cream base palette */
@@ -38,50 +39,28 @@
     --glow-rose: rgba(255, 90, 138, 0.35);
 
     /* === SEMANTIC TOKENS === */
-    --surface-base: var(--cream-base);
-    --surface-lift: var(--cream-lift);
-    --surface-deep: var(--cream-deep);
+    --surface-base: #f6f2ea;
+    --surface-lift: #faf6ee;
+    --surface-deep: #efe8d9;
     --surface-glass: rgba(251, 248, 241, 0.58);
     --surface-card: rgba(255, 255, 255, 0.65);
 
-    --text-primary: var(--ink-deep);
-    --text-secondary: var(--ink-2);
-    --text-tertiary: var(--ink-3);
-    --text-quaternary: var(--ink-4);
+    --fg-primary: #0e1621;
+    --fg-secondary: rgba(14, 22, 33, 0.68);
+    --fg-tertiary: rgba(14, 22, 33, 0.45);
+    --fg-quaternary: rgba(14, 22, 33, 0.22);
 
-    --border-subtle: var(--ink-5);
-    --border-muted: var(--ink-4);
+    --border-subtle: rgba(14, 22, 33, 0.10);
+    --border-muted: rgba(14, 22, 33, 0.22);
 
-    --action-primary: var(--aurora-violet);
+    --action-primary: #7b5cff;
     --action-primary-fg: #ffffff;
-    --status-success: var(--aurora-teal);
-    --status-warning: var(--aurora-amber);
-    --status-danger: var(--aurora-rose);
-    --status-info: var(--aurora-blue);
-    --status-pending: var(--aurora-amber);
-    --status-attention: var(--aurora-coral);
-
-    /* === SHADCN-COMPATIBLE TOKENS (voor ingebouwde radix/shadcn components) === */
-    --background: 40 40% 94%;               /* cream */
-    --foreground: 213 40% 10%;               /* deep ink */
-    --card: 40 48% 97%;
-    --card-foreground: 213 40% 10%;
-    --popover: 40 48% 97%;
-    --popover-foreground: 213 40% 10%;
-    --primary: 255 100% 68%;                  /* aurora-violet HSL */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 40 30% 92%;
-    --secondary-foreground: 213 40% 10%;
-    --muted: 40 30% 92%;
-    --muted-foreground: 213 10% 40%;
-    --accent: 40 30% 90%;
-    --accent-foreground: 213 40% 10%;
-    --destructive: 342 100% 68%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 213 10% 85%;
-    --input: 213 10% 85%;
-    --ring: 255 100% 68%;
-    --radius: 0.75rem;
+    --status-success: #3dd8a8;
+    --status-warning: #f5c55c;
+    --status-danger: #ff5a8a;
+    --status-info: #4ba3ff;
+    --status-pending: #f5c55c;
+    --status-attention: #ff8a4c;
 
     /* === MOTION TOKENS === */
     --ease-standard: cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -120,10 +99,10 @@
     --surface-glass: rgba(26, 22, 18, 0.65);
     --surface-card: rgba(30, 25, 20, 0.55);
 
-    --text-primary: #f5ecde;
-    --text-secondary: rgba(245, 236, 222, 0.72);
-    --text-tertiary: rgba(245, 236, 222, 0.50);
-    --text-quaternary: rgba(245, 236, 222, 0.28);
+    --fg-primary: #f5ecde;
+    --fg-secondary: rgba(245, 236, 222, 0.72);
+    --fg-tertiary: rgba(245, 236, 222, 0.50);
+    --fg-quaternary: rgba(245, 236, 222, 0.28);
 
     --border-subtle: rgba(245, 236, 222, 0.12);
     --border-muted: rgba(245, 236, 222, 0.22);
@@ -135,8 +114,38 @@
     --glow-amber: rgba(245, 197, 92, 0.50);
     --glow-teal: rgba(61, 216, 168, 0.45);
     --glow-rose: rgba(255, 90, 138, 0.45);
+  }
+  /* @tokens:end */
 
-    /* Shadcn tokens */
+  /* === SHADCN-COMPATIBLE TOKENS === */
+  /* These are a parallel HSL system used by shadcn/radix primitives.
+     They are intentionally NOT generated from packages/design-tokens because
+     they encode a different (HSL space) representation. */
+  :root {
+    --background: 40 40% 94%;               /* cream */
+    --foreground: 213 40% 10%;               /* deep ink */
+    --card: 40 48% 97%;
+    --card-foreground: 213 40% 10%;
+    --popover: 40 48% 97%;
+    --popover-foreground: 213 40% 10%;
+    --primary: 255 100% 68%;                  /* aurora-violet HSL */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 30% 92%;
+    --secondary-foreground: 213 40% 10%;
+    --muted: 40 30% 92%;
+    --muted-foreground: 213 10% 40%;
+    --accent: 40 30% 90%;
+    --accent-foreground: 213 40% 10%;
+    --destructive: 342 100% 68%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 213 10% 85%;
+    --input: 213 10% 85%;
+    --ring: 255 100% 68%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    /* Shadcn tokens — dark variant */
     --background: 34 23% 6%;
     --foreground: 40 50% 92%;
     --card: 30 16% 10%;
@@ -170,7 +179,7 @@
 
   body {
     background: var(--surface-base);
-    color: var(--text-primary);
+    color: var(--fg-primary);
     font-size: 0.875rem;
     line-height: 1.5;
     min-height: 100vh;

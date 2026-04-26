@@ -55,8 +55,8 @@ export function Sidebar({ user, mode }: { user: CurrentUser; mode: "employee" | 
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-quick ease-standard",
                   active
-                    ? "bg-surface-base shadow-sm text-text-primary"
-                    : "text-text-secondary hover:bg-surface-lift hover:text-text-primary"
+                    ? "bg-surface-base shadow-sm text-fg-primary"
+                    : "text-fg-secondary hover:bg-surface-lift hover:text-fg-primary"
                 )}
               >
                 <Icon className="h-4 w-4" aria-hidden />
