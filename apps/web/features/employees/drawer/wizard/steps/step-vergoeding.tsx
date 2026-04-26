@@ -52,7 +52,7 @@ export function StepVergoeding({
       <div>
         <div
           className="mb-2.5 text-[11px] font-medium uppercase tracking-wider"
-          style={{ color: "var(--text-tertiary)" }}
+          style={{ color: "var(--fg-tertiary)" }}
         >
           Reisvergoeding
         </div>
@@ -81,7 +81,7 @@ export function StepVergoeding({
                     background: selected
                       ? "var(--aurora-violet)"
                       : "var(--surface-deep)",
-                    color: selected ? "#fff" : "var(--text-secondary)",
+                    color: selected ? "#fff" : "var(--fg-secondary)",
                   }}
                 >
                   {c.icon}
@@ -89,13 +89,13 @@ export function StepVergoeding({
                 <div>
                   <div
                     className="text-sm font-medium"
-                    style={{ color: "var(--text-primary)" }}
+                    style={{ color: "var(--fg-primary)" }}
                   >
                     {c.label}
                   </div>
                   <div
                     className="text-[11px] leading-snug"
-                    style={{ color: "var(--text-tertiary)" }}
+                    style={{ color: "var(--fg-tertiary)" }}
                   >
                     {c.desc}
                   </div>
@@ -115,7 +115,7 @@ export function StepVergoeding({
       {form.compensationType === "auto" && (
         <FieldWrap label="Km-tarief" htmlFor="emp-kmRate" hint="Standaard is 23 cent. Pas aan indien nodig.">
           <div className="flex items-center gap-2">
-            <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
+            <span className="text-sm" style={{ color: "var(--fg-tertiary)" }}>
               €
             </span>
             <input
@@ -128,9 +128,9 @@ export function StepVergoeding({
                 update({ kmRateCents: Math.round(Number(e.target.value) * 100) })
               }
               className="w-24 bg-transparent py-2 font-mono text-[15px] outline-none"
-              style={{ color: "var(--text-primary)" }}
+              style={{ color: "var(--fg-primary)" }}
             />
-            <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
+            <span className="text-sm" style={{ color: "var(--fg-tertiary)" }}>
               per km
             </span>
           </div>
@@ -141,11 +141,11 @@ export function StepVergoeding({
       <div>
         <div
           className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider"
-          style={{ color: "var(--text-tertiary)" }}
+          style={{ color: "var(--fg-tertiary)" }}
         >
           <MapPin size={11} /> Woonadres
         </div>
-        <p className="mb-2 text-[11px]" style={{ color: "var(--text-tertiary)" }}>
+        <p className="mb-2 text-[11px]" style={{ color: "var(--fg-tertiary)" }}>
           Startpunt voor km-declaraties.
         </p>
         <AddressInput
@@ -177,7 +177,7 @@ export function StepVergoeding({
             onBlur={() => setTouch("emergencyName")}
             placeholder="Partner, ouder, vriend(in)…"
             className="w-full bg-transparent py-2 text-[15px] outline-none placeholder:opacity-60"
-            style={{ color: "var(--text-primary)" }}
+            style={{ color: "var(--fg-primary)" }}
           />
         </FieldWrap>
         <FieldWrap label="Noodcontact — telefoon" htmlFor="emp-emergencyPhone">
@@ -188,7 +188,7 @@ export function StepVergoeding({
             onChange={(e) => update({ emergencyPhone: e.target.value })}
             placeholder="+31 6 …"
             className="w-full bg-transparent py-2 text-[15px] outline-none placeholder:opacity-60"
-            style={{ color: "var(--text-primary)" }}
+            style={{ color: "var(--fg-primary)" }}
           />
         </FieldWrap>
       </div>
@@ -201,7 +201,7 @@ export function StepVergoeding({
           onChange={(e) => update({ notes: e.target.value })}
           placeholder="Bijv. 'Start met onboarding-buddy Sanne'"
           className="w-full resize-none bg-transparent py-2 text-[15px] outline-none placeholder:opacity-60"
-          style={{ color: "var(--text-primary)" }}
+          style={{ color: "var(--fg-primary)" }}
         />
       </FieldWrap>
     </div>

@@ -38,3 +38,10 @@ test('legacy --text-primary CSS var has been removed (DD-1)', async ({ page }) =
   );
   expect(legacy).toBe('');
 });
+
+test('body background resolves to surface-base color', async ({ page }) => {
+  await page.goto('/');
+  const bodyBg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  // #f6f2ea === rgb(246, 242, 234) — chromium normalises hex to rgb()
+  expect(bodyBg).toBe('rgb(246, 242, 234)');
+});

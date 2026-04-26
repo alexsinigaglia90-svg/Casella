@@ -36,39 +36,39 @@ export function StepUitnodigen({ form, onJump }: StepUitnodigenProps) {
           className="flex items-center gap-2 border-b px-4 py-2.5 text-[11px] font-mono uppercase tracking-wider"
           style={{
             borderColor: "var(--border-subtle)",
-            color: "var(--text-tertiary)",
+            color: "var(--fg-tertiary)",
           }}
         >
           <Mail size={12} />
           Voorbeeld van de uitnodiging
         </div>
         <div className="p-5">
-          <div className="mb-1 text-xs" style={{ color: "var(--text-tertiary)" }}>
+          <div className="mb-1 text-xs" style={{ color: "var(--fg-tertiary)" }}>
             aan{" "}
-            <span style={{ color: "var(--text-secondary)" }}>
+            <span style={{ color: "var(--fg-secondary)" }}>
               {form.inviteEmail || "—"}
             </span>
           </div>
           <div
             className="mb-4 text-sm font-medium"
-            style={{ color: "var(--text-primary)" }}
+            style={{ color: "var(--fg-primary)" }}
           >
             Welkom bij Casella ✦
           </div>
           <div
             className="space-y-2 text-sm leading-relaxed"
-            style={{ color: "var(--text-secondary)" }}
+            style={{ color: "var(--fg-secondary)" }}
           >
             <p>
               Hoi{" "}
-              <strong style={{ color: "var(--text-primary)" }}>
+              <strong style={{ color: "var(--fg-primary)" }}>
                 {form.firstName || "…"}
               </strong>
               ,
             </p>
             <p>
               Per{" "}
-              <strong style={{ color: "var(--text-primary)" }}>
+              <strong style={{ color: "var(--fg-primary)" }}>
                 {formatDateNL(form.startDate)}
               </strong>{" "}
               kom je bij het Ascentra-team als{" "}
@@ -101,7 +101,7 @@ export function StepUitnodigen({ form, onJump }: StepUitnodigenProps) {
         <div className="mb-2.5 flex items-center justify-between">
           <div
             className="text-[11px] font-medium uppercase tracking-wider"
-            style={{ color: "var(--text-tertiary)" }}
+            style={{ color: "var(--fg-tertiary)" }}
           >
             Samenvatting
           </div>
@@ -159,13 +159,13 @@ function SummaryRow({
     <div className="group flex items-center gap-4 px-4 py-3">
       <div
         className="w-28 shrink-0 text-[11px] font-medium uppercase tracking-wider"
-        style={{ color: "var(--text-tertiary)" }}
+        style={{ color: "var(--fg-tertiary)" }}
       >
         {label}
       </div>
       <div
         className="flex-1 text-sm"
-        style={{ color: value ? "var(--text-primary)" : "var(--text-quaternary)" }}
+        style={{ color: value ? "var(--fg-primary)" : "var(--fg-quaternary)" }}
       >
         {value || "niet ingevuld"}
       </div>

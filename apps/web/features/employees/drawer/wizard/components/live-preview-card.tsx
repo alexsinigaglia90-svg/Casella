@@ -49,7 +49,7 @@ export function LivePreviewCard({ form, step }: LivePreviewCardProps) {
     >
       <div
         className="text-[10px] font-mono uppercase tracking-[0.15em]"
-        style={{ color: "var(--text-tertiary)" }}
+        style={{ color: "var(--fg-tertiary)" }}
       >
         Zo ziet hun kaart eruit
       </div>
@@ -89,19 +89,19 @@ export function LivePreviewCard({ form, step }: LivePreviewCardProps) {
           <div className="min-w-0">
             <div
               className="truncate text-[17px] font-medium"
-              style={{ color: "var(--text-primary)" }}
+              style={{ color: "var(--fg-primary)" }}
             >
               {hasName ? (
                 `${form.firstName} ${form.lastName}`.trim()
               ) : (
-                <span style={{ color: "var(--text-quaternary)" }}>
+                <span style={{ color: "var(--fg-quaternary)" }}>
                   Naam verschijnt hier…
                 </span>
               )}
             </div>
-            <div className="truncate text-sm" style={{ color: "var(--text-secondary)" }}>
+            <div className="truncate text-sm" style={{ color: "var(--fg-secondary)" }}>
               {form.jobTitle || (
-                <span style={{ color: "var(--text-quaternary)" }}>Functie…</span>
+                <span style={{ color: "var(--fg-quaternary)" }}>Functie…</span>
               )}
             </div>
           </div>
@@ -144,7 +144,7 @@ export function LivePreviewCard({ form, step }: LivePreviewCardProps) {
           </span>
           <span
             className="ml-auto text-[10px] font-mono"
-            style={{ color: "var(--text-tertiary)" }}
+            style={{ color: "var(--fg-tertiary)" }}
           >
             #nieuw
           </span>
@@ -157,7 +157,7 @@ export function LivePreviewCard({ form, step }: LivePreviewCardProps) {
         style={{
           background: "rgba(123, 92, 255, 0.06)",
           border: "1px solid rgba(123, 92, 255, 0.18)",
-          color: "var(--text-secondary)",
+          color: "var(--fg-secondary)",
         }}
       >
         <div
@@ -183,13 +183,13 @@ function PreviewRow({
     <div className="flex items-center gap-2.5">
       <div
         className="flex h-4 w-4 shrink-0 items-center justify-center"
-        style={{ color: "var(--text-tertiary)" }}
+        style={{ color: "var(--fg-tertiary)" }}
       >
         {icon}
       </div>
       <div
         className="flex-1 truncate"
-        style={{ color: value ? "var(--text-secondary)" : "var(--text-quaternary)" }}
+        style={{ color: value ? "var(--fg-secondary)" : "var(--fg-quaternary)" }}
       >
         {value || "—"}
       </div>

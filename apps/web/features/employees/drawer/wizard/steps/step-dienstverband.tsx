@@ -39,7 +39,7 @@ export function StepDienstverband({
           onChange={(e) => update({ startDate: e.target.value })}
           onBlur={() => setTouch("startDate")}
           className="w-full bg-transparent py-2 text-[15px] outline-none"
-          style={{ color: "var(--text-primary)" }}
+          style={{ color: "var(--fg-primary)" }}
         />
       </FieldWrap>
 
@@ -60,9 +60,9 @@ export function StepDienstverband({
             onChange={(e) => update({ contractedHours: Number(e.target.value) })}
             onBlur={() => setTouch("contractedHours")}
             className="w-20 bg-transparent py-2 text-[15px] font-mono outline-none"
-            style={{ color: "var(--text-primary)" }}
+            style={{ color: "var(--fg-primary)" }}
           />
-          <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
+          <span className="text-sm" style={{ color: "var(--fg-tertiary)" }}>
             uur/week
           </span>
           <div className="ml-auto flex gap-1">
@@ -80,7 +80,7 @@ export function StepDienstverband({
                   color:
                     form.contractedHours === h
                       ? "#fff"
-                      : "var(--text-secondary)",
+                      : "var(--fg-secondary)",
                   border: `1px solid ${form.contractedHours === h ? "var(--aurora-violet)" : "var(--border-subtle)"}`,
                 }}
               >
@@ -102,7 +102,7 @@ export function StepDienstverband({
           <SelectTrigger
             id="emp-manager"
             className="w-full bg-transparent border-0 outline-none focus:ring-0 px-0"
-            style={{ color: form.manager ? "var(--text-primary)" : "var(--text-tertiary)" }}
+            style={{ color: form.manager ? "var(--fg-primary)" : "var(--fg-tertiary)" }}
           >
             <SelectValue placeholder="— Kies iemand —" />
           </SelectTrigger>

@@ -35,7 +35,7 @@ const STATUS_MAP: Record<
 
 const FALLBACK = {
   label: "?",
-  dotVar: "var(--text-tertiary)",
+  dotVar: "var(--fg-tertiary)",
   tintClass: "bg-muted",
   textClass: "text-muted-foreground",
 };

@@ -107,7 +107,7 @@ export function EmployeesListShell({
         <div>
           <div
             className="mb-1 font-mono text-[11px] uppercase tracking-wider"
-            style={{ color: "var(--text-tertiary)" }}
+            style={{ color: "var(--fg-tertiary)" }}
           >
             Admin
           </div>
@@ -115,7 +115,7 @@ export function EmployeesListShell({
             <span>Mede</span>
             <em>werkers</em>
           </h1>
-          <p className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
+          <p className="mt-2 text-sm" style={{ color: "var(--fg-secondary)" }}>
             {rows.length} van {counts.all} · laatste synchronisatie zojuist
           </p>
         </div>
@@ -146,7 +146,7 @@ export function EmployeesListShell({
           className="relative flex h-9 min-w-[260px] flex-1 items-center gap-2 rounded-md border px-3"
           style={{ borderColor: "var(--border-subtle)", background: "var(--surface-lift)" }}
         >
-          <Search size={14} style={{ color: "var(--text-tertiary)", flexShrink: 0 }} />
+          <Search size={14} style={{ color: "var(--fg-tertiary)", flexShrink: 0 }} />
           <input
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
@@ -155,7 +155,7 @@ export function EmployeesListShell({
           />
           <kbd
             className="rounded border px-1.5 py-0.5 font-mono text-[10px]"
-            style={{ borderColor: "var(--border-subtle)", color: "var(--text-tertiary)" }}
+            style={{ borderColor: "var(--border-subtle)", color: "var(--fg-tertiary)" }}
           >
             ⌘K
           </kbd>
@@ -174,14 +174,14 @@ export function EmployeesListShell({
                 className="flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors"
                 style={{
                   background: on ? "var(--surface-base)" : "transparent",
-                  color: on ? "var(--text-primary)" : "var(--text-secondary)",
+                  color: on ? "var(--fg-primary)" : "var(--fg-secondary)",
                   boxShadow: on ? "0 1px 2px rgba(0,0,0,0.04)" : "none",
                 }}
               >
                 {f.label}
                 <span
                   className="rounded-full px-1.5 font-mono text-[10px]"
-                  style={{ background: "var(--ink-5, rgba(0,0,0,0.06))", color: "var(--text-tertiary)" }}
+                  style={{ background: "var(--ink-5, rgba(0,0,0,0.06))", color: "var(--fg-tertiary)" }}
                 >
                   {counts[f.key as keyof typeof counts]}
                 </span>
@@ -200,7 +200,7 @@ export function EmployeesListShell({
           <thead>
             <tr
               className="border-b text-xs uppercase tracking-wide"
-              style={{ borderColor: "var(--border-subtle)", color: "var(--text-tertiary)" }}
+              style={{ borderColor: "var(--border-subtle)", color: "var(--fg-tertiary)" }}
             >
               <th className="p-3 text-left font-medium">
                 <SortableHeader
@@ -262,7 +262,7 @@ export function EmployeesListShell({
                           {emp.displayName}
                         </Link>
                         {prefs.density !== "compact" && emp.city && (
-                          <div className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+                          <div className="text-xs" style={{ color: "var(--fg-tertiary)" }}>
                             {emp.city}
                           </div>
                         )}
@@ -272,13 +272,13 @@ export function EmployeesListShell({
                   {prefs.columns.email && (
                     <td
                       className={`p-3 font-mono text-xs ${rowPad}`}
-                      style={{ color: "var(--text-secondary)" }}
+                      style={{ color: "var(--fg-secondary)" }}
                     >
                       {emp.email}
                     </td>
                   )}
                   {prefs.columns.function && (
-                    <td className={`p-3 ${rowPad}`} style={{ color: "var(--text-secondary)" }}>
+                    <td className={`p-3 ${rowPad}`} style={{ color: "var(--fg-secondary)" }}>
                       {emp.jobTitle ?? "—"}
                     </td>
                   )}
@@ -290,7 +290,7 @@ export function EmployeesListShell({
                   {prefs.columns.startDate && (
                     <td
                       className={`p-3 font-mono text-xs tabular-nums ${rowPad}`}
-                      style={{ color: "var(--text-secondary)" }}
+                      style={{ color: "var(--fg-secondary)" }}
                     >
                       {fmtDate(emp.startDate)}
                     </td>
@@ -317,7 +317,7 @@ export function EmployeesListShell({
                         onClick={() => toast.info("Acties volgt in 1.1b")}
                         aria-label="Meer opties"
                       >
-                        <MoreHorizontal size={16} style={{ color: "var(--text-secondary)" }} />
+                        <MoreHorizontal size={16} style={{ color: "var(--fg-secondary)" }} />
                       </button>
                     </div>
                   </td>
@@ -332,7 +332,7 @@ export function EmployeesListShell({
             <p className="font-display" style={{ fontSize: "var(--text-title)" }}>
               Niets <em>gevonden</em>
             </p>
-            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-sm" style={{ color: "var(--fg-secondary)" }}>
               Pas je filter aan of ruim je zoekopdracht op.
             </p>
           </div>
@@ -342,7 +342,7 @@ export function EmployeesListShell({
       {/* Footer line */}
       <div
         className="flex items-center justify-between text-xs"
-        style={{ color: "var(--text-tertiary)" }}
+        style={{ color: "var(--fg-tertiary)" }}
       >
         <span>
           Toont {rows.length} · sorteer op {currentSort}
@@ -374,7 +374,7 @@ function SortableHeader({
     <button
       onClick={() => onSort(sortKey)}
       className="inline-flex items-center gap-1 uppercase tracking-wide transition-colors hover:text-fg-primary"
-      style={{ color: active ? "var(--text-primary)" : "inherit" }}
+      style={{ color: active ? "var(--fg-primary)" : "inherit" }}
     >
       {label}
       {active &&

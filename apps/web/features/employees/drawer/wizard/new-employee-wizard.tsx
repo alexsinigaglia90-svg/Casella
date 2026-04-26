@@ -217,7 +217,7 @@ export function NewEmployeeWizard({
         <div className="min-w-0 flex-1">
           <div
             className="mb-1 text-[10px] font-mono uppercase tracking-[0.15em]"
-            style={{ color: "var(--text-tertiary)" }}
+            style={{ color: "var(--fg-tertiary)" }}
           >
             {(STEPS as readonly (typeof STEPS)[number][])[step]!.kicker} / {STEPS.length}
           </div>
@@ -232,7 +232,7 @@ export function NewEmployeeWizard({
         <button
           onClick={onClose}
           className="shrink-0 rounded-full p-2 transition-colors hover:bg-surface-deep"
-          style={{ color: "var(--text-secondary)" }}
+          style={{ color: "var(--fg-secondary)" }}
           aria-label="Sluiten"
         >
           <X size={18} />
@@ -260,7 +260,7 @@ export function NewEmployeeWizard({
           >
             {(STEPS as readonly (typeof STEPS)[number][])[step]!.title}
           </h3>
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-sm" style={{ color: "var(--fg-secondary)" }}>
             {(STEPS as readonly (typeof STEPS)[number][])[step]!.sub}
           </p>
         </div>
@@ -309,7 +309,7 @@ export function NewEmployeeWizard({
       >
         <div
           className="flex items-center gap-3 text-xs"
-          style={{ color: "var(--text-tertiary)" }}
+          style={{ color: "var(--fg-tertiary)" }}
         >
           <KbdHint k="Esc" label="Sluit" />
           <KbdHint
@@ -323,7 +323,7 @@ export function NewEmployeeWizard({
               type="button"
               onClick={goPrev}
               className="rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-deep"
-              style={{ color: "var(--text-secondary)" }}
+              style={{ color: "var(--fg-secondary)" }}
             >
               ← Terug
             </button>

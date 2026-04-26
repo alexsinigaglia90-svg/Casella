@@ -32,8 +32,8 @@ export function SuccessPanel({ form, onClose, onReset }: SuccessPanelProps) {
         >
           Uitnodiging <em>onderweg</em>
         </h2>
-        <p className="max-w-sm text-sm" style={{ color: "var(--text-secondary)" }}>
-          <strong style={{ color: "var(--text-primary)" }}>
+        <p className="max-w-sm text-sm" style={{ color: "var(--fg-secondary)" }}>
+          <strong style={{ color: "var(--fg-primary)" }}>
             {form.firstName} {form.lastName}
           </strong>{" "}
           ontvangt op{" "}
@@ -45,7 +45,7 @@ export function SuccessPanel({ form, onClose, onReset }: SuccessPanelProps) {
         <button
           onClick={onClose}
           className="rounded-lg px-5 py-2.5 text-sm font-medium transition-colors hover:bg-surface-deep"
-          style={{ color: "var(--text-secondary)" }}
+          style={{ color: "var(--fg-secondary)" }}
         >
           Terug naar lijst
         </button>
