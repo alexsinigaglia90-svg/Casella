@@ -4,6 +4,12 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    zod:
+      specifier: ^3.25.76
+      version: 3.25.76
+
 importers:
 
   .:
@@ -111,7 +117,7 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0
       zod:
-        specifier: ^3.25.76
+        specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
       '@playwright/test':
@@ -239,7 +245,7 @@ importers:
   packages/types:
     dependencies:
       zod:
-        specifier: ^3.23.0
+        specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
       typescript:

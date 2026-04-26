@@ -41,7 +41,7 @@
     "react-hotkeys-hook": "^5.2.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
-    "zod": "^3.25.76"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",
