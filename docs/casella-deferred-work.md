@@ -100,6 +100,19 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: `pnpm test` is red locally. CI is unaffected today because root `pnpm test` may not gate on this currently — verify CI behavior before next test step is added.
 - **Status**: done in commit `c34ee7c` — `apps/web/vitest.config.ts` excludes `e2e/**`, `node_modules/**`, `.next/**`. `pnpm -r test` green.
 
+### TD-1-FOLLOWUPS — Code-review nits from T8 (low-priority polish)
+- **Category**: Tech-debt
+- **Discovered during**: Plan 1.1b Task 8 (TD-1) code-quality review (commit `a350297`).
+- **Why deferred**: All three are NIT/LOW severity per reviewer. T8 verdict was APPROVE; nits are polish, not correctness.
+- **Pickup trigger**: Next time touching the affected files, OR a dedicated polish-pass before 1.1b PR open.
+- **Estimated cost**: ~15 min total.
+- **Items**:
+  1. **`apps/web/components/theme/theme-toggle.tsx:65`** — replace `tabIndex={-1}` on radiogroup container with per-line `// eslint-disable-next-line jsx-a11y/interactive-supports-focus -- WAI-ARIA APG: radiogroup is composite role; roving tabindex on children handles focus`. Update Playwright spec to focus the active radio child instead of the container. WAI-ARIA APG explicitly says the radiogroup container is non-focusable.
+  2. **`apps/web/features/employees/list/employees-list-shell.tsx`** — add a `TODO(plan-1.2)` comment near `_nextCursor` documenting that cursor-based pagination is not yet wired to the shell UI (carry-over from 1.1a). Prevents the rename from looking like dead code.
+  3. **`apps/web/eslint.config.mjs`** — add `out/**` to ignores defensively (in case a future task adds Next.js static export).
+- **Impact if skipped**: Cosmetic only. No functional break.
+- **Status**: open
+
 ### TD-2 — Test coverage for `apps/web` UI + API routes
 - **Category**: Test-coverage
 - **Deferred from**: Plan 1.1a (scope decision — smoke test in Task 31 only)
