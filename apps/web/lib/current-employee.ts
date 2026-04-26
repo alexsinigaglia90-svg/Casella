@@ -1,5 +1,6 @@
-import { cache } from "react";
 import { eq, getDb, schema } from "@casella/db";
+import { cache } from "react";
+
 import { getCurrentUser } from "./current-user";
 
 export const getCurrentEmployee = cache(async () => {

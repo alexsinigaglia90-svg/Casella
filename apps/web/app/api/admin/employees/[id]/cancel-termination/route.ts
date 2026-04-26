@@ -1,8 +1,9 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { getCurrentUser } from "@/lib/current-user";
 import { getDb, schema, auditMutation, eq } from "@casella/db";
-import { revalidatePath } from "next/cache";
 import { apiError } from "@casella/types";
+import { revalidatePath } from "next/cache";
+import { NextResponse, type NextRequest } from "next/server";
+
+import { getCurrentUser } from "@/lib/current-user";
 
 export const dynamic = "force-dynamic";
 

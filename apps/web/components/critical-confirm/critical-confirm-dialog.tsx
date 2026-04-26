@@ -1,11 +1,12 @@
 "use client";
 
+import { AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
+
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { AlertTriangle } from "lucide-react";
 
 export interface CriticalConfirmDialogProps {
   open: boolean;
@@ -86,6 +87,7 @@ export function CriticalConfirmDialog({
         </section>
 
         <div className="mt-4 grid grid-cols-2 gap-4">
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control -- Input is a wrapped Radix/shadcn primitive; control is nested inside the label which is a valid a11y pattern that the rule's heuristic does not detect */}
           <label className="space-y-1.5">
             <span className="text-xs font-medium">Uitvoeren op</span>
             <Input
@@ -103,6 +105,7 @@ export function CriticalConfirmDialog({
           )}
         </div>
 
+        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control -- Input is a wrapped primitive; control is nested inside label (valid pattern, rule heuristic limitation) */}
         <label className="mt-4 block space-y-1.5">
           <span className="text-xs font-medium">
             Typ <code className="font-mono text-aurora-rose">{confirmPhrase}</code> om te bevestigen

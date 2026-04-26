@@ -1,9 +1,10 @@
 "use client";
 
 import { Check } from "lucide-react";
+
 import { STEPS } from "../types";
-import { isStepValid } from "../validation";
 import type { CreateEmployeeFormValues } from "../types";
+import { isStepValid } from "../validation";
 
 interface StepperProps {
   step: number;

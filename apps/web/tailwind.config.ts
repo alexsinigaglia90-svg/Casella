@@ -1,8 +1,8 @@
+import { motion, glowLight } from "@casella/design-tokens";
 import type { Config } from "tailwindcss";
 // Tokens are imported as TS source-of-truth. CSS-vars in :root/.dark are
 // generated from the same package by scripts/generate-css-vars.ts (run via
 // `pnpm prebuild` and asserted by CI via `pnpm tokens:check`).
-import { motion, glowLight } from "@casella/design-tokens";
 
 const config: Config = {
   darkMode: ["class"],
@@ -149,6 +149,7 @@ const config: Config = {
       },
     },
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- tailwind config is loaded by Tailwind CLI which expects CJS-style require for plugins
   plugins: [require("tailwindcss-animate")],
 };
 

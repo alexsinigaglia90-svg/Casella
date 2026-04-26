@@ -1,4 +1,5 @@
 import { NextResponse, type NextMiddleware } from "next/server";
+
 import { auth } from "@/auth";
 import { THEME_COOKIE } from "@/lib/theme-cookie-shared";
 

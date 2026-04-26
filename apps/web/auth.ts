@@ -1,5 +1,5 @@
-import NextAuth, { type NextAuthResult } from "next-auth";
 import { buildAuthConfig } from "@casella/auth";
+import NextAuth, { type NextAuthResult } from "next-auth";
 
 const result: NextAuthResult = NextAuth(buildAuthConfig());
 

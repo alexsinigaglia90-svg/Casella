@@ -1,26 +1,26 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, Dispatch, SetStateAction } from "react";
-import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
-import { toast } from "sonner";
-import type { AddressInput as AddressInputValue } from "@casella/types";
 import type { PdokAddress } from "@casella/maps";
+import type { AddressInput as AddressInputValue } from "@casella/types";
+import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useMemo, useEffect, useRef, Dispatch, SetStateAction } from "react";
+import { toast } from "sonner";
 
-import { STEPS, emptyForm } from "./types";
-import type { CreateEmployeeFormValues } from "./types";
-import { validateStep, isStepValid } from "./validation";
-import { deriveFirstFromEmail, deriveLastFromEmail } from "./helpers/derive-name";
 
-import { Stepper } from "./components/stepper";
 import { KbdHint } from "./components/kbd-hint";
 import { PrimaryButton } from "./components/primary-button";
 import { Spinner } from "./components/spinner";
+import { Stepper } from "./components/stepper";
 import { SuccessPanel } from "./components/success-panel";
-import { StepWie } from "./steps/step-wie";
+import { deriveFirstFromEmail, deriveLastFromEmail } from "./helpers/derive-name";
 import { StepDienstverband } from "./steps/step-dienstverband";
-import { StepVergoeding } from "./steps/step-vergoeding";
 import { StepUitnodigen } from "./steps/step-uitnodigen";
+import { StepVergoeding } from "./steps/step-vergoeding";
+import { StepWie } from "./steps/step-wie";
+import type { CreateEmployeeFormValues } from "./types";
+import { STEPS, emptyForm } from "./types";
+import { validateStep, isStepValid } from "./validation";
 
 function toAddressInput(addr: PdokAddress | null): AddressInputValue | null {
   if (!addr) return null;

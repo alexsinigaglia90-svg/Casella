@@ -1,8 +1,10 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { PrimaryButton } from "./primary-button";
+
 import type { CreateEmployeeFormValues } from "../types";
+
+import { PrimaryButton } from "./primary-button";
 
 interface SuccessPanelProps {
   form: CreateEmployeeFormValues;

@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
-import { auth } from "@/auth";
 import { getDb, schema, eq } from "@casella/db";
-import { z } from "zod";
 import { apiError } from "@casella/types";
+import { NextResponse } from "next/server";
+import { z } from "zod";
+
+import { auth } from "@/auth";
 
 const bodySchema = z.object({
   theme: z.enum(["light", "dark", "system"]),

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import type { PdokAddress, PdokSuggestion } from "@casella/maps";
+import type { ApiError } from "@casella/types";
 import {
   Command,
   CommandEmpty,
@@ -10,11 +11,13 @@ import {
   CommandList,
 } from "cmdk";
 import { MapPin } from "lucide-react";
-import { cn } from "@/lib/utils";
-import type { PdokAddress, PdokSuggestion } from "@casella/maps";
-import type { ApiError } from "@casella/types";
-import { mapAddressError } from "@/features/address-input/error-mapper";
+import { useEffect, useRef, useState } from "react";
+
+
 import { useDebounce } from "./use-debounce";
+
+import { mapAddressError } from "@/features/address-input/error-mapper";
+import { cn } from "@/lib/utils";
 
 interface Props {
   value: PdokAddress | null;

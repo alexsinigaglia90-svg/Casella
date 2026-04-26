@@ -1,8 +1,9 @@
 "use client";
 import { Sun, Moon, Monitor } from "lucide-react";
+import { useCallback } from "react";
+
 import { useTheme } from "@/lib/use-theme";
 import { cn } from "@/lib/utils";
-import { useCallback } from "react";
 
 const OPTIONS = [
   { value: "light" as const, label: "Licht", icon: Sun },
@@ -61,6 +62,7 @@ export function ThemeToggle() {
       aria-label="Thema"
       className="flex gap-1 rounded-lg bg-surface-deep p-1"
       onKeyDown={handleKeyDown}
+      tabIndex={-1}
     >
       {OPTIONS.map((opt) => {
         const active = theme === opt.value;

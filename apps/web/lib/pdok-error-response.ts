@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import { PdokError } from "@casella/maps";
 import { apiError } from "@casella/types";
+import { NextResponse } from "next/server";
 
 export function pdokErrorResponse(err: unknown): NextResponse {
   if (err instanceof PdokError) {

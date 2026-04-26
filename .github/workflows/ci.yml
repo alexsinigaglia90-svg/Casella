@@ -54,6 +54,9 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      - name: Lint
+        run: pnpm -F @casella/web lint
+
       - name: Apply Drizzle migrations
         run: pnpm db:migrate
 

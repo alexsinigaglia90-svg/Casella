@@ -1,9 +1,11 @@
 "use client";
 
 import { Car, Train, X, MapPin } from "lucide-react";
+
 import { FieldWrap } from "../components/field-wrap";
-import { AddressInput } from "@/components/address-input/address-input";
 import type { CreateEmployeeFormValues, CompensationType } from "../types";
+
+import { AddressInput } from "@/components/address-input/address-input";
 
 interface StepVergoedingProps {
   form: CreateEmployeeFormValues;

@@ -1,8 +1,9 @@
-import { redirect } from "next/navigation";
 import type { Route } from "next";
-import { getCurrentUser } from "@/lib/current-user";
-import { getCurrentEmployee } from "@/lib/current-employee";
+import { redirect } from "next/navigation";
+
 import { Sidebar } from "@/components/shell/sidebar";
+import { getCurrentEmployee } from "@/lib/current-employee";
+import { getCurrentUser } from "@/lib/current-user";
 
 const ONBOARDING_PENDING_ROUTE = "/onboarding-pending" as Route;
 

@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+
 import { LIST_PREFS_COOKIE, DEFAULT_LIST_PREFS, type ListPrefs, type ColumnPrefs, type Density, type StatusVariant } from "./list-prefs-cookie-shared";
 
 const VALID_DENSITY = new Set<Density>(["compact", "comfortable", "spacious"]);

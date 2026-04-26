@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
 import { Sparkles, AlertCircle } from "lucide-react";
+import { useState, type ReactNode } from "react";
 
 interface FieldWrapProps {
   label: string;

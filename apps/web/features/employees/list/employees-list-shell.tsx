@@ -1,17 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import Link from "next/link";
-import type { Route } from "next";
 import { Download, Plus, Search, ArrowUp, ArrowDown, MoreHorizontal } from "lucide-react";
+import type { Route } from "next";
+import Link from "next/link";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
+
+import { ListTweaksDock } from "./list-tweaks-dock";
+
+import type { EmployeeListRow, EmployeeStatusCounts } from "@/app/(admin)/admin/medewerkers/queries";
 import { EmployeeAvatar } from "@/components/employees/employee-avatar";
 import { EmploymentBadge } from "@/components/employees/employment-badge";
-import { ListTweaksDock } from "./list-tweaks-dock";
-import { useListPrefs } from "@/lib/use-list-prefs";
-import type { EmployeeListRow, EmployeeStatusCounts } from "@/app/(admin)/admin/medewerkers/queries";
 import type { ListPrefs } from "@/lib/list-prefs-cookie-shared";
+import { useListPrefs } from "@/lib/use-list-prefs";
 
 const NL_MONTHS = ["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"];
 
@@ -44,7 +46,7 @@ interface EmployeesListShellProps {
 export function EmployeesListShell({
   rows,
   counts,
-  nextCursor,
+  nextCursor: _nextCursor,
   currentQuery,
   currentStatus,
   currentSort,

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/current-user";
+
 import { getCurrentEmployee } from "@/lib/current-employee";
+import { getCurrentUser } from "@/lib/current-user";
 
 export default async function OnboardingPending() {
   const user = await getCurrentUser();

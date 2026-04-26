@@ -89,7 +89,16 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: Plan 1.1b, task 1.
 - **Estimated cost**: 2–3 hours (flat config for Next 15 + React 19 + TypeScript + monorepo; wire CI step; fix any violations).
 - **Impact if skipped**: No linting at all. Style drift, bug-prone patterns slip through, accessibility misses (jsx-a11y).
-- **Status**: open — Plan 1.1b task TBD
+- **Status**: done — Plan 1.1b Task 8, see Done section
+
+### TD-1-FOLLOWUP — Vitest collects e2e Playwright specs (pre-existing tooling drift)
+- **Category**: Tech-debt (test tooling)
+- **Discovered during**: Plan 1.1b Task 8 (TD-1) verification — `pnpm test` in `apps/web` fails with "Playwright Test did not expect test.describe() to be called here" against 4 files in `e2e/`.
+- **Why deferred**: Pre-existing on HEAD `c305520`. Verified via `git stash` test on the unmodified branch — same 4 failures. Vitest config in `apps/web` has no `test.exclude` for `e2e/**`, so `vitest run` picks up Playwright specs and fails. Out of scope for T8 (lint setup).
+- **Pickup trigger**: Next test-related task, OR before relying on `pnpm test` as a green-bar gate locally.
+- **Estimated cost**: 10–15 min — add `apps/web/vitest.config.ts` with `test: { exclude: ['e2e/**', 'node_modules/**'] }` (or `include` whitelist for `**/*.test.{ts,tsx}` if any unit tests get added).
+- **Impact if skipped**: `pnpm test` is red locally. CI is unaffected today because root `pnpm test` may not gate on this currently — verify CI behavior before next test step is added.
+- **Status**: open
 
 ### TD-2 — Test coverage for `apps/web` UI + API routes
 - **Category**: Test-coverage
@@ -257,3 +266,8 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Status**: done, commit `4a99caf`
 - **Category**: Architecture (client/server boundary)
 - **Resolved**: 2026-04-23
+
+### DONE — Task 8 ESLint v9 flat config + CI gate (TD-1)
+- **Status**: done, see Plan 1.1b Task 8 commit
+- **Category**: Tech-debt
+- **Resolved**: 2026-04-27

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
+
 import { CriticalConfirmDialog } from "@/components/critical-confirm/critical-confirm-dialog";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 interface Props {
   employeeId: string;

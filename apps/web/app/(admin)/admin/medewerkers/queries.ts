@@ -1,4 +1,4 @@
-import { getDb, schema, and, asc, desc, eq, isNull, or, ilike, sql } from "@casella/db";
+import { getDb, schema, and, asc, desc, eq, or, ilike, sql } from "@casella/db";
 import type { EmploymentStatus } from "@casella/types";
 
 export interface EmployeeListRow {

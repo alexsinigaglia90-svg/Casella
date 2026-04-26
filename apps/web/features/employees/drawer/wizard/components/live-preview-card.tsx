@@ -1,8 +1,9 @@
 "use client";
 
 import { Mail, Phone, Calendar, Clock, Car, Train, MapPin, Sparkles } from "lucide-react";
-import type { CreateEmployeeFormValues } from "../types";
+
 import { formatDateNL } from "../helpers/format-date-nl";
+import type { CreateEmployeeFormValues } from "../types";
 
 interface LivePreviewCardProps {
   form: CreateEmployeeFormValues;

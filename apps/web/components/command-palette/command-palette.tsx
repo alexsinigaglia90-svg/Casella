@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Command } from "cmdk";
-import { useRouter } from "next/navigation";
-import type { Route } from "next";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Users, Briefcase, Folders, UserCheck, Plus, Settings } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import type { Route } from "next";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);

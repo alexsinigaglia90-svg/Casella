@@ -1,6 +1,8 @@
-import { Suspense } from "react";
-import { listEmployees, countEmployeesByStatus } from "./queries";
 import type { EmploymentStatus } from "@casella/types";
+import { Suspense } from "react";
+
+import { listEmployees, countEmployeesByStatus } from "./queries";
+
 import { EmployeeDrawer } from "@/features/employees/drawer/employee-drawer";
 import { EmployeesListShell } from "@/features/employees/list/employees-list-shell";
 import { readListPrefs } from "@/lib/list-prefs-cookie";

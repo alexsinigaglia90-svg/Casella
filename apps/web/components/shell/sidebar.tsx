@@ -1,15 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import type { Route } from "next";
-import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import { Users, Briefcase, Folders, UserCheck, Home, FileText, Clock, Calendar, Wallet } from "lucide-react";
+import type { Route } from "next";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import { Brand } from "./brand";
 import { EnvBadge } from "./env-badge";
+
 import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { cn } from "@/lib/utils";
 import type { CurrentUser } from "@/lib/current-user";
+import { cn } from "@/lib/utils";
 
 interface NavLink {
   href: Route;

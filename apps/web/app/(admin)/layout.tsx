@@ -1,7 +1,8 @@
-import { redirect } from "next/navigation";
 import type { Route } from "next";
-import { getCurrentUser } from "@/lib/current-user";
+import { redirect } from "next/navigation";
+
 import { Sidebar } from "@/components/shell/sidebar";
+import { getCurrentUser } from "@/lib/current-user";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
