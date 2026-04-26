@@ -207,6 +207,22 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: Users can't hide irrelevant columns. Acceptable for admin-only alpha; would degrade UX if list grows to 100+ employees.
 - **Status**: open
 
+### ML-1-FOLLOWUPS — Polish items uit code-review van Plan 1.1b Task 2
+- **Category**: Tech-debt + UX-polish
+- **Deferred from**: Plan 1.1b Task 2 code-quality review (2026-04-26)
+- **Why deferred**: Niet-blokkerende nits gevonden tijdens code-review van ML-1 tokens-lift. Geen visuele of correctness-impact in 1.1b runtime. Gebundeld als één entry voor efficiency.
+- **Pickup trigger**: Voor 1.1c start (foundation-hardening sweep) OR bij eerstvolgende design-tokens wijziging.
+- **Estimated cost**: ~2 uur totaal — alle 6 items zijn klein.
+- **Items**:
+  1. **HIGH** — `pnpm tokens:check` schrijft naar `globals.css` als drift-check; CI runt dit voor typecheck en kan dirty tree achterlaten. Voorstel: voeg `--check-only` mode toe aan `scripts/generate-css-vars.ts` die zonder write de gegenereerde output vergelijkt met file-content en exit 1 op verschil. Vermijdt filesystem-writes in CI volledig.
+  2. **MEDIUM** — `paletteHex.ink.{a68,a45,a22,a10}` bevatten rgba-strings ondanks naam "paletteHex". Ofwel object hernoemen naar `palette` (mixed format), ofwel opacity-varianten in een aparte structuur splitten. Naming-concern voor RN consumers.
+  3. **MEDIUM** — `tailwind.config.ts:137` `status-pulse` keyframe `50%` gebruikt hardcoded `rgba(61, 216, 168, 0)` terwijl `0%/100%` `glowLight.teal` gebruikt. Risico op drift als teal-kleur verandert. Voorstel: extract `aurora.teal` rgba-componenten in helper of in design-tokens package.
+  4. **LOW** — `apps/web/package.json:18` gebruikt `workspace:^` voor `@casella/design-tokens`; alle andere workspace-deps gebruiken `workspace:*`. Inconsistent maar functioneel identiek in pnpm. Wijzig naar `workspace:*`.
+  5. **LOW** — `packages/design-tokens/` heeft geen README. Documenteer: doel van pakket, hoe tokens toevoegen, generation-workflow, CI gate.
+  6. **LOW** — CI step ordering: `Tokens drift check` staat VOOR `Typecheck`. Plan vroeg om "after". Mode-functioneel identiek — beide gates moeten passeren — maar plan-intent matchen geeft schonere telemetry. Verplaats step na typecheck.
+- **Impact if skipped**: Gemak / consistency-issues bij latere wijzigingen; geen runtime-impact.
+- **Status**: open
+
 ---
 
 ## Done (audit trail)
