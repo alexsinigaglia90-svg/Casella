@@ -207,6 +207,17 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: Users can't hide irrelevant columns. Acceptable for admin-only alpha; would degrade UX if list grows to 100+ employees.
 - **Status**: open
 
+### ML-5-FOLLOWUPS — Polish items uit spec-review van Plan 1.1b Task 6
+- **Category**: Tech-debt
+- **Deferred from**: Plan 1.1b Task 6 spec-review (2026-04-26)
+- **Why deferred**: Niet-blokkerende cosmetische nits in `feat(auth): bootstrap theme cookie from DB on first login` (commit `6d150ed`). Geen runtime-impact.
+- **Pickup trigger**: Voor 1.1c start OR bij next-edit van auth package.
+- **Estimated cost**: ~15 min totaal.
+- **Items**:
+  1. `packages/auth/package.json:19-21` — `next` as peerDependency added but no file in `packages/auth` imports anything from `next/*` (speculative). Remove dead metadata. Web app already provides `next` transitively.
+  2. `packages/auth/src/config.ts` — `readThemeFromDb` returns `'system'` value verbatim; the no-op decision is enforced downstream in middleware (`themePref !== "system"`) instead of at source. Slightly bloats JWT token payload. Move guard into helper for cleaner separation of concerns.
+- **Status**: open
+
 ### ML-1-FOLLOWUPS — Polish items uit code-review van Plan 1.1b Task 2
 - **Category**: Tech-debt + UX-polish
 - **Deferred from**: Plan 1.1b Task 2 code-quality review (2026-04-26)
