@@ -49,8 +49,8 @@ export function TerminateButton({
               body: JSON.stringify({ id: employeeId, pendingTerminationAt: scheduledAt, reason, confirmText: displayName }),
             });
             if (!res.ok) {
-              const body = (await res.json().catch(() => ({}))) as { error?: string };
-              throw new Error(body.error ?? `HTTP ${res.status}`);
+              const body = (await res.json().catch(() => ({}))) as { message?: string };
+              throw new Error(body.message ?? `HTTP ${res.status}`);
             }
             toast.success(`Beëindiging ingepland voor ${scheduledAt}`);
           } catch (e) {
