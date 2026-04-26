@@ -187,7 +187,7 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: Plan 1.1b (alongside Clients/Projects CRUDs which will likely also need manager pickers).
 - **Estimated cost**: ~1.5 hour — define managers query in `apps/web/lib/employees/managers.ts`, server-fetch in the wizard or pass down from the page, replace the 3 SelectItems with a mapped list, send the real UUID as `managerId` in the POST body, drop the TODO comments.
 - **Impact if skipped**: Admin can't actually pick a manager during create — has to edit the employee later (and edit-mode is also deferred to 1.1b). Combined: no manager assignment in 1.1a at all.
-- **Status**: open — TODO comments in `apps/web/features/employees/drawer/wizard/steps/step-dienstverband.tsx` mark the spot
+- **Status**: abandoned (Plan 1.1b T10 / B-3 scope decision — no manager-role UI in 1.1b; manager-select removed from wizard. `managerId` blijft optional in `createEmployeeSchema` als hidden API surface voor mobile/Nmbrs sync. Real picker komt mogelijk in Fase 1.1c CRUDs.)
 
 ### DD-3 — Consider `role="group"` + keyboard arrow-nav on ThemeToggle (radiogroup polish)
 - **Category**: UX-polish

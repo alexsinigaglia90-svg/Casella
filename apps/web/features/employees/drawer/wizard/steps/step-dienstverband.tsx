@@ -5,8 +5,6 @@ import { Calendar, Clock } from "lucide-react";
 import { FieldWrap } from "../components/field-wrap";
 import type { CreateEmployeeFormValues } from "../types";
 
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-
 interface StepDienstverbandProps {
   form: CreateEmployeeFormValues;
   update: (patch: Partial<CreateEmployeeFormValues>) => void;
@@ -93,28 +91,6 @@ export function StepDienstverband({
         </div>
       </FieldWrap>
 
-      <FieldWrap
-        label="Manager"
-        hint="Optioneel — wie is hun aanspreekpunt?"
-        htmlFor="emp-manager"
-        className="md:col-span-2"
-      >
-        {/* TODO 1.1b: replace dummy manager options with real admin-users query + send managerId UUID */}
-        <Select value={form.manager} onValueChange={(v) => update({ manager: v })}>
-          <SelectTrigger
-            id="emp-manager"
-            className="w-full bg-transparent border-0 outline-none focus:ring-0 px-0"
-            style={{ color: form.manager ? "var(--fg-primary)" : "var(--fg-tertiary)" }}
-          >
-            <SelectValue placeholder="— Kies iemand —" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="esmee">Esmée van der Velden</SelectItem>
-            <SelectItem value="sanne">Sanne Bakker</SelectItem>
-            <SelectItem value="maarten">Maarten de Groot</SelectItem>
-          </SelectContent>
-        </Select>
-      </FieldWrap>
     </div>
   );
 }

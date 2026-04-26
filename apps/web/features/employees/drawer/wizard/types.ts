@@ -12,7 +12,6 @@ export interface CreateEmployeeFormValues {
   // Step 2 — Werk
   startDate: string; // YYYY-MM-DD
   contractedHours: number; // mapped to contractedHoursPerWeek on submit
-  manager: string; // dummy local-only (1.1b)
   // Step 3 — Reis
   compensationType: CompensationType;
   kmRateCents: number; // mapped to defaultKmRateCents on submit
@@ -31,7 +30,6 @@ export function emptyForm(): CreateEmployeeFormValues {
     jobTitle: "",
     startDate: "",
     contractedHours: 40,
-    manager: "",
     compensationType: "auto",
     kmRateCents: 23,
     address: null,

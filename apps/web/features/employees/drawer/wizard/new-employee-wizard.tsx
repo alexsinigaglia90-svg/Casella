@@ -159,7 +159,6 @@ export function NewEmployeeWizard({
           emergencyContactPhone: form.emergencyPhone || undefined,
           notes: form.notes || undefined,
           nmbrsEmployeeId: undefined,
-          managerId: undefined, // TODO 1.1b: replace dummy manager with real UUID
         }),
       });
       if (!res.ok) {
