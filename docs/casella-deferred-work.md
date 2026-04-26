@@ -98,7 +98,7 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: Next test-related task, OR before relying on `pnpm test` as a green-bar gate locally.
 - **Estimated cost**: 10–15 min — add `apps/web/vitest.config.ts` with `test: { exclude: ['e2e/**', 'node_modules/**'] }` (or `include` whitelist for `**/*.test.{ts,tsx}` if any unit tests get added).
 - **Impact if skipped**: `pnpm test` is red locally. CI is unaffected today because root `pnpm test` may not gate on this currently — verify CI behavior before next test step is added.
-- **Status**: open
+- **Status**: done in commit `c34ee7c` — `apps/web/vitest.config.ts` excludes `e2e/**`, `node_modules/**`, `.next/**`. `pnpm -r test` green.
 
 ### TD-2 — Test coverage for `apps/web` UI + API routes
 - **Category**: Test-coverage
