@@ -41,10 +41,10 @@ export function ThemeToggle() {
         e.preventDefault();
         const nextTheme = OPTIONS[nextIdx]?.value;
         if (nextTheme) {
+          const root = e.currentTarget;
           setTheme(nextTheme);
-          // Focus the button after state updates
           setTimeout(() => {
-            const btn = e.currentTarget?.querySelector<HTMLButtonElement>(
+            const btn = root.querySelector<HTMLButtonElement>(
               `[data-theme-value="${nextTheme}"]`
             );
             btn?.focus();
