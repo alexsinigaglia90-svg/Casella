@@ -5,6 +5,7 @@ import { listEmployees, countEmployeesByStatus } from "./queries";
 
 import { EmployeeDrawer } from "@/features/employees/drawer/employee-drawer";
 import { EmployeesListShell } from "@/features/employees/list/employees-list-shell";
+import { MedewerkersCrumbs } from "@/features/employees/list/medewerkers-crumbs";
 import { readListPrefs } from "@/lib/list-prefs-cookie";
 
 const VALID_STATUS = new Set(["active", "on_leave", "sick", "terminated", "all"]);
@@ -41,6 +42,7 @@ export default async function MedewerkersPage({
 
   return (
     <>
+      <MedewerkersCrumbs />
       <EmployeesListShell
         rows={rows}
         counts={counts}

@@ -1,6 +1,8 @@
 // apps/web/app/(admin)/admin/medewerkers/pending/page.tsx
 import { getDb, sql } from "@casella/db";
 
+import { PendingCrumbs } from "@/features/employees/pending/pending-crumbs";
+
 interface PendingRow extends Record<string, unknown> {
   id: string;
   email: string;
@@ -23,6 +25,7 @@ export default async function PendingOnboardingPage() {
 
   return (
     <div className="space-y-6">
+      <PendingCrumbs />
       <header>
         <h1 className="font-display text-display">
           <em>Pending</em> onboarding
