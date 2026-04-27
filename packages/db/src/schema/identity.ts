@@ -31,6 +31,7 @@ export const users = pgTable("users", {
     .defaultNow()
     .$onUpdate(() => new Date()),
   disabledAt: timestamp("disabled_at", { withTimezone: true }),
+  lastSeenAuditAt: timestamp("last_seen_audit_at", { withTimezone: true }),
 });
 
 export const employees = pgTable("employees", {

@@ -29,6 +29,13 @@
       "when": 1776993031918,
       "tag": "0003_colorful_salo",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777279572941,
+      "tag": "0004_user_last_seen_audit_at",
+      "breakpoints": true
     }
   ]
 }
