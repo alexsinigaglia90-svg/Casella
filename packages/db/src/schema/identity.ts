@@ -5,12 +5,14 @@ import {
   timestamp,
   integer,
   date,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import {
   userRoleEnum,
   employmentStatusEnum,
   compensationTypeEnum,
   themePreferenceEnum,
+  languagePreferenceEnum,
 } from "./enums";
 import { addresses } from "./addresses";
 
@@ -64,6 +66,13 @@ export const employees = pgTable("employees", {
   pendingTerminationAt: date("pending_termination_at"),
   pendingTerminationReason: text("pending_termination_reason"),
   terminationUndoUntil: timestamp("termination_undo_until", { withTimezone: true }),
+  languagePreference: languagePreferenceEnum("language_preference").notNull().default("nl"),
+  bio: text("bio"),
+  avatarStoragePath: text("avatar_storage_path"),
+  emailNotificationPreferences: jsonb("email_notification_preferences")
+    .$type<Record<string, boolean>>()
+    .notNull()
+    .default({}),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()

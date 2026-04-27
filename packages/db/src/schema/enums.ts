@@ -77,3 +77,5 @@ export const themePreferenceEnum = pgEnum("theme_preference", [
   "dark",
   "system",
 ]);
+
+export const languagePreferenceEnum = pgEnum("language_preference", ["nl", "en"]);

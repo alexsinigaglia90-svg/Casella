@@ -5,6 +5,7 @@ import {
   timestamp,
   date,
   integer,
+  numeric,
 } from "drizzle-orm/pg-core";
 import { projectStatusEnum, compensationTypeEnum } from "./enums";
 import { addresses } from "./addresses";
@@ -40,6 +41,7 @@ export const projects = pgTable("projects", {
   startDate: date("start_date"),
   endDate: date("end_date"),
   status: projectStatusEnum("status").notNull().default("planned"),
+  hourlyRateExclBtw: numeric("hourly_rate_excl_btw", { precision: 8, scale: 2 }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
