@@ -16,21 +16,5 @@ export async function shouldSendEmail(
   return prefs[type] !== false;
 }
 
-export const DEFAULT_EMAIL_PREFS: Record<EmployeeNotificationType, boolean> = {
-  "leave.approved": true,
-  "leave.rejected": true,
-  "expense.approved": true,
-  "expense.rejected": true,
-  "hours.rejected": true,
-  "hours.approved": false,
-  "statement.ready": true,
-  "payslip.available": true,
-  "contract.uploaded": true,
-  "bonus.paid": true,
-  "address.change.approved": true,
-  "iban.change.approved": true,
-  "vacation.balance.low": true,
-  "hours.missing.reminder": true,
-  "vacation.unused.year-end": true,
-  "broadcast.general": true,
-};
+// Re-export for convenience — import from defaults.ts for client components
+export { DEFAULT_EMAIL_PREFS } from "./defaults";

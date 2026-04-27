@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { EMPLOYEE_NOTIFICATION_TYPES } from "@/lib/notifications/types";
-import { DEFAULT_EMAIL_PREFS } from "@/lib/notifications/preferences";
+import { DEFAULT_EMAIL_PREFS } from "@/lib/notifications/defaults";
 
 const TYPE_LABELS: Record<string, string> = {
   "leave.approved": "Verlof goedgekeurd",

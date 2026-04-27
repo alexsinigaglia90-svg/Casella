@@ -388,6 +388,36 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: Tips werken, maar geen overview/retrospective voor de user.
 - **Status**: open
 
+### IBAN-STORAGE-AND-NMBRS-PUSH
+- **Title**: IBAN opslaan op employees + Nmbrs IBAN-push na change-request goedkeuring
+- **Category**: Tech-debt / Mobile-alignment
+- **Deferred from**: Plan 1.6 Task 25 (Chapter E) — 2026-04-28
+- **Why deferred**: Casella heeft geen `iban`-kolom op `employees`; Nmbrs-SOAP heeft wel een IBAN-push endpoint maar die is niet geïmplementeerd in 1.3. Change-request-flow is klaar (admin kan goedkeuren), maar het iban wordt nergens opgeslagen of doorgezet.
+- **Pickup trigger**: Start van Fase 2 Nmbrs-koppeling volronde, OF zodra een admin vraagt om IBAN-zichtbaarheid in admin-profiel.
+- **Estimated cost**: 2-4 uur (schema-migratie + nmbrs SOAP call + admin-display).
+- **Impact if skipped**: IBAN-wijzigingsverzoeken kunnen worden goedgekeurd maar het iban wordt niet persisteerd of naar Nmbrs gestuurd. Admin moet handmatig in Nmbrs bijwerken.
+- **Status**: open
+
+### DASHBOARD-RECENT-PAYSLIPS-WIRING
+- **Title**: Dashboard recente loonstroken wiring via Nmbrs SOAP
+- **Category**: Tech-debt
+- **Deferred from**: Plan 1.6 Task 27 (Chapter E) — 2026-04-28
+- **Why deferred**: `getEmployeePayslips` is gestubbed (not_implemented). Wachten op Nmbrs productie-credentials en SOAP-implementatie uit Chapter C.
+- **Pickup trigger**: Nmbrs productie-credentials beschikbaar EN `NMBRS-PAYSLIP-SOAP-IMPL` afgerond.
+- **Estimated cost**: 1 uur (wiring, dashboard toont al de empty-state).
+- **Impact if skipped**: Dashboard toont empty-state voor loonstroken — correct gedrag totdat Nmbrs live is.
+- **Status**: open
+
+### DASHBOARD-SPARKLINES
+- **Title**: Mini-sparklines op saldo-cards in dashboard
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.6 Task 27 (Chapter E) — 2026-04-28
+- **Why deferred**: Nog geen historische saldo-data beschikbaar (alleen huidige snapshot). Sparklines vereisen time-series data.
+- **Pickup trigger**: Na 3+ maanden `leave_balance_snapshots` accumulation, OF als Alex expliciete vraag stelt.
+- **Estimated cost**: 3-4 uur (chart-lib, data-aggregatie, responsive design).
+- **Impact if skipped**: Saldo-cards zijn statisch — functioneel correct, minder inzichtelijk.
+- **Status**: open
+
 ---
 
 ## Done (audit trail)
