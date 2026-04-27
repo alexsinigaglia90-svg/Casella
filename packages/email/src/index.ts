@@ -6,3 +6,9 @@ export {
   type SkeletonInput,
   type SkeletonOutput,
 } from "./templates/_skeleton";
+export {
+  leaveSubmittedAdminEmail,
+  leaveDecidedEmployeeEmail,
+  type LeaveSubmittedAdminInput,
+  type LeaveDecidedEmployeeInput,
+} from "./templates/leave-status";
