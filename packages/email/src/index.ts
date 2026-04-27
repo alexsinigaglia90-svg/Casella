@@ -12,3 +12,7 @@ export {
   type LeaveSubmittedAdminInput,
   type LeaveDecidedEmployeeInput,
 } from "./templates/leave-status";
+export {
+  sickSubmittedAdminEmail,
+  type SickSubmittedAdminInput,
+} from "./templates/sick";
