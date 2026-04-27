@@ -113,6 +113,21 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: Cosmetic only. No functional break.
 - **Status**: open
 
+### B-1-FOLLOWUPS — Code-review nits from T11 (EmployeeWizard mode-aware)
+- **Category**: Mixed (UX + TS + Product + Test)
+- **Discovered during**: Plan 1.1b Task 11 (B-1) full-pad review (commit `70588f3`).
+- **Why deferred**: T11 verdict was APPROVE-WITH-NITS; geen blocker, geen high. 5 polish-items waarvan 2 MEDIUM (UX + product), 3 LOW (TS + test).
+- **Pickup trigger**: B-1-FOLLOWUP-1 zodra opnieuw aan stepper wordt gewerkt; B-1-FOLLOWUP-3 bij eerste user-feedback over invite-email confusion; rest bij polish-pass voor 1.1b PR open.
+- **Estimated cost**: ~1.5h totaal.
+- **Items**:
+  1. **[UX/MEDIUM] `apps/web/features/employees/drawer/wizard/components/stepper.tsx:18`** — Stepper-pill leest "Stuur" in zowel create als edit-mode; in edit-mode toont header al "Wijzigingen — Controleer voor opslaan" via `EDIT_STEPS`. Refactor: `<Stepper>` accepteert een `steps?: typeof STEPS` prop; `EditWizard` geeft `EDIT_STEPS` mee. ~15 regels.
+  2. **[TS/LOW] `apps/web/app/api/admin/employees/[id]/route.ts:38`** — `addr.country as "NL"` cast. Tighten zodra non-NL-adressen daadwerkelijk in scope komen (BE/DE cross-border). Voor nu pragmatic; runtime-check (`addr.country === "NL" ? "NL" : ...`) als alternatief.
+  3. **[Product/MEDIUM]** Beslissen of `inviteEmail` UI-read-only moet worden in edit-mode na eerste activatie (`userId !== null`). Huidig: editable. PATCH triggert geen re-invite, audit-trail dekt het, dus geen direct risico — alleen ambiguity in welke email "the invite" was. Beslissing kan via product-discussion of bij eerste user-feedback.
+  4. **[Test/LOW]** Unit-tests toevoegen voor `diffForm()` en `pdokAddressToAddressInput`/`addressInputToPdokAddress` round-trip in `apps/web/features/employees/drawer/wizard/helpers/employee-mapping.ts`. Pure functions, behavior-rich, niet covered.
+  5. **[Test/LOW]** Manual smoke voor T11 is overgeslagen door implementer; T12 e2e (`apps/web/e2e/edit-employee.spec.ts`) is de juiste plek voor full edit-flow coverage.
+- **Impact if skipped**: B-1-FOLLOWUP-1 = zichtbaar UX-mismatch. B-1-FOLLOWUP-3 = mogelijk product-confusion. Rest = polish + maintainability.
+- **Status**: open
+
 ### TD-2 — Test coverage for `apps/web` UI + API routes
 - **Category**: Test-coverage
 - **Deferred from**: Plan 1.1a (scope decision — smoke test in Task 31 only)
