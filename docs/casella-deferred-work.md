@@ -307,6 +307,24 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: Users kunnen 6+ pinnen maar zien alleen 5 in sidebar; rest accessible via palette `@` scope of detail-pages.
 - **Status**: open
 
+### PRESENCE-MULTI-USER-POLISH — Real-multi-user validation deferred to Fase 2
+- **Category**: UX-polish (also Fase 2 prep)
+- **Deferred from**: Plan 1.1b Task 32 (C-16, 2026-04-27)
+- **Why deferred**: Solo-admin context limits multi-user testing. Self-presence (2 tabs) werkt; cross-user gedrag heeft >1 admin nodig.
+- **Pickup trigger**: Wanneer Ascentra een 2e admin toevoegt OR Fase 2 (production) brings real concurrency.
+- **Estimated cost**: 1 dag testing + UX polish (presence-tooltips, "viewing-since" copy, channel scaling).
+- **Impact if skipped**: Infrastructure works; UX-polish deferred.
+- **Status**: open
+
+### T32-REALTIME — Wire Supabase Realtime channel for true push presence
+- **Category**: Tech-debt (also Mobile-alignment)
+- **Deferred from**: Plan 1.1b Task 32 (C-16, 2026-04-27) — pragmatic polling-only ship
+- **Why deferred**: @supabase/supabase-js niet geinstalleerd, NEXT_PUBLIC_SUPABASE_URL + ANON_KEY env-vars niet gezet, solo-admin context maakt 5s polling acceptabel. Realtime-pad blijft architecturaal (PresenceAvatarStack consumeert generic useEntityPresence — Realtime is een niet-zichtbare upgrade-pad in de hook).
+- **Pickup trigger**: Fase 2 productie-infra (Supabase prod URL + anon key in env) OR multi-admin in Ascentra.
+- **Estimated cost**: ~2 hours — install package, add env-validatie, wire Realtime channel met fallback-cleanup, smoke-test cross-tab presence.
+- **Impact if skipped**: 5s update-latency in plaats van real-time push. Echt-multi-admin presence-feel iets minder snappy maar functioneel correct.
+- **Status**: open
+
 ---
 
 ## Done (audit trail)

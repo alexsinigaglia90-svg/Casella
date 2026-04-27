@@ -13,6 +13,7 @@ import { CommandPill } from "@/features/admin-shell/command-pill/command-pill";
 import { ContextActions } from "@/features/admin-shell/context-actions/context-actions";
 import { TopBarActionsProvider } from "@/features/admin-shell/context-actions/context-actions-context";
 import { NotificationBell } from "@/features/admin-shell/notifications/notification-bell";
+import { PresenceAvatarStack } from "@/features/admin-shell/presence/presence-avatar-stack";
 import { QuickCreateProvider } from "@/features/admin-shell/quick-create/quick-create-context";
 import { ShortcutsDialog } from "@/features/admin-shell/shortcuts-overlay/shortcuts-dialog";
 import { ShortcutsOverlayProvider } from "@/features/admin-shell/shortcuts-overlay/use-shortcuts-overlay";
@@ -45,6 +46,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 rightSlot={
                   <>
                     <CommandPill />
+                    <PresenceAvatarStack currentUserId={user.id} />
                     <NotificationBell />
                     <EnvBadge />
                     <UserMenu displayName={user.displayName} email={user.email} />
