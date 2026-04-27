@@ -22,3 +22,7 @@ export {
 } from "./templates/expense";
 export { contractUploadedEmployeeEmail } from "./templates/contract";
 export { statementReadyEmployeeEmail } from "./templates/statement";
+export {
+  changeRequestSubmittedAdminEmail,
+  changeRequestDecidedEmployeeEmail,
+} from "./templates/profile";

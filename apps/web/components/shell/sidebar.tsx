@@ -20,6 +20,7 @@ import {
   User,
   Megaphone,
   ScrollText,
+  Inbox,
 } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
@@ -65,6 +66,7 @@ const ADMIN_LINKS: NavLink[] = [
   { href: "/admin/contracten" as Route, label: "Contracten", icon: ScrollText },
   { href: "/admin/bonus" as Route, label: "Bonus-beheer", icon: Trophy },
   { href: "/admin/broadcasts" as Route, label: "Berichten", icon: Megaphone },
+  { href: "/admin/change-requests" as Route, label: "Wijzigingsverzoeken", icon: Inbox },
   { href: "/admin/nmbrs" as Route, label: "Nmbrs sync", icon: Activity },
 ];
 
