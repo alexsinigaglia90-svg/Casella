@@ -1,4 +1,4 @@
-import { and, eq, getDb, schema } from "@casella/db";
+import { eq, getDb, schema } from "@casella/db";
 import { apiError } from "@casella/types";
 import { NextResponse, type NextRequest } from "next/server";
 
