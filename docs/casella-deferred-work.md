@@ -298,6 +298,15 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: Gemak / consistency-issues bij latere wijzigingen; geen runtime-impact.
 - **Status**: open
 
+### FAVORITES-FULL-VIEW — Sidebar shows top 5; full view deferred
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.1b Task 30 (C-14, 2026-04-27)
+- **Why deferred**: Sidebar fits 5 pinned entities cleanly; >5 needs een dedicated view (`/admin/favorieten` of vergelijkbaar).
+- **Pickup trigger**: Wanneer >5 pins regel wordt OR Fase 1.2 polish.
+- **Estimated cost**: ~2 hours.
+- **Impact if skipped**: Users kunnen 6+ pinnen maar zien alleen 5 in sidebar; rest accessible via palette `@` scope of detail-pages.
+- **Status**: open
+
 ---
 
 ## Done (audit trail)

@@ -1,11 +1,16 @@
 "use client";
 
-import { Copy, Link2, Pencil, Star, Trash } from "lucide-react";
+import { Copy, Link2, Pencil, Star, StarOff, Trash } from "lucide-react";
 import { toast } from "sonner";
 
 import { useTopBarActions } from "@/features/admin-shell/context-actions/use-top-bar-actions";
+import { usePinToggle } from "@/features/admin-shell/pins/use-pin-toggle";
 
-export function EmployeeDetailActions() {
+export function EmployeeDetailActions({ employeeId }: { employeeId: string }) {
+  const { isPinned, toggle } = usePinToggle("employee", employeeId);
+  const pinLabel = isPinned ? "Unpin" : "Pin";
+  const PinIcon = isPinned ? StarOff : Star;
+
   useTopBarActions([
     {
       kind: "primary",
@@ -24,9 +29,11 @@ export function EmployeeDetailActions() {
           onClick: () => toast.info("Dupliceren komt later"),
         },
         {
-          label: "Pin / Unpin",
-          icon: Star,
-          onClick: () => toast.info("Pinnen komt in C-14"),
+          label: pinLabel,
+          icon: PinIcon,
+          onClick: () => {
+            void toggle();
+          },
         },
         {
           label: "Kopieer link",
@@ -41,7 +48,9 @@ export function EmployeeDetailActions() {
           icon: Trash,
           destructive: true,
           onClick: () =>
-            toast.info("Open de drawer en gebruik 'Beëindig dienst' in de wizard."),
+            toast.info(
+              "Open de drawer en gebruik 'Beëindig dienst' in de wizard.",
+            ),
         },
       ],
     },

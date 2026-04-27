@@ -16,7 +16,7 @@ export default async function EmployeeDetailPage({
   return (
     <>
       <EmployeeDetailCrumbs id={employee.id} firstName={employee.firstName} lastName={employee.lastName} />
-      <EmployeeDetailActions />
+      <EmployeeDetailActions employeeId={employee.id} />
       <EmployeeDetailFallback employee={employee} />
     </>
   );

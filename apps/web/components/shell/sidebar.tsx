@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { Brand } from "./brand";
 
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { FavoritesSection } from "@/features/admin-shell/pins/favorites-section";
 import type { CurrentUser } from "@/lib/current-user";
 import { cn } from "@/lib/utils";
 
@@ -43,6 +44,8 @@ export function Sidebar({ user, mode }: { user: CurrentUser; mode: "employee" | 
       <div className="flex items-center p-4">
         <Brand />
       </div>
+
+      {mode === "admin" && <FavoritesSection />}
 
       <ul className="flex-1 space-y-0.5 px-3 py-2">
         {links.map((link) => {

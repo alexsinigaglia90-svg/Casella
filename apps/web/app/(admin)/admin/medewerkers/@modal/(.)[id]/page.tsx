@@ -16,7 +16,7 @@ export default async function InterceptedEmployeePage({
   return (
     <>
       <EmployeeDetailCrumbs id={employee.id} firstName={employee.firstName} lastName={employee.lastName} />
-      <EmployeeDetailActions />
+      <EmployeeDetailActions employeeId={employee.id} />
       <InterceptedEditDrawer employee={employee} />
     </>
   );

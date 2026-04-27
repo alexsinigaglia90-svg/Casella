@@ -95,3 +95,12 @@ CREATE POLICY documents_access ON documents
 CREATE POLICY notifications_access ON notifications
   USING (app_current_user_is_admin() OR user_id = app_current_user_id())
   WITH CHECK (app_current_user_is_admin() OR user_id = app_current_user_id());
+
+-- user_pins: each user only sees/manages their own pins (no admin override)
+ALTER TABLE user_pins ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS user_pins_access ON user_pins;
+
+CREATE POLICY user_pins_access ON user_pins
+  USING (user_id = app_current_user_id())
+  WITH CHECK (user_id = app_current_user_id());
