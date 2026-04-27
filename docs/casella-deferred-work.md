@@ -325,6 +325,15 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: 5s update-latency in plaats van real-time push. Echt-multi-admin presence-feel iets minder snappy maar functioneel correct.
 - **Status**: open
 
+### EXPENSES-RECEIPT-UPLOAD — Supabase Storage voor bonnetje-upload (Fase 2)
+- **Category**: Tech-debt (infrastructure)
+- **Deferred from**: Plan 1.6 Chapter C Task 16 (2026-04-27)
+- **Why deferred:** @supabase/supabase-js niet geinstalleerd; storage credentials wachten op prod-env. Per plan-discipline: geen nieuwe npm packages in Chapter C.
+- **Pickup trigger**: Vercel + Supabase prod-project geactiveerd en SUPABASE_SERVICE_ROLE_KEY beschikbaar.
+- **Estimated cost**: 1u (install + sign-url helper + wire-up bestaand stub-endpoint `/api/expenses/upload-url/route.ts`).
+- **Impact if skipped**: Receipt-upload werkt niet in prod; declaraties-flow vraagt om handmatige path-input (stub pad wordt ingevuld via plain text input in form).
+- **Status**: open
+
 ### COACHING-DASHBOARD — Consolidated "learnings" view in user-menu
 - **Category**: UX-polish
 - **Deferred from**: Plan 1.1b Task 29 (C-13, 2026-04-27)
