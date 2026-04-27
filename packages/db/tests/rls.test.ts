@@ -56,10 +56,10 @@ describe("RLS policies", () => {
     otherEmployeeId = otherEmp[0].id;
 
     await sql`
-      INSERT INTO leave_requests (employee_id, leave_type, start_date, end_date)
+      INSERT INTO leave_requests (employee_id, leave_type, type, hours, start_date, end_date)
       VALUES
-        (${employeeEmployeeId}, 'vacation', '2026-05-01', '2026-05-05'),
-        (${otherEmployeeId}, 'vacation', '2026-05-01', '2026-05-05')
+        (${employeeEmployeeId}, 'vacation', 'vacation_legal', 40, '2026-05-01', '2026-05-05'),
+        (${otherEmployeeId}, 'vacation', 'vacation_legal', 40, '2026-05-01', '2026-05-05')
     `;
 
     await sql`
