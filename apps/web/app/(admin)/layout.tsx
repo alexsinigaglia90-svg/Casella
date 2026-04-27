@@ -9,6 +9,7 @@ import { BreadcrumbTrail } from "@/features/admin-shell/breadcrumbs/breadcrumb-t
 import { PaletteProvider } from "@/features/admin-shell/command-palette/palette-context";
 import { CommandPill } from "@/features/admin-shell/command-pill/command-pill";
 import { TopBar } from "@/features/admin-shell/top-bar/top-bar";
+import { UserMenu } from "@/features/admin-shell/user-menu/user-menu";
 import { getCurrentUser } from "@/lib/current-user";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -28,6 +29,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 <>
                   <CommandPill />
                   <EnvBadge />
+                  <UserMenu displayName={user.displayName} email={user.email} />
                 </>
               }
             />

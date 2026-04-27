@@ -146,6 +146,15 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: B-2-FOLLOWUP-1 = wasted DB roundtrips. B-2-FOLLOWUP-3 = wrong-coords visible bij map-render. B-2-FOLLOWUP-4 = latent UX-bug. Rest = polish.
 - **Status**: open
 
+### PROFILE-PAGE-STUB — `/admin/profile` placeholder
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.1b Task 20 (C-5 UserMenu, 2026-04-27)
+- **Why deferred**: User-menu needs een "Mijn profiel" landing; echte page (theme-pref UI in plaats van sidebar, account-settings, taal, notification-prefs) is Fase 1.2 scope. Placeholder route stopt 404 vanuit user-menu.
+- **Pickup trigger**: Fase 1.2 planning, OR wanneer eerste user-settings beyond theme wordt aangevraagd.
+- **Estimated cost**: ~3 hours.
+- **Impact if skipped**: User-menu navigeert naar placeholder, niet echte settings page.
+- **Status**: open
+
 ### TD-2 — Test coverage for `apps/web` UI + API routes
 - **Category**: Test-coverage
 - **Deferred from**: Plan 1.1a (scope decision — smoke test in Task 31 only)
