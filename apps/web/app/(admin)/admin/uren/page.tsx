@@ -1,12 +1,25 @@
+import { AnomalyBanner } from "@/features/hours/admin/anomaly-banner";
 import { ApprovalList, type PendingItem } from "@/features/hours/admin/approval-list";
 import { UrenCrumbs } from "@/features/hours/admin/uren-crumbs";
 import { UrenPageActions } from "@/features/hours/admin/uren-page-actions";
+import { computeAnomaliesForWeek } from "@/lib/hours/anomalies";
 import { listPendingApprovals } from "@/lib/hours/queries";
 
 export const dynamic = "force-dynamic";
 
+function currentMondayIso(): string {
+  const d = new Date();
+  const day = d.getDay() || 7;
+  if (day !== 1) d.setDate(d.getDate() - (day - 1));
+  return d.toISOString().slice(0, 10);
+}
+
 export default async function AdminUrenPage() {
-  const rows = await listPendingApprovals();
+  const monday = currentMondayIso();
+  const [rows, anomalies] = await Promise.all([
+    listPendingApprovals(),
+    computeAnomaliesForWeek(monday),
+  ]);
 
   const items: PendingItem[] = rows.map((r) => ({
     employeeId: r.employeeId,
@@ -40,6 +53,7 @@ export default async function AdminUrenPage() {
           </p>
         </header>
 
+        <AnomalyBanner anomalies={anomalies} />
         <ApprovalList rows={items} />
       </div>
     </>

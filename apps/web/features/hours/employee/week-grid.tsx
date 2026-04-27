@@ -1,12 +1,18 @@
 "use client";
 
 import type { HourEntryEnriched } from "@casella/types";
-import { AlertCircle, Check, MessageSquare, Send } from "lucide-react";
+import { AlertCircle, Check, Copy, MessageSquare, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { formatHoursNl, formatWeekRangeLabel, getWeekDays } from "./date-utils";
+import {
+  addDays,
+  formatDateIso,
+  formatHoursNl,
+  formatWeekRangeLabel,
+  getWeekDays,
+} from "./date-utils";
 import { SavedIndicator } from "./saved-indicator";
 import { cellKey, useWeekState, type CellState } from "./use-week-state";
 import { WeekPicker } from "./week-picker";
@@ -81,6 +87,64 @@ export function WeekGrid({
   });
 
   const [submitting, setSubmitting] = useState(false);
+  const [filling, setFilling] = useState(false);
+
+  const isWeekEmpty = initialEntries.length === 0;
+
+  async function handleFillFromPrevWeek() {
+    if (filling) return;
+    setFilling(true);
+    try {
+      const prevWeekIso = formatDateIso(addDays(new Date(weekStart), -7));
+      const res = await fetch(
+        `/api/uren/template?prevWeek=${encodeURIComponent(prevWeekIso)}`,
+      );
+      if (!res.ok) {
+        toast.error("Vorige week niet kunnen ophalen");
+        return;
+      }
+      const body = (await res.json()) as {
+        entries: {
+          projectId: string;
+          workDate: string;
+          hours: number;
+          notes: string | null;
+        }[];
+      };
+      if (body.entries.length === 0) {
+        toast.info("Vorige week is leeg — niets om te kopiëren");
+        return;
+      }
+
+      // Map prev-week dates → current-week dates by day-of-week offset.
+      const prevStart = new Date(prevWeekIso);
+      const curStart = new Date(weekStart);
+      let copied = 0;
+      for (const entry of body.entries) {
+        const entryDate = new Date(entry.workDate);
+        const dayOffset = Math.round(
+          (entryDate.getTime() - prevStart.getTime()) / (1000 * 60 * 60 * 24),
+        );
+        if (dayOffset < 0 || dayOffset > 4) continue; // skip weekend / out-of-range
+        const targetDate = formatDateIso(addDays(curStart, dayOffset));
+        const key = cellKey(entry.projectId, targetDate);
+        setCell(key, {
+          hours: formatHoursNl(entry.hours),
+          notes: entry.notes ?? "",
+        });
+        copied++;
+      }
+      if (copied === 0) {
+        toast.info("Geen werkdag-uren gevonden in vorige week");
+      } else {
+        toast.success(`${copied} cellen gekopieerd uit vorige week`);
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Onbekende fout");
+    } finally {
+      setFilling(false);
+    }
+  }
 
   function handleHoursChange(projectId: string, workDate: string, raw: string) {
     setCell(cellKey(projectId, workDate), { hours: raw });
@@ -133,6 +197,8 @@ export function WeekGrid({
 
   const statusColor = STATUS_COLORS[status];
 
+  const showFillButton = !readOnly && isWeekEmpty && projects.length > 0;
+
   if (projects.length === 0) {
     return (
       <div className="space-y-6">
@@ -143,6 +209,9 @@ export function WeekGrid({
           status={status}
           statusColor={statusColor}
           saveStatus={saveStatus}
+          showFillButton={false}
+          filling={false}
+          onFillFromPrevWeek={() => {}}
         />
         <NoAssignmentsEmptyState />
       </div>
@@ -158,6 +227,9 @@ export function WeekGrid({
         status={status}
         statusColor={statusColor}
         saveStatus={saveStatus}
+        showFillButton={showFillButton}
+        filling={filling}
+        onFillFromPrevWeek={() => void handleFillFromPrevWeek()}
       />
 
       {status === "rejected" && rejectionReason && (
@@ -368,6 +440,9 @@ function Header({
   status,
   statusColor,
   saveStatus,
+  showFillButton,
+  filling,
+  onFillFromPrevWeek,
 }: {
   weekStart: string;
   rangeLabel: string;
@@ -375,6 +450,9 @@ function Header({
   status: WeekStatus;
   statusColor: { bg: string; fg: string };
   saveStatus: ReturnType<typeof useWeekState>["saveStatus"];
+  showFillButton: boolean;
+  filling: boolean;
+  onFillFromPrevWeek: () => void;
 }) {
   return (
     <header className="space-y-4">
@@ -393,6 +471,17 @@ function Header({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <WeekPicker weekStart={weekStart} rangeLabel={rangeLabel} />
         <div className="flex items-center gap-3">
+          {showFillButton && (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={filling}
+              onClick={onFillFromPrevWeek}
+            >
+              <Copy className="size-3.5" />
+              {filling ? "Bezig…" : "Vul met vorige week"}
+            </Button>
+          )}
           <span
             className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
             style={{ background: statusColor.bg, color: statusColor.fg }}

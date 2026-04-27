@@ -9,3 +9,4 @@ export * from "./bonus";
 export * from "./system";
 export * from "./pins";
 export * from "./nmbrs";
+export * from "./notifications";
