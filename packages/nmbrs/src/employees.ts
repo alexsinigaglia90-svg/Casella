@@ -3,6 +3,52 @@ import { z } from "zod";
 import { escapeXml, getCredentialsFromEnv, soapCall } from "./client";
 import { NmbrsError } from "./errors";
 
+// ---------------------------------------------------------------------------
+// Payslip API surface
+// SOAP implementation is stubbed — NmbrsError('not_implemented') until prod
+// Nmbrs-credentials are available. See NMBRS-PAYSLIP-SOAP-IMPL in deferred-work.
+// ---------------------------------------------------------------------------
+
+export interface NmbrsPayslipSummary {
+  year: number;
+  period: number;
+  amountGrossCents: number;
+  availableSince: string;
+}
+
+export async function getEmployeePayslips(
+  nmbrsEmployeeId: string,
+  year: number,
+): Promise<NmbrsPayslipSummary[]> {
+  const creds = getCredentialsFromEnv(); // throws missing_credentials if not set
+  // TODO: NMBRS-PAYSLIP-SOAP-IMPL — implement SOAP call to EmployeeService_GetPayslip
+  // when prod-creds are available. Shape of SOAP body TBD via Nmbrs API docs.
+  void creds;
+  void nmbrsEmployeeId;
+  void year;
+  throw new NmbrsError(
+    "not_implemented",
+    "getEmployeePayslips is not yet implemented — SOAP method EmployeeService_GetPayslip needs wiring",
+  );
+}
+
+export async function getPayslipPdfBase64(
+  nmbrsEmployeeId: string,
+  year: number,
+  period: number,
+): Promise<string> {
+  const creds = getCredentialsFromEnv(); // throws missing_credentials if not set
+  // TODO: NMBRS-PAYSLIP-SOAP-IMPL — implement SOAP call to retrieve payslip PDF
+  void creds;
+  void nmbrsEmployeeId;
+  void year;
+  void period;
+  throw new NmbrsError(
+    "not_implemented",
+    "getPayslipPdfBase64 is not yet implemented — SOAP method needs wiring",
+  );
+}
+
 const employeeBaseSchema = z.object({
   Id: z.union([z.number(), z.string()]),
   Number: z.union([z.number(), z.string()]).optional(),

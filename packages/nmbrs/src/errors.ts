@@ -4,7 +4,8 @@ export type NmbrsErrorCode =
   | "network_error"
   | "soap_fault"
   | "invalid_response"
-  | "not_found";
+  | "not_found"
+  | "not_implemented";
 
 export class NmbrsError extends Error {
   readonly code: NmbrsErrorCode;

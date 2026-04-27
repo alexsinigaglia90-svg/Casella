@@ -325,6 +325,15 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: 5s update-latency in plaats van real-time push. Echt-multi-admin presence-feel iets minder snappy maar functioneel correct.
 - **Status**: open
 
+### NMBRS-PAYSLIP-SOAP-IMPL — Implementeer SOAP-calls voor loonstroken (Fase 1.7 / prod)
+- **Category**: Tech-debt (external integration)
+- **Deferred from**: Plan 1.6 Chapter C Task 18 (2026-04-27)
+- **Why deferred:** API-surface klaar (getEmployeePayslips + getPayslipPdfBase64 in @casella/nmbrs), maar SOAP-body shapes voor EmployeeService_GetPayslip zijn nog niet geïmplementeerd. Nmbrs-prod-creds ontbreken voor testing.
+- **Pickup trigger**: prod-Nmbrs-credentials beschikbaar (NMBRS_USER, NMBRS_TOKEN, NMBRS_COMPANY_ID) + Nmbrs API docs geraadpleegd voor payslip SOAP-method.
+- **Estimated cost**: 2u (SOAP body shape lookup + implementatie + smoke-test met prod-creds).
+- **Impact if skipped**: /loonstroken toont graceful empty-state "koppel Nmbrs-credentials"; geen echte loonstroken zichtbaar.
+- **Status**: open
+
 ### CONTRACTS-PDF-UPLOAD — Supabase Storage voor PDF contract-upload (Fase 2)
 - **Category**: Tech-debt (infrastructure)
 - **Deferred from**: Plan 1.6 Chapter C Task 17 (2026-04-27)
