@@ -1,6 +1,6 @@
+import { dateIsoSchema, uuidSchema } from "@casella/types";
 import { z } from "zod";
 
-import { dateIsoSchema, uuidSchema } from "@casella/types";
 
 export const expenseSubmitSchema = z
   .object({

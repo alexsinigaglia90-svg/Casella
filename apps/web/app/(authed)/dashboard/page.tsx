@@ -1,12 +1,12 @@
 import { and, desc, eq, getDb, gt, schema, sql } from "@casella/db";
 import { redirect } from "next/navigation";
 
+import { ActionStrip } from "@/features/dashboard/action-strip";
+import { BalanceStrip } from "@/features/dashboard/balance-strip";
+import { DocumentsSection } from "@/features/dashboard/documents-section";
+import { HeroCard } from "@/features/dashboard/hero-card";
 import { getCurrentEmployee } from "@/lib/current-employee";
 import { getLeaveBalances } from "@/lib/leave/balance";
-import { HeroCard } from "@/features/dashboard/hero-card";
-import { BalanceStrip } from "@/features/dashboard/balance-strip";
-import { ActionStrip } from "@/features/dashboard/action-strip";
-import { DocumentsSection } from "@/features/dashboard/documents-section";
 
 export const dynamic = "force-dynamic";
 

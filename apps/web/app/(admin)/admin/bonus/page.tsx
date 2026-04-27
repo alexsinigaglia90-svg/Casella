@@ -1,11 +1,11 @@
 import { and, eq, getDb, gte, lte, schema, sql } from "@casella/db";
 import { redirect } from "next/navigation";
 
+import { BonusConfigForm } from "@/features/bonus/admin/bonus-config-form";
 import {
   EmployeeBonusOverview,
   type EmployeeBonusRow,
 } from "@/features/bonus/admin/employee-bonus-overview";
-import { BonusConfigForm } from "@/features/bonus/admin/bonus-config-form";
 import { OverperformanceForm } from "@/features/bonus/admin/overperformance-form";
 import { getCurrentUser } from "@/lib/current-user";
 

@@ -1,11 +1,11 @@
 import { desc, eq, getDb, schema } from "@casella/db";
 import { redirect } from "next/navigation";
 
+import { StatementForm } from "@/features/statements/employee/statement-form";
 import {
   StatementList,
   type StatementListItem,
 } from "@/features/statements/employee/statement-list";
-import { StatementForm } from "@/features/statements/employee/statement-form";
 import { getCurrentEmployee } from "@/lib/current-employee";
 
 export const dynamic = "force-dynamic";

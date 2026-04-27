@@ -2,9 +2,9 @@ import type { Route } from "next";
 import { redirect } from "next/navigation";
 
 import { Sidebar } from "@/components/shell/sidebar";
+import { NotificationBellEmployee } from "@/features/notifications/employee/notification-bell-employee";
 import { getCurrentEmployee } from "@/lib/current-employee";
 import { getCurrentUser } from "@/lib/current-user";
-import { NotificationBellEmployee } from "@/features/notifications/employee/notification-bell-employee";
 
 const ONBOARDING_PENDING_ROUTE = "/onboarding-pending" as Route;
 

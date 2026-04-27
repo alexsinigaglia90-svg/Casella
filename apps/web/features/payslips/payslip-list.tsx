@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { NmbrsPayslipSummary } from "@casella/nmbrs";
+import Link from "next/link";
 
 const MONTH_NAMES = [
   "Januari", "Februari", "Maart", "April", "Mei", "Juni",

@@ -1,5 +1,6 @@
 import "server-only";
 import { getDb, schema, eq } from "@casella/db";
+
 import type { EmployeeNotificationType } from "./types";
 
 export async function shouldSendEmail(

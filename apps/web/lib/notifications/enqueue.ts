@@ -1,6 +1,7 @@
 import "server-only";
 import { getDb, schema } from "@casella/db";
 import { sendEmail, type SendEmailInput } from "@casella/email";
+
 import { shouldSendEmail } from "./preferences";
 import type {
   EmployeeNotificationType,

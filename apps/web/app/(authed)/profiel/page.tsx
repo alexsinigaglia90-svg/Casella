@@ -1,12 +1,12 @@
 import { eq, getDb, schema } from "@casella/db";
-import { redirect } from "next/navigation";
 import { ExternalLink, ShieldCheck } from "lucide-react";
+import { redirect } from "next/navigation";
 
+import { ChangeRequestForm } from "@/features/profile/change-request-form";
+import { EmailPreferences } from "@/features/profile/email-preferences";
+import { PersonalForm, PreferencesForm } from "@/features/profile/profile-form";
 import { getCurrentEmployee } from "@/lib/current-employee";
 import { getCurrentUser } from "@/lib/current-user";
-import { PersonalForm, PreferencesForm } from "@/features/profile/profile-form";
-import { EmailPreferences } from "@/features/profile/email-preferences";
-import { ChangeRequestForm } from "@/features/profile/change-request-form";
 
 export const dynamic = "force-dynamic";
 

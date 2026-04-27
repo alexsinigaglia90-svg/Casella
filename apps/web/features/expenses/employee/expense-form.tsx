@@ -4,11 +4,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { ReceiptUpload } from "./receipt-upload";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { EXPENSE_CATEGORIES, type ExpenseCategoryKey } from "@/lib/expenses/types";
-import { ReceiptUpload } from "./receipt-upload";
 
 interface Project {
   id: string;

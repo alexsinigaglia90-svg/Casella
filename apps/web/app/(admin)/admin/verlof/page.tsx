@@ -1,8 +1,8 @@
 import { and, desc, eq, getDb, schema } from "@casella/db";
 import { redirect } from "next/navigation";
 
-import { LeaveQueue } from "@/features/leave/admin/leave-queue";
 import type { LeaveQueueItem } from "@/features/leave/admin/approve-card";
+import { LeaveQueue } from "@/features/leave/admin/leave-queue";
 import { getCurrentUser } from "@/lib/current-user";
 
 export const dynamic = "force-dynamic";

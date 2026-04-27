@@ -4,9 +4,9 @@ import { apiError } from "@casella/types";
 import { NextResponse, type NextRequest } from "next/server";
 import { ZodError } from "zod";
 
+import { getCurrentUser } from "@/lib/current-user";
 import { EXPENSE_CATEGORY_MAP } from "@/lib/expenses/types";
 import { rejectExpenseSchema } from "@/lib/expenses/validation";
-import { getCurrentUser } from "@/lib/current-user";
 import { enqueueNotification } from "@/lib/notifications/enqueue";
 
 export const dynamic = "force-dynamic";

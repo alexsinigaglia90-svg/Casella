@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import type { Route } from "next";
 import { AlertCircle } from "lucide-react";
+import type { Route } from "next";
+import Link from "next/link";
 
 interface ActionItem {
   label: string;

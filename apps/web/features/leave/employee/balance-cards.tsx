@@ -1,9 +1,9 @@
+import type { LeaveBalance } from "@/lib/leave/balance";
+import { fallbackBalance } from "@/lib/leave/balance";
 import {
   LEAVE_TYPES,
   type LeaveTypeKey,
 } from "@/lib/leave/types";
-import type { LeaveBalance } from "@/lib/leave/balance";
-import { fallbackBalance } from "@/lib/leave/balance";
 
 const VISIBLE_TYPES: LeaveTypeKey[] = [
   "vacation_legal",
