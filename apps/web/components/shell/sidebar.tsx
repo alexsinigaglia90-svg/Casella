@@ -33,6 +33,7 @@ const ADMIN_LINKS: NavLink[] = [
   { href: "/admin/klanten" as Route, label: "Klanten", icon: Briefcase },
   { href: "/admin/projecten" as Route, label: "Projecten", icon: Folders },
   { href: "/admin/toewijzingen" as Route, label: "Toewijzingen", icon: UserCheck },
+  { href: "/admin/uren" as Route, label: "Uren goedkeuren", icon: Clock },
 ];
 
 export function Sidebar({ user, mode }: { user: CurrentUser; mode: "employee" | "admin" }) {
