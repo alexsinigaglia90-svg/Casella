@@ -13,61 +13,83 @@ interface StepperProps {
 }
 
 export function ClientStepper({ step, form, onJump }: StepperProps) {
-  return (
-    <div className="flex items-center gap-1.5">
-      {CLIENT_STEPS.map((s, i) => {
-        const isActive = i === step;
-        const isDone = i < step && isClientStepValid(i, form);
-        const isReachable =
-          i <= step ||
-          Array.from({ length: i }, (_, n) => n).every((n) =>
-            isClientStepValid(n, form),
-          );
+  // Aurora-gradient progress bar width = (step+1) / totalSteps * 100%
+  const progressPct = ((step + 1) / CLIENT_STEPS.length) * 100;
 
-        return (
-          <button
-            key={s.key}
-            type="button"
-            disabled={!isReachable}
-            onClick={() => onJump(i)}
-            className="group flex flex-1 flex-col items-start gap-1.5 text-left transition-opacity"
-            style={{
-              opacity: isReachable ? 1 : 0.45,
-              cursor: isReachable ? "pointer" : "not-allowed",
-            }}
-          >
-            <div className="flex w-full items-center gap-2">
-              <StepDot active={isActive} done={isDone} index={i} />
-              <span
-                className="whitespace-nowrap text-[11px] font-medium uppercase tracking-wider"
-                style={{
-                  color: isActive ? "var(--fg-primary)" : "var(--fg-tertiary)",
-                }}
-              >
-                {s.label}
-              </span>
-            </div>
-            <div
-              className="h-[3px] w-full overflow-hidden rounded-full"
-              style={{ background: "var(--ink-5)" }}
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-1.5">
+        {CLIENT_STEPS.map((s, i) => {
+          const isActive = i === step;
+          const isDone = i < step && isClientStepValid(i, form);
+          const isReachable =
+            i <= step ||
+            Array.from({ length: i }, (_, n) => n).every((n) =>
+              isClientStepValid(n, form),
+            );
+
+          return (
+            <button
+              key={s.key}
+              type="button"
+              disabled={!isReachable}
+              onClick={() => onJump(i)}
+              className="group flex flex-1 flex-col items-start gap-1.5 text-left transition-opacity"
+              style={{
+                opacity: isReachable ? 1 : 0.45,
+                cursor: isReachable ? "pointer" : "not-allowed",
+              }}
             >
+              <div className="flex w-full items-center gap-2">
+                <StepDot active={isActive} done={isDone} index={i} />
+                <span
+                  className="whitespace-nowrap text-[11px] font-medium uppercase tracking-wider"
+                  style={{
+                    color: isActive ? "var(--fg-primary)" : "var(--fg-tertiary)",
+                  }}
+                >
+                  {s.label}
+                </span>
+              </div>
               <div
-                className="h-full rounded-full transition-all"
-                style={{
-                  width: isDone ? "100%" : isActive ? "40%" : "0%",
-                  background: isActive
-                    ? "linear-gradient(90deg, var(--aurora-violet), var(--aurora-blue))"
-                    : isDone
-                      ? "var(--aurora-teal)"
-                      : "transparent",
-                  transitionDuration: "500ms",
-                  transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-                }}
-              />
-            </div>
-          </button>
-        );
-      })}
+                className="h-[3px] w-full overflow-hidden rounded-full"
+                style={{ background: "var(--ink-5, rgba(14,22,33,0.08))" }}
+              >
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{
+                    width: isDone ? "100%" : isActive ? "40%" : "0%",
+                    background: isActive
+                      ? "linear-gradient(90deg, var(--aurora-violet), var(--aurora-blue))"
+                      : isDone
+                        ? "var(--aurora-teal)"
+                        : "transparent",
+                    transitionDuration: "500ms",
+                    transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                  }}
+                />
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Aurora-gradient global progress bar */}
+      <div
+        className="h-[2px] w-full overflow-hidden rounded-full"
+        style={{ background: "var(--ink-5, rgba(14,22,33,0.06))" }}
+      >
+        <div
+          className="h-full rounded-full transition-all"
+          style={{
+            width: `${progressPct}%`,
+            background:
+              "linear-gradient(90deg, var(--aurora-violet), var(--aurora-blue))",
+            transitionDuration: "400ms",
+            transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+        />
+      </div>
     </div>
   );
 }
@@ -92,7 +114,7 @@ function StepDot({
           : active
             ? "var(--aurora-violet)"
             : "transparent",
-        border: !done && !active ? "1.5px solid var(--ink-4)" : "none",
+        border: !done && !active ? "1.5px solid var(--ink-4, rgba(14,22,33,0.18))" : "none",
         color: done || active ? "#fff" : "var(--fg-tertiary)",
         boxShadow: active ? "0 0 0 4px rgba(123, 92, 255, 0.18)" : "none",
       }}

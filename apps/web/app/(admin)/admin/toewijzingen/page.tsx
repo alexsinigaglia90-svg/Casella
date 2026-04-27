@@ -12,6 +12,7 @@ import { AssignmentDrawer } from "@/features/assignments/drawer/assignment-drawe
 import { AssignmentsListShell } from "@/features/assignments/list/assignments-list-shell";
 import { ToewijzingenCrumbs } from "@/features/assignments/list/toewijzingen-crumbs";
 import { ToewijzingenPageActions } from "@/features/assignments/list/toewijzingen-page-actions";
+import { readAssignmentsListPrefs } from "@/lib/list-prefs-cookie-assignments";
 
 const VALID_FILTER = new Set(["current", "past", "future", "all"]);
 const VALID_SORT = new Set(["employee", "project", "start"]);
@@ -47,8 +48,8 @@ export default async function ToewijzingenPage({
       ? (params.dir as "asc" | "desc")
       : "desc";
 
-  const [{ rows, nextCursor }, counts, projects, employees] = await Promise.all(
-    [
+  const [{ rows, nextCursor }, counts, projects, employees, initialPrefs] =
+    await Promise.all([
       listAssignments({
         search: params.q,
         filter,
@@ -57,12 +58,14 @@ export default async function ToewijzingenPage({
         cursor: params.cursor,
         employeeId: params.employeeId,
         projectId: params.projectId,
+        // Larger limit so the timeline shows enough rows out of the box.
+        limit: 200,
       }),
       countAssignmentsByFilter(),
       listActiveProjectsForPicker(),
       listActiveEmployeesForPicker(),
-    ],
-  );
+      readAssignmentsListPrefs(),
+    ]);
 
   return (
     <>
@@ -76,6 +79,7 @@ export default async function ToewijzingenPage({
         currentFilter={filter}
         currentSort={sort}
         currentDir={dir}
+        initialPrefs={initialPrefs}
       />
       <Suspense fallback={null}>
         <AssignmentDrawer projects={projects} employees={employees} />

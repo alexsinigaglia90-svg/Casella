@@ -40,7 +40,7 @@ export function ClientDrawer() {
       <DialogContent
         className="fixed right-0 top-0 left-auto translate-x-0 translate-y-0 h-screen rounded-none p-0 gap-0 max-w-none flex flex-col data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right"
         style={{
-          width: "min(820px, 92vw)",
+          width: "min(1080px, 92vw)",
           boxShadow: "-40px 0 80px -20px rgba(14, 22, 33, 0.28)",
           borderLeft: "1px solid var(--border-subtle)",
         }}
