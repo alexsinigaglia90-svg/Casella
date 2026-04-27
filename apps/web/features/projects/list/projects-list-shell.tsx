@@ -1,19 +1,21 @@
 "use client";
 
 import type { ProjectStatus } from "@casella/types";
-import { Search, ArrowUp, ArrowDown, MoreHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import type { Route } from "next";
-import Link from "next/link";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { toast } from "sonner";
 
-import { ProjectStatusBadge } from "./project-status-badge";
+import { ProjectChartsPanel } from "./project-charts-panel";
+import { ProjectListTweaksDock } from "./project-list-tweaks-dock";
+import { ProjectsTable } from "./projects-table";
 
 import type {
   ProjectListRow,
   ProjectStatusCounts,
 } from "@/app/(admin)/admin/projecten/queries";
+import type { ProjectListPrefs } from "@/lib/list-prefs-cookie-shared-projects";
+import { useProjectListPrefs } from "@/lib/use-project-list-prefs";
 
 const STATUS_TABS = [
   { key: "all", label: "Alle" },
@@ -31,11 +33,12 @@ interface ProjectsListShellProps {
   currentStatus: string;
   currentSort: string;
   currentDir: string;
+  initialPrefs: ProjectListPrefs;
 }
 
-function fmtDate(iso: string | null): string {
-  if (!iso) return "—";
-  return iso;
+function countFor(counts: ProjectStatusCounts, key: (typeof STATUS_TABS)[number]["key"]): number {
+  if (key === "all") return counts.all;
+  return counts[key as ProjectStatus];
 }
 
 export function ProjectsListShell({
@@ -46,13 +49,15 @@ export function ProjectsListShell({
   currentStatus,
   currentSort,
   currentDir,
+  initialPrefs,
 }: ProjectsListShellProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const { prefs, setPrefs } = useProjectListPrefs(initialPrefs);
 
   const [searchValue, setSearchValue] = useState(currentQuery);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   function updateParam(key: string, value: string | null) {
     const params = new URLSearchParams(searchParams.toString());
@@ -86,9 +91,8 @@ export function ProjectsListShell({
     }
   }
 
-  function countFor(key: (typeof STATUS_TABS)[number]["key"]): number {
-    if (key === "all") return counts.all;
-    return counts[key as ProjectStatus];
+  function handleSelectProject(id: string | null) {
+    setSelectedId(id);
   }
 
   return (
@@ -114,10 +118,7 @@ export function ProjectsListShell({
       <div className="flex flex-wrap items-center gap-3">
         <div
           className="relative flex h-9 min-w-[260px] flex-1 items-center gap-2 rounded-md border px-3"
-          style={{
-            borderColor: "var(--border-subtle)",
-            background: "var(--surface-lift)",
-          }}
+          style={{ borderColor: "var(--border-subtle)", background: "var(--surface-lift)" }}
         >
           <Search size={14} style={{ color: "var(--fg-tertiary)", flexShrink: 0 }} />
           <input
@@ -128,10 +129,7 @@ export function ProjectsListShell({
           />
           <kbd
             className="rounded border px-1.5 py-0.5 font-mono text-[10px]"
-            style={{
-              borderColor: "var(--border-subtle)",
-              color: "var(--fg-tertiary)",
-            }}
+            style={{ borderColor: "var(--border-subtle)", color: "var(--fg-tertiary)" }}
           >
             ⌘K
           </kbd>
@@ -139,10 +137,7 @@ export function ProjectsListShell({
 
         <div
           className="flex items-center gap-1 rounded-md border p-1"
-          style={{
-            borderColor: "var(--border-subtle)",
-            background: "var(--surface-lift)",
-          }}
+          style={{ borderColor: "var(--border-subtle)", background: "var(--surface-lift)" }}
         >
           {STATUS_TABS.map((f) => {
             const on = currentStatus === f.key;
@@ -160,12 +155,9 @@ export function ProjectsListShell({
                 {f.label}
                 <span
                   className="rounded-full px-1.5 font-mono text-[10px]"
-                  style={{
-                    background: "var(--ink-5, rgba(0,0,0,0.06))",
-                    color: "var(--fg-tertiary)",
-                  }}
+                  style={{ background: "var(--ink-5, rgba(0,0,0,0.06))", color: "var(--fg-tertiary)" }}
                 >
-                  {countFor(f.key)}
+                  {countFor(counts, f.key)}
                 </span>
               </button>
             );
@@ -173,163 +165,44 @@ export function ProjectsListShell({
         </div>
       </div>
 
-      {/* Table */}
-      <div
-        className="overflow-hidden rounded-xl border glass-card"
-        style={{ borderColor: "var(--border-subtle)" }}
-      >
-        <table className="w-full text-sm">
-          <thead>
-            <tr
-              className="border-b text-xs uppercase tracking-wide"
-              style={{
-                borderColor: "var(--border-subtle)",
-                color: "var(--fg-tertiary)",
-              }}
-            >
-              <th className="p-3 text-left font-medium">
-                <SortableHeader
-                  label="Naam"
-                  sortKey="name"
-                  currentSort={currentSort}
-                  currentDir={currentDir}
-                  onSort={handleSort}
-                />
-              </th>
-              <th className="p-3 text-left font-medium">Klant</th>
-              <th className="p-3 text-left font-medium">Status</th>
-              <th className="p-3 text-left font-medium">
-                <SortableHeader
-                  label="Start"
-                  sortKey="start"
-                  currentSort={currentSort}
-                  currentDir={currentDir}
-                  onSort={handleSort}
-                />
-              </th>
-              <th className="p-3 text-left font-medium">Eind</th>
-              <th className="p-3 text-right font-medium">Toewijzingen</th>
-              <th className="w-10 p-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((p) => {
-              const hov = hoveredId === p.id;
-              return (
-                <tr
-                  key={p.id}
-                  onMouseEnter={() => setHoveredId(p.id)}
-                  onMouseLeave={() => setHoveredId(null)}
-                  className="cursor-pointer border-b transition-colors last:border-0"
-                  style={{
-                    borderColor: "var(--border-subtle)",
-                    background: hov ? "var(--surface-lift)" : "transparent",
-                  }}
-                >
-                  <td className="pl-3 pr-3 py-3">
-                    <Link
-                      href={`/admin/projecten/${p.id}` as Route}
-                      className="font-medium hover:underline"
-                    >
-                      {p.name}
-                    </Link>
-                  </td>
-                  <td className="p-3" style={{ color: "var(--fg-secondary)" }}>
-                    {p.clientName}
-                  </td>
-                  <td className="p-3">
-                    <ProjectStatusBadge status={p.status} />
-                  </td>
-                  <td
-                    className="p-3 font-mono text-xs"
-                    style={{ color: "var(--fg-secondary)" }}
-                  >
-                    {fmtDate(p.startDate)}
-                  </td>
-                  <td
-                    className="p-3 font-mono text-xs"
-                    style={{ color: "var(--fg-secondary)" }}
-                  >
-                    {fmtDate(p.endDate)}
-                  </td>
-                  <td
-                    className="p-3 text-right font-mono tabular-nums"
-                    style={{ color: "var(--fg-secondary)" }}
-                  >
-                    {p.assignmentCount}
-                  </td>
-                  <td className="p-3">
-                    <div
-                      className="flex items-center justify-end gap-1"
-                      style={{ opacity: hov ? 1 : 0.2 }}
-                    >
-                      <button
-                        className="rounded p-1 transition-colors hover:bg-surface-base"
-                        onClick={() => toast.info("Acties volgt later")}
-                        aria-label="Meer opties"
-                      >
-                        <MoreHorizontal
-                          size={16}
-                          style={{ color: "var(--fg-secondary)" }}
-                        />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      {/* Split-view: table left, charts right */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_420px]">
+        {/* Left: table */}
+        <div className="min-w-0">
+          <ProjectsTable
+            rows={rows}
+            prefs={prefs}
+            selectedId={selectedId}
+            onSelectProject={handleSelectProject}
+            currentSort={currentSort}
+            currentDir={currentDir}
+            onSort={handleSort}
+          />
 
-        {rows.length === 0 && (
-          <div className="flex flex-col items-center gap-3 p-12 text-center">
-            <p className="font-display" style={{ fontSize: "var(--text-title)" }}>
-              Niets <em>gevonden</em>
-            </p>
-            <p className="text-sm" style={{ color: "var(--fg-secondary)" }}>
-              Pas je filter aan of ruim je zoekopdracht op.
-            </p>
+          {/* Footer */}
+          <div
+            className="mt-3 flex items-center justify-between text-xs"
+            style={{ color: "var(--fg-tertiary)" }}
+          >
+            <span>Toont {rows.length} · sorteer op {currentSort}</span>
+            <span className="font-mono">⌘K om te zoeken · N voor nieuw</span>
           </div>
-        )}
+        </div>
+
+        {/* Right: sticky chart panel */}
+        <div className="hidden md:block">
+          <div style={{ position: "sticky", top: "6rem" }}>
+            <ProjectChartsPanel
+              rows={rows}
+              selectedId={selectedId}
+              prefs={prefs}
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Footer line */}
-      <div
-        className="flex items-center justify-between text-xs"
-        style={{ color: "var(--fg-tertiary)" }}
-      >
-        <span>
-          Toont {rows.length} · sorteer op {currentSort}
-        </span>
-        <span className="font-mono">⌘K om te zoeken · N voor nieuw</span>
-      </div>
+      {/* Tweaks dock */}
+      <ProjectListTweaksDock prefs={prefs} onChange={setPrefs} />
     </div>
-  );
-}
-
-function SortableHeader({
-  label,
-  sortKey,
-  currentSort,
-  currentDir,
-  onSort,
-}: {
-  label: string;
-  sortKey: string;
-  currentSort: string;
-  currentDir: string;
-  onSort: (key: string) => void;
-}) {
-  const active = currentSort === sortKey;
-  return (
-    <button
-      onClick={() => onSort(sortKey)}
-      className="inline-flex items-center gap-1 uppercase tracking-wide transition-colors hover:text-fg-primary"
-      style={{ color: active ? "var(--fg-primary)" : "inherit" }}
-    >
-      {label}
-      {active &&
-        (currentDir === "asc" ? <ArrowUp size={10} /> : <ArrowDown size={10} />)}
-    </button>
   );
 }

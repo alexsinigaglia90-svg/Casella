@@ -11,6 +11,7 @@ import { ProjectDrawer } from "@/features/projects/drawer/project-drawer";
 import { ProjectenCrumbs } from "@/features/projects/list/projecten-crumbs";
 import { ProjectenPageActions } from "@/features/projects/list/projecten-page-actions";
 import { ProjectsListShell } from "@/features/projects/list/projects-list-shell";
+import { readProjectListPrefs } from "@/lib/list-prefs-cookie-projects";
 
 const VALID_STATUS = new Set(["all", "planned", "active", "completed", "cancelled"]);
 const VALID_SORT = new Set(["name", "start", "created"]);
@@ -45,7 +46,7 @@ export default async function ProjectenPage({
       ? (params.dir as "asc" | "desc")
       : "asc";
 
-  const [{ rows, nextCursor }, counts, clients] = await Promise.all([
+  const [{ rows, nextCursor }, counts, clients, initialPrefs] = await Promise.all([
     listProjects({
       search: params.q,
       status,
@@ -56,6 +57,7 @@ export default async function ProjectenPage({
     }),
     countProjectsByStatus(),
     listActiveClientsForPicker(),
+    readProjectListPrefs(),
   ]);
 
   return (
@@ -70,6 +72,7 @@ export default async function ProjectenPage({
         currentStatus={status}
         currentSort={sort}
         currentDir={dir}
+        initialPrefs={initialPrefs}
       />
       <Suspense fallback={null}>
         <ProjectDrawer clients={clients} />
