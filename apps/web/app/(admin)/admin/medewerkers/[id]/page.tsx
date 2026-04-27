@@ -15,7 +15,7 @@ export default async function EmployeeDetailPage({
   if (!employee) notFound();
   return (
     <>
-      <EmployeeDetailCrumbs firstName={employee.firstName} lastName={employee.lastName} />
+      <EmployeeDetailCrumbs id={employee.id} firstName={employee.firstName} lastName={employee.lastName} />
       <EmployeeDetailActions />
       <EmployeeDetailFallback employee={employee} />
     </>

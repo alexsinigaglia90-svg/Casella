@@ -12,6 +12,7 @@ import { ListTweaksDock } from "./list-tweaks-dock";
 import type { EmployeeListRow, EmployeeStatusCounts } from "@/app/(admin)/admin/medewerkers/queries";
 import { EmployeeAvatar } from "@/components/employees/employee-avatar";
 import { EmploymentBadge } from "@/components/employees/employment-badge";
+import { useEmployeeListCache } from "@/features/admin-shell/breadcrumb-switcher/employee-list-cache-context";
 import type { ListPrefs } from "@/lib/list-prefs-cookie-shared";
 import { useListPrefs } from "@/lib/use-list-prefs";
 
@@ -57,6 +58,17 @@ export function EmployeesListShell({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { prefs, setPrefs } = useListPrefs(initialPrefs);
+  const { setEmployees } = useEmployeeListCache();
+
+  useEffect(() => {
+    setEmployees(
+      rows.map((r) => ({
+        id: r.id,
+        displayName: r.displayName,
+        jobTitle: r.jobTitle,
+      })),
+    );
+  }, [rows, setEmployees]);
 
   const [searchValue, setSearchValue] = useState(currentQuery);
   const [hoveredId, setHoveredId] = useState<string | null>(null);

@@ -4,11 +4,14 @@ import { ChevronRight } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 
+import type { Crumb } from "./breadcrumb-context";
 import { useBreadcrumbCtx } from "./breadcrumb-context";
+
+import { BreadcrumbTrigger } from "@/features/admin-shell/breadcrumb-switcher/breadcrumb-trigger";
 
 export function BreadcrumbTrail() {
   const { crumbs } = useBreadcrumbCtx();
-  const trail = [{ label: "Admin", href: "/admin/dashboard" }, ...crumbs];
+  const trail: Crumb[] = [{ label: "Admin", href: "/admin/dashboard" }, ...crumbs];
 
   return (
     <nav
@@ -26,7 +29,13 @@ export function BreadcrumbTrail() {
                 aria-hidden
               />
             )}
-            {c.href && !isLast ? (
+            {c.switcher ? (
+              <BreadcrumbTrigger
+                label={c.label}
+                scope={c.switcher.scope}
+                currentId={c.switcher.currentId}
+              />
+            ) : c.href && !isLast ? (
               <Link
                 href={c.href as Route}
                 className="truncate hover:underline"

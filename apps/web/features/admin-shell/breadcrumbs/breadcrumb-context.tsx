@@ -3,9 +3,17 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import type { ReactNode } from "react";
 
+export type SwitcherScope = "parent-medewerkers" | "current-employee";
+
+export interface CrumbSwitcher {
+  scope: SwitcherScope;
+  currentId?: string;
+}
+
 export interface Crumb {
   label: string;
   href?: string;
+  switcher?: CrumbSwitcher;
 }
 
 interface BreadcrumbCtx {

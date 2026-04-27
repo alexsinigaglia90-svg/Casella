@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { CommandPalette } from "@/components/command-palette/command-palette";
 import { EnvBadge } from "@/components/shell/env-badge";
 import { Sidebar } from "@/components/shell/sidebar";
+import { EmployeeListCacheProvider } from "@/features/admin-shell/breadcrumb-switcher/employee-list-cache-context";
 import { BreadcrumbProvider } from "@/features/admin-shell/breadcrumbs/breadcrumb-context";
 import { BreadcrumbTrail } from "@/features/admin-shell/breadcrumbs/breadcrumb-trail";
 import { PaletteProvider } from "@/features/admin-shell/command-palette/palette-context";
@@ -23,6 +24,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <BreadcrumbProvider>
+      <EmployeeListCacheProvider>
       <PaletteProvider>
         <TopBarActionsProvider>
           <ShortcutsOverlayProvider>
@@ -54,6 +56,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </ShortcutsOverlayProvider>
         </TopBarActionsProvider>
       </PaletteProvider>
+      </EmployeeListCacheProvider>
     </BreadcrumbProvider>
   );
 }
