@@ -258,7 +258,7 @@ export function EmployeesListShell({
                       )}
                       <div>
                         <Link
-                          href={`/admin/medewerkers?id=${emp.id}` as Route}
+                          href={`/admin/medewerkers/${emp.id}` as Route}
                           className="font-medium hover:underline"
                         >
                           {emp.displayName}
