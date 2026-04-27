@@ -27,3 +27,31 @@ export {
   changeRequestDecidedEmployeeEmail,
 } from "./templates/profile";
 export { broadcastEmployeeEmail } from "./templates/broadcast";
+export {
+  hoursDecidedEmployeeEmail,
+  type HoursDecidedEmployeeInput,
+} from "./templates/hours-status";
+export {
+  payslipAvailableEmployeeEmail,
+  type PayslipAvailableInput,
+} from "./templates/payslip";
+export {
+  bonusPaidEmployeeEmail,
+  type BonusPaidEmployeeInput,
+} from "./templates/bonus-paid";
+export {
+  vacationBalanceLowEmployeeEmail,
+  type VacationBalanceLowInput,
+} from "./templates/vacation-balance-low";
+export {
+  hoursMissingReminderEmployeeEmail,
+  type HoursMissingReminderInput,
+} from "./templates/hours-missing";
+export {
+  vacationUnusedYearEndEmployeeEmail,
+  type VacationUnusedInput,
+} from "./templates/vacation-unused";
+export {
+  terminationUpcomingAdminEmail,
+  type TerminationUpcomingAdminInput,
+} from "./templates/termination";
