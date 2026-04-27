@@ -64,6 +64,27 @@
       "when": 1777295787504,
       "tag": "0008_reminder_logs",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1777321944315,
+      "tag": "0009_employee_experience_fundament",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1777322075240,
+      "tag": "0010_employee_experience_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1777322786752,
+      "tag": "0011_leave_requests_extended",
+      "breakpoints": true
     }
   ]
 }

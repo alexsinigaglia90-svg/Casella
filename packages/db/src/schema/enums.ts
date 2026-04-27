@@ -77,3 +77,42 @@ export const themePreferenceEnum = pgEnum("theme_preference", [
   "dark",
   "system",
 ]);
+
+export const languagePreferenceEnum = pgEnum("language_preference", ["nl", "en"]);
+
+export const expenseCategoryEnum = pgEnum("expense_category", [
+  "travel",
+  "client_meal",
+  "conference",
+  "materials",
+  "software",
+  "telecom",
+  "client_gift",
+  "other",
+]);
+
+export const expenseStatusEnum = pgEnum("expense_status", [
+  "submitted",
+  "approved",
+  "rejected",
+  "paid",
+]);
+
+export const changeRequestTypeEnum = pgEnum("change_request_type", ["address", "iban"]);
+
+export const changeRequestStatusEnum = pgEnum("change_request_status", [
+  "pending",
+  "approved",
+  "rejected",
+]);
+
+export const carePackageCompanyEnum = pgEnum("care_package_company", [
+  "ascentra",
+  "operis",
+  "astra",
+]);
+
+export const carePackageLedgerTypeEnum = pgEnum("care_package_ledger_type", [
+  "annual_distribution",
+  "exit_payout",
+]);

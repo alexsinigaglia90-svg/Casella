@@ -43,3 +43,9 @@ playwright-report/
 test-results/
 apps/web/playwright-report/
 apps/web/test-results/
+
+# Local Claude Code settings (per-machine)
+.claude/
+
+# Temporary REST-API payload files (PR/merge bodies)
+.tmp-*.json

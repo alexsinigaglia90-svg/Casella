@@ -2,6 +2,7 @@ import type { Route } from "next";
 import { redirect } from "next/navigation";
 
 import { Sidebar } from "@/components/shell/sidebar";
+import { NotificationBellEmployee } from "@/features/notifications/employee/notification-bell-employee";
 import { getCurrentEmployee } from "@/lib/current-employee";
 import { getCurrentUser } from "@/lib/current-user";
 
@@ -19,6 +20,22 @@ export default async function AuthedLayout({ children }: { children: React.React
     <div className="flex min-h-screen">
       <Sidebar user={user} mode="employee" />
       <main className="flex-1 overflow-x-hidden">
+        <div
+          style={{
+            position: "sticky",
+            top: 0,
+            height: "48px",
+            padding: "8px 16px",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            background: "var(--surface-base)",
+            borderBottom: "1px solid var(--border-subtle)",
+            zIndex: 10,
+          }}
+        >
+          <NotificationBellEmployee />
+        </div>
         <div className="mx-auto max-w-[1180px] p-8">{children}</div>
       </main>
     </div>

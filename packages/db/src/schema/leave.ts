@@ -4,6 +4,8 @@ import {
   text,
   timestamp,
   date,
+  numeric,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import { leaveTypeEnum, leaveStatusEnum } from "./enums";
 import { users, employees } from "./identity";
@@ -13,9 +15,11 @@ export const leaveRequests = pgTable("leave_requests", {
   employeeId: uuid("employee_id")
     .notNull()
     .references(() => employees.id, { onDelete: "cascade" }),
-  leaveType: leaveTypeEnum("leave_type").notNull(),
+  leaveType: leaveTypeEnum("leave_type"),
+  type: text("type").notNull(),
+  hours: numeric("hours", { precision: 7, scale: 2 }).notNull(),
   startDate: date("start_date").notNull(),
-  endDate: date("end_date").notNull(),
+  endDate: date("end_date"),
   reason: text("reason"),
   status: leaveStatusEnum("status").notNull().default("pending"),
   reviewedBy: uuid("reviewed_by").references(() => users.id, {
@@ -23,6 +27,16 @@ export const leaveRequests = pgTable("leave_requests", {
   }),
   reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
   reviewNote: text("review_note"),
+  submittedAt: timestamp("submitted_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  approvedAt: timestamp("approved_at", { withTimezone: true }),
+  approvedBy: uuid("approved_by").references(() => users.id, {
+    onDelete: "set null",
+  }),
+  customPayload: jsonb("custom_payload"),
+  attachmentStoragePath: text("attachment_storage_path"),
+  availabilityStatus: text("availability_status"),
   nmbrsSyncedAt: timestamp("nmbrs_synced_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
