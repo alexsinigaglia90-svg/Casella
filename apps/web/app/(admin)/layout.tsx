@@ -2,6 +2,7 @@ import type { Route } from "next";
 import { redirect } from "next/navigation";
 
 import { Sidebar } from "@/components/shell/sidebar";
+import { TopBar } from "@/features/admin-shell/top-bar/top-bar";
 import { getCurrentUser } from "@/lib/current-user";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -12,9 +13,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="flex min-h-screen">
       <Sidebar user={user} mode="admin" />
-      <main className="flex-1 overflow-x-hidden">
-        <div className="mx-auto max-w-[1180px] p-8">{children}</div>
-      </main>
+      <div className="flex flex-1 flex-col overflow-x-hidden">
+        <TopBar />
+        <main className="flex-1">
+          <div className="mx-auto max-w-[1180px] p-8">{children}</div>
+        </main>
+      </div>
     </div>
   );
 }
