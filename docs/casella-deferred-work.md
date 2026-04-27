@@ -352,6 +352,33 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: Receipt-upload werkt niet in prod; declaraties-flow vraagt om handmatige path-input (stub pad wordt ingevuld via plain text input in form).
 - **Status**: open
 
+### STATEMENTS-STORAGE-MIGRATION — Werkgeversverklaring PDF in Supabase Storage (Fase 2)
+- **Category**: Tech-debt (infrastructure)
+- **Deferred from**: Plan 1.6 Chapter D Task 23 (2026-04-27)
+- **Why deferred**: @supabase/supabase-js niet geinstalleerd; storage credentials wachten op prod-env. PDF wordt nu base64-encoded direct opgeslagen in `employer_statements.generatedPdfPath` als tijdelijke holder. Download-route detecteert base64 via afwezigheid van `/` en streamt het terug.
+- **Pickup trigger**: Vercel + Supabase prod-project geactiveerd en SUPABASE_SERVICE_ROLE_KEY beschikbaar.
+- **Estimated cost**: 1u (install + storage upload + sign-url helper + migrate bestaande base64-rows naar storage paths).
+- **Impact if skipped**: PDFs worden in Postgres opgeslagen in plaats van Object Storage; werkt functioneel maar groeit DB-grootte ongewenst.
+- **Status**: open
+
+### STATEMENTS-EMPLOYER-CONFIG — Werkgever-blok hardcoded, Fase 2 admin-config
+- **Category**: Tech-debt (config)
+- **Deferred from**: Plan 1.6 Chapter D Task 23 (2026-04-27)
+- **Why deferred**: Employer-naam/KvK/adres staan als constants in `apps/web/app/api/werkgeversverklaring/route.ts`. Fase 2 zou dit naar `bonus_config` of een nieuwe `app_config`-tabel moeten halen, of via env-vars zodat producten over meerdere vennootschappen kunnen werken.
+- **Pickup trigger**: Eerste werkgeversverklaring voor Operis of Astra (multi-vennootschap), OF productie-deploy waar plaatsnaam/KvK echt moet kloppen.
+- **Estimated cost**: 1u (config-tabel of env + admin-form).
+- **Impact if skipped**: PDFs tonen Ascentra-werkgever-stub voor alle medewerkers ongeacht vennootschap.
+- **Status**: open
+
+### STATEMENTS-ADMIN-SIGNATURE-CONFIG — Hardcoded admin-naam in signature
+- **Category**: Tech-debt (config)
+- **Deferred from**: Plan 1.6 Chapter D Task 23 (2026-04-27)
+- **Why deferred**: Signature-block hardcodeert `signedBy = "Alex Sinigaglia"` + `locationCity = "Den Haag"`. Fase 2 zou dit per actieve admin moeten resolven (huidige user als role=admin, anders fallback) of uit een config halen.
+- **Pickup trigger**: 2e admin in Ascentra OF productie waar handtekening moet kloppen met daadwerkelijke ondertekenaar.
+- **Estimated cost**: 30 min — resolve `signedBy` uit `users.displayName` van een geconfigureerde admin, of uit env.
+- **Impact if skipped**: Alle PDFs ondertekend door Alex ongeacht wie het systeem feitelijk runt.
+- **Status**: open
+
 ### COACHING-DASHBOARD — Consolidated "learnings" view in user-menu
 - **Category**: UX-polish
 - **Deferred from**: Plan 1.1b Task 29 (C-13, 2026-04-27)

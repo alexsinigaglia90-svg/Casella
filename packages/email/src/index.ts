@@ -21,3 +21,4 @@ export {
   expenseDecidedEmployeeEmail,
 } from "./templates/expense";
 export { contractUploadedEmployeeEmail } from "./templates/contract";
+export { statementReadyEmployeeEmail } from "./templates/statement";
