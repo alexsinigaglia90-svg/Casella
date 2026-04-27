@@ -4,6 +4,7 @@ import { apiError } from "@casella/types";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { LEAVE_TYPES, type LeaveTypeKey } from "@/lib/leave/types";
+import { pushLeaveToNmbrs } from "@/lib/nmbrs/leave-sync";
 import { getCurrentUser } from "@/lib/current-user";
 import { enqueueNotification } from "@/lib/notifications/enqueue";
 
@@ -145,6 +146,14 @@ export async function POST(
       }
     }
 
+    try {
+      const res = await pushLeaveToNmbrs(id);
+      if (res && "skipped" in res) {
+        console.log("nmbrs leave-push skipped", { id, reason: res.skipped });
+      }
+    } catch (e) {
+      console.error("nmbrs leave-push failed (best-effort)", { id, error: e });
+    }
   }
 
   return NextResponse.json({ ok: true });
