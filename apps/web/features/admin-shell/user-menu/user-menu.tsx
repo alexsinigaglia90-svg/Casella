@@ -3,6 +3,7 @@
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 import { EmployeeAvatar } from "@/components/employees/employee-avatar";
 import {
@@ -13,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { isOptedOut, setOptedOut } from "@/features/admin-shell/coaching/tracker";
 
 interface UserMenuProps {
   displayName: string;
@@ -24,10 +26,15 @@ export function UserMenu({ displayName, email }: UserMenuProps) {
   const [first, ...rest] = displayName.split(" ");
   const last = rest.join(" ");
 
+  const [optedOut, setOptedOutState] = useState(false);
+  useEffect(() => {
+    setOptedOutState(isOptedOut());
+  }, []);
+
   function toggleCoaching() {
-    if (typeof window === "undefined") return;
-    const cur = window.localStorage.getItem("casellaCoachingOptedOut") === "true";
-    window.localStorage.setItem("casellaCoachingOptedOut", cur ? "false" : "true");
+    const newVal = !optedOut;
+    setOptedOut(newVal);
+    setOptedOutState(newVal);
   }
 
   return (
@@ -56,7 +63,7 @@ export function UserMenu({ displayName, email }: UserMenuProps) {
           Mijn profiel
         </DropdownMenuItem>
         <DropdownMenuItem onSelect={toggleCoaching}>
-          Coaching-tips uit
+          {optedOut ? "Coaching-tips aan" : "Coaching-tips uit"}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={() => signOut({ callbackUrl: "/" })}>

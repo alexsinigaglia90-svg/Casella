@@ -7,6 +7,7 @@ import { Sidebar } from "@/components/shell/sidebar";
 import { EmployeeListCacheProvider } from "@/features/admin-shell/breadcrumb-switcher/employee-list-cache-context";
 import { BreadcrumbProvider } from "@/features/admin-shell/breadcrumbs/breadcrumb-context";
 import { BreadcrumbTrail } from "@/features/admin-shell/breadcrumbs/breadcrumb-trail";
+import { CoachingTipsScanner } from "@/features/admin-shell/coaching/scanner";
 import { PaletteProvider } from "@/features/admin-shell/command-palette/palette-context";
 import { CommandPill } from "@/features/admin-shell/command-pill/command-pill";
 import { ContextActions } from "@/features/admin-shell/context-actions/context-actions";
@@ -56,6 +57,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </div>
             <CommandPalette />
             <ShortcutsDialog />
+            <CoachingTipsScanner />
           </div>
           </ShortcutsOverlayProvider>
           </QuickCreateProvider>

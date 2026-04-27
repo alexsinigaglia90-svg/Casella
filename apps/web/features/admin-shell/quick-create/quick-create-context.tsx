@@ -3,6 +3,8 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
+import { trackAction } from "../coaching/tracker";
+
 interface QuickCreateTrigger {
   onTrigger: () => void;
   label: string;
@@ -35,6 +37,7 @@ export function QuickCreateProvider({ children }: { children: ReactNode }) {
       if (isInInputContext(e.target)) return;
       if (!trigger) return;
       e.preventDefault();
+      trackAction("usedCmdN");
       trigger.onTrigger();
     }
     window.addEventListener("keydown", handler);

@@ -2,6 +2,8 @@
 
 import { MoreHorizontal } from "lucide-react";
 
+import { trackAction } from "../coaching/tracker";
+
 import { useTopBarActionsCtx } from "./context-actions-context";
 
 import {
@@ -24,7 +26,10 @@ export function ContextActions() {
             <button
               key={`primary-${i}`}
               type="button"
-              onClick={action.onClick}
+              onClick={() => {
+                if (action.trackingKey) trackAction(action.trackingKey);
+                action.onClick();
+              }}
               className="inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-xs font-medium text-white transition-opacity hover:opacity-90"
               style={{
                 background: "var(--aurora-violet, #7b5cff)",

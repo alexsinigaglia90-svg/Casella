@@ -3,6 +3,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
+import { trackAction } from "../coaching/tracker";
+
 interface ShortcutsCtx {
   open: boolean;
   setOpen: (v: boolean) => void;
@@ -22,6 +24,7 @@ export function ShortcutsOverlayProvider({ children }: { children: ReactNode }) 
     function handler(e: KeyboardEvent) {
       if (e.key === "?" && !e.metaKey && !e.ctrlKey && !isInInputContext(e.target)) {
         e.preventDefault();
+        trackAction("usedShortcutsOverlay");
         setOpen(true);
       }
     }

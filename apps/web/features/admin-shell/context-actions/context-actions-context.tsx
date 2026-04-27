@@ -12,7 +12,7 @@ export interface KebabItem {
 }
 
 export type TopBarAction =
-  | { kind: "primary"; label: string; icon?: LucideIcon; onClick: () => void; shortcut?: string }
+  | { kind: "primary"; label: string; icon?: LucideIcon; onClick: () => void; shortcut?: string; trackingKey?: string }
   | { kind: "secondary"; label: string; icon?: LucideIcon; onClick: () => void }
   | { kind: "kebab"; items: KebabItem[] };
 

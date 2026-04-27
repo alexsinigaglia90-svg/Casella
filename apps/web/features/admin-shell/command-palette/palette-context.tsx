@@ -3,6 +3,8 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
+import { trackAction } from "../coaching/tracker";
+
 interface PaletteCtx {
   open: boolean;
   setOpen: (v: boolean) => void;
@@ -13,7 +15,13 @@ const PaletteContext = createContext<PaletteCtx | null>(null);
 
 export function PaletteProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
-  const toggle = useCallback(() => setOpen((o) => !o), []);
+  const toggle = useCallback(() => {
+    setOpen((o) => {
+      const next = !o;
+      if (next) trackAction("usedCmdK");
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     function handler(e: KeyboardEvent) {

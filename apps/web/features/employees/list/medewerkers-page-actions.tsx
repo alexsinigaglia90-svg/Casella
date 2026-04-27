@@ -25,6 +25,7 @@ export function MedewerkersPageActions() {
       label: "Nieuw",
       icon: Plus,
       shortcut: "⌘N",
+      trackingKey: "clickedNewEmployeeButton",
       onClick: onCreate,
     },
     {
