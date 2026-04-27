@@ -1,6 +1,7 @@
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
+import { EnvBadge } from "@/components/shell/env-badge";
 import { Sidebar } from "@/components/shell/sidebar";
 import { BreadcrumbProvider } from "@/features/admin-shell/breadcrumbs/breadcrumb-context";
 import { BreadcrumbTrail } from "@/features/admin-shell/breadcrumbs/breadcrumb-trail";
@@ -17,7 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div className="flex min-h-screen">
         <Sidebar user={user} mode="admin" />
         <div className="flex flex-1 flex-col overflow-x-hidden">
-          <TopBar centerSlot={<BreadcrumbTrail />} />
+          <TopBar centerSlot={<BreadcrumbTrail />} rightSlot={<EnvBadge />} />
           <main className="flex-1">
             <div className="mx-auto max-w-[1180px] p-8">{children}</div>
           </main>

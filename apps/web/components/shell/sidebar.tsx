@@ -7,7 +7,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Brand } from "./brand";
-import { EnvBadge } from "./env-badge";
 
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import type { CurrentUser } from "@/lib/current-user";
@@ -41,9 +40,8 @@ export function Sidebar({ user, mode }: { user: CurrentUser; mode: "employee" | 
 
   return (
     <nav className="flex h-screen w-64 flex-col border-r border-border glass">
-      <div className="flex items-center justify-between p-4">
+      <div className="flex items-center p-4">
         <Brand />
-        <EnvBadge />
       </div>
 
       <ul className="flex-1 space-y-0.5 px-3 py-2">
