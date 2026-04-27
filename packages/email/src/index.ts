@@ -20,3 +20,4 @@ export {
   expenseSubmittedAdminEmail,
   expenseDecidedEmployeeEmail,
 } from "./templates/expense";
+export { contractUploadedEmployeeEmail } from "./templates/contract";

@@ -325,6 +325,15 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: 5s update-latency in plaats van real-time push. Echt-multi-admin presence-feel iets minder snappy maar functioneel correct.
 - **Status**: open
 
+### CONTRACTS-PDF-UPLOAD — Supabase Storage voor PDF contract-upload (Fase 2)
+- **Category**: Tech-debt (infrastructure)
+- **Deferred from**: Plan 1.6 Chapter C Task 17 (2026-04-27)
+- **Why deferred:** @supabase/supabase-js niet geinstalleerd; storage credentials wachten op prod-env. Admin voert nu een stub-pad in als tijdelijke referentie (geen echte bytes upload).
+- **Pickup trigger**: Vercel + Supabase prod-project geactiveerd en SUPABASE_SERVICE_ROLE_KEY beschikbaar.
+- **Estimated cost**: 1u (install + sign-url helper + file-input in ContractUploadForm + wire-up `/api/admin/contracts`).
+- **Impact if skipped**: Contracten hebben geen echte PDF-storage; download-redirect werkt alleen als stub-pad een publieke URL is.
+- **Status**: open
+
 ### EXPENSES-RECEIPT-UPLOAD — Supabase Storage voor bonnetje-upload (Fase 2)
 - **Category**: Tech-debt (infrastructure)
 - **Deferred from**: Plan 1.6 Chapter C Task 16 (2026-04-27)

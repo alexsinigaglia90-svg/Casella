@@ -19,6 +19,7 @@ import {
   FileBadge,
   User,
   Megaphone,
+  ScrollText,
 } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
@@ -61,6 +62,7 @@ const ADMIN_LINKS: NavLink[] = [
   { href: "/admin/verlof" as Route, label: "Verlof goedkeuren", icon: Calendar },
   { href: "/admin/verzuim" as Route, label: "Verzuim", icon: HeartPulse },
   { href: "/admin/declaraties" as Route, label: "Declaraties", icon: Receipt },
+  { href: "/admin/contracten" as Route, label: "Contracten", icon: ScrollText },
   { href: "/admin/bonus" as Route, label: "Bonus-beheer", icon: Trophy },
   { href: "/admin/broadcasts" as Route, label: "Berichten", icon: Megaphone },
   { href: "/admin/nmbrs" as Route, label: "Nmbrs sync", icon: Activity },
