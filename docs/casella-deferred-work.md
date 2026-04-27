@@ -446,3 +446,142 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Status**: done, see Plan 1.1b Task 8 commit
 - **Category**: Tech-debt
 - **Resolved**: 2026-04-27
+
+---
+
+## Plan 1.6 deferrals (2026-04-27)
+
+### EMAIL-COPY-ADDENDUM
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.6 Tasks 4+5+8+13+15+17+22+23+25+26+29 (skeleton emails)
+- **Why deferred**: 14 nieuwe email-flows hebben placeholder-bodies via `skeletonEmail` helper. Definitieve copy + HTML-vormgeving + branding (logo, kleuren, footer-disclaimers) komt in addendum-document.
+- **Pickup trigger**: Pre-prod copy-review met Alex.
+- **Est cost**: 2-4u (14 templates ~10 min copy + visuele HTML).
+- **Impact if skipped**: Emails functioneel maar generiek-ogend; AAA-bar nog niet gehaald.
+- **Status**: open
+
+### A11Y-1.6-PASS
+- **Category**: UX-polish + Test-coverage
+- **Deferred from**: Plan 1.6 Chapter F final-lint
+- **Why deferred**: 1.6 features-folders (verlof/sick/expenses/contracts/bonus/care-package/statements/profile/broadcasts/dashboard/payslips + (authed)+(admin)/admin pages) hebben `jsx-a11y/label-has-associated-control` + `click-events-have-key-events` + `no-static-element-interactions` rules op `'off'` gezet via eslint.config override. Skeleton-forms gebruiken `<label>` + `<input>` siblings ipv htmlFor-coupling, en sommige clickable rows missen keyboard-handlers.
+- **Pickup trigger**: Pre-prod a11y-pass (Fase 1.7 of begin Fase 2).
+- **Est cost**: 4-6u (htmlFor toevoegen + key-handlers op rows + role-attributen).
+- **Impact if skipped**: Screen-reader gebruikers en keyboard-only navigation suboptimaal. WCAG-AA niet behaald.
+- **Status**: open
+
+### EXPENSES-RECEIPT-UPLOAD
+- **Category**: Mobile-alignment + Tech-debt
+- **Deferred from**: Plan 1.6 Task 16
+- **Why deferred**: `@supabase/supabase-js` niet geinstalleerd; storage-credentials wachten op prod-env. Endpoint `/api/expenses/upload-url` returnt nu een stub.
+- **Pickup trigger**: Vercel + Supabase prod-project geactiveerd (Fase 2 start).
+- **Est cost**: 1u.
+- **Impact if skipped**: Receipt-upload werkt niet in prod; declaraties-flow vraagt om handmatige path-input.
+- **Status**: open
+
+### CONTRACTS-PDF-UPLOAD
+- **Category**: Mobile-alignment + Tech-debt
+- **Deferred from**: Plan 1.6 Task 17
+- **Why deferred**: Idem als EXPENSES-RECEIPT-UPLOAD. Admin upload-form slaat nu een path-string op zonder echte byte-upload.
+- **Pickup trigger**: Vercel + Supabase prod-project geactiveerd.
+- **Est cost**: 1u.
+- **Impact if skipped**: Geen echte PDF-upload mogelijk; alleen path-string tracking.
+- **Status**: open
+
+### NMBRS-PAYSLIP-SOAP-IMPL
+- **Category**: Tech-debt
+- **Deferred from**: Plan 1.6 Task 18
+- **Why deferred**: Nmbrs SOAP-endpoint `EmployeeService_GetPayslip` body-shape niet bevestigd zonder prod-creds + WSDL-introspectie. `getEmployeePayslips` + `getPayslipPdfBase64` API-surface bestaat maar throwt `NmbrsError("not_implemented")`.
+- **Pickup trigger**: Prod Nmbrs-creds + WSDL beschikbaar (Fase 2).
+- **Est cost**: 2u.
+- **Impact if skipped**: `/loonstroken` toont empty-state met graceful banner — geen prod-blocker.
+- **Status**: open
+
+### STATEMENTS-STORAGE-MIGRATION
+- **Category**: Tech-debt
+- **Deferred from**: Plan 1.6 Task 23
+- **Why deferred**: Werkgeversverklaring PDFs worden tijdelijk base64-encoded in `employer_statements.generatedPdfPath` opgeslagen.
+- **Pickup trigger**: Vercel + Supabase prod-project (Fase 2).
+- **Est cost**: 1.5u.
+- **Impact if skipped**: DB groeit per gegenereerde verklaring; geen CDN-caching.
+- **Status**: open
+
+### STATEMENTS-EMPLOYER-CONFIG
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.6 Task 23
+- **Why deferred**: Werkgeversverklaring-template heeft hardcoded employer-block (Ascentra Nederland B.V., KvK 87654321, Lange Voorhout 1).
+- **Pickup trigger**: Multi-vennootschap-feature of pre-prod fix.
+- **Est cost**: 1u.
+- **Impact if skipped**: PDFs hebben placeholder employer-data.
+- **Status**: open
+
+### STATEMENTS-ADMIN-SIGNATURE-CONFIG
+- **Category**: Security + UX-polish
+- **Deferred from**: Plan 1.6 Task 23
+- **Why deferred**: Auto-sign hardcoded `signedBy="Alex Sinigaglia"`. Geen handtekening-image.
+- **Pickup trigger**: Pre-prod + AstraSign-integratie (Fase 4).
+- **Est cost**: 2u.
+- **Impact if skipped**: Verklaringen lijken niet-officieel.
+- **Status**: open
+
+### IBAN-STORAGE-AND-NMBRS-PUSH
+- **Category**: Tech-debt + Security
+- **Deferred from**: Plan 1.6 Task 25
+- **Why deferred**: Casella heeft geen iban-kolom op `employees`. Change-request voor IBAN approven slaat de proposed waarde NIET op (alleen audit-log) — Nmbrs is source-of-truth.
+- **Pickup trigger**: Prod Nmbrs-creds + WSDL voor `EmployeeService_UpdateBankAccount`.
+- **Est cost**: 2u.
+- **Impact if skipped**: IBAN-change-request zichtbaar voor admin maar geen automatische verwerking.
+- **Status**: open
+
+### BONUS-PAYOUT-API-AND-EMAIL-WIRE
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.6 Task 29
+- **Why deferred**: `bonus_ledger.type='payout'` bestaat in schema maar er is geen admin-API om handmatig payouts te registreren. Email-template `bonusPaidEmployeeEmail` bestaat maar wordt nergens enqueued.
+- **Pickup trigger**: Eerste maand-end na live-going.
+- **Est cost**: 1u.
+- **Impact if skipped**: Admin moet handmatig in DB schrijven om payouts vast te leggen.
+- **Status**: open
+
+### DASHBOARD-RECENT-PAYSLIPS-WIRING
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.6 Task 27
+- **Why deferred**: Documenten-section toont empty-state voor loonstroken; dependency op NMBRS-PAYSLIP-SOAP-IMPL.
+- **Pickup trigger**: NMBRS-PAYSLIP-SOAP-IMPL afgerond.
+- **Est cost**: 30 min.
+- **Impact if skipped**: Dashboard mist recent-payslips; rest werkt.
+- **Status**: open
+
+### DASHBOARD-SPARKLINES
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.6 Task 27
+- **Why deferred**: Mini-sparklines op saldo-cards vereisen historische snapshots.
+- **Pickup trigger**: Snapshot-tabel toevoegen of cron-driven aggregatie.
+- **Est cost**: 3-4u.
+- **Impact if skipped**: Saldo-cards plain (numeric), geen visuele trend.
+- **Status**: open
+
+### VERCEL-CRON-ACTIVATION
+- **Category**: Mobile-alignment + Security
+- **Deferred from**: Plan 1.6 Task 21+30
+- **Why deferred**: 5 cron-endpoints bestaan met CRON_SECRET-guard maar geen `vercel.json` cron-config.
+- **Pickup trigger**: Vercel-deploy (Fase 2).
+- **Est cost**: 30 min.
+- **Impact if skipped**: Cron-jobs draaien niet automatisch; saldo-syncs en reminders staan stil.
+- **Status**: open
+
+### RLS-1.6-TABLES
+- **Category**: Security
+- **Deferred from**: Plan 1.6 schema-base
+- **Why deferred**: Nieuwe tabellen (contracts/expense_claims/employee_change_requests/broadcasts/leave_balance_snapshots/bonus_config/care_package_ledger) hebben nog geen RLS-policies. App-level guards aanwezig.
+- **Pickup trigger**: Voor prod-deploy (Fase 2).
+- **Est cost**: 1.5u.
+- **Impact if skipped**: Rauwe DB-toegang via Supabase API zou mogelijk multi-employee data tonen.
+- **Status**: open
+
+### NMBRS-LEAVE-REVERT
+- **Category**: Tech-debt
+- **Deferred from**: Plan 1.6 Task 8
+- **Why deferred**: `verlof/cancel`-route revert NIET de Nmbrs absence-record bij approved-state.
+- **Pickup trigger**: Prod Nmbrs-creds.
+- **Est cost**: 1u.
+- **Impact if skipped**: Cancelled-na-approval-leaves staan dubbel.
+- **Status**: open

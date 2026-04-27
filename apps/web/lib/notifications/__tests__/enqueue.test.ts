@@ -1,4 +1,7 @@
+import { sendEmail } from "@casella/email";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+
+import { enqueueNotification } from "../enqueue";
 
 vi.mock("server-only", () => ({}));
 
@@ -18,9 +21,6 @@ vi.mock("../preferences", () => ({
   shouldSendEmail: vi.fn(async () => true),
   DEFAULT_EMAIL_PREFS: {},
 }));
-
-import { enqueueNotification } from "../enqueue";
-import { sendEmail } from "@casella/email";
 
 describe("enqueueNotification", () => {
   beforeEach(() => {
