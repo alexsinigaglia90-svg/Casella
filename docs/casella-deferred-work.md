@@ -260,7 +260,7 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: Plan 1.1b polish, after collecting feedback on column relevance from admin users.
 - **Estimated cost**: 2–3 hours — extend `ListPrefs` interface with `columns` bitmask + `statusVariant`, update `list-prefs-cookie-shared.ts`, add toggles to `ListTweaksDock`, thread visibility props through `EmployeesListShell` table headers/cells.
 - **Impact if skipped**: Users can't hide irrelevant columns. Acceptable for admin-only alpha; would degrade UX if list grows to 100+ employees.
-- **Status**: open
+- **Status**: done — landed in Plan 1.1a Claude Design handoff (commit `5b1e3b2`). `ListPrefs` has `columns` (5 fields incl. `project`) + `statusVariant` (pill/dot/text). `ListTweaksDock` exposes "Kolommen" + "Status-stijl" popovers. `EmploymentBadge` supports all 3 variants. `EmployeesListShell` honors `prefs.columns.*` conditionals + threads `statusVariant` to badge. Plan 1.1b Task 13 added Playwright spec (`apps/web/e2e/column-toggles.spec.ts`, `describe.skip` until auth-fixture lands).
 
 ### ML-5-FOLLOWUPS — Polish items uit spec-review van Plan 1.1b Task 6
 - **Category**: Tech-debt
