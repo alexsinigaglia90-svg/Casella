@@ -1,37 +1,128 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { getCurrentUser } from "@/lib/current-user";
 import { getDb, schema, auditMutation, eq } from "@casella/db";
 import { updateEmployeeSchema } from "@casella/types";
-import { upsertAddress } from "@/lib/employees/upsert-address";
+import { apiError } from "@casella/types";
 import { revalidatePath } from "next/cache";
+import { NextResponse, type NextRequest } from "next/server";
 import { ZodError } from "zod";
+
+import { getCurrentUser } from "@/lib/current-user";
+import { upsertAddress } from "@/lib/employees/upsert-address";
 
 export const dynamic = "force-dynamic";
 
-export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const admin = await getCurrentUser();
-  if (!admin) return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
-  if (admin.role !== "admin") return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!admin) return NextResponse.json(apiError("unauthenticated", "Niet ingelogd"), { status: 401 });
+  if (admin.role !== "admin") return NextResponse.json(apiError("forbidden", "Geen toegang"), { status: 403 });
 
   const { id } = await params;
-  if (!id) return NextResponse.json({ error: "invalid_id" }, { status: 400 });
+  if (!id) return NextResponse.json(apiError("invalid_id", "Ongeldig medewerker-ID"), { status: 400 });
+
+  const db = getDb();
+  const [emp] = await db.select().from(schema.employees).where(eq(schema.employees.id, id));
+  if (!emp) return NextResponse.json(apiError("not_found", "Medewerker niet gevonden"), { status: 404 });
+
+  let address: import("@casella/types").AddressInput | null = null;
+  if (emp.homeAddressId) {
+    const [addr] = await db.select().from(schema.addresses).where(eq(schema.addresses.id, emp.homeAddressId));
+    if (addr) {
+      address = {
+        pdokId: addr.pdokId ?? "",
+        street: addr.street,
+        houseNumber: addr.houseNumber,
+        houseNumberAddition: addr.houseNumberAddition,
+        postalCode: addr.postalCode,
+        city: addr.city,
+        municipality: addr.municipality,
+        province: addr.province,
+        country: (addr.country as "NL"),
+        lat: addr.lat ?? 0,
+        lng: addr.lng ?? 0,
+        rdX: addr.rdX,
+        rdY: addr.rdY,
+        fullDisplay: addr.fullAddressDisplay ?? "",
+      };
+    }
+  }
+
+  return NextResponse.json({
+    id: emp.id,
+    userId: emp.userId,
+    inviteEmail: emp.inviteEmail,
+    nmbrsEmployeeId: emp.nmbrsEmployeeId,
+    homeAddressId: emp.homeAddressId,
+    employmentStatus: emp.employmentStatus,
+    startDate: emp.startDate ?? null,
+    endDate: emp.endDate ?? null,
+    defaultKmRateCents: emp.defaultKmRateCents,
+    compensationType: emp.compensationType,
+    contractedHoursPerWeek: emp.contractedHoursPerWeek,
+    managerId: emp.managerId,
+    phone: emp.phone,
+    emergencyContactName: emp.emergencyContactName,
+    emergencyContactPhone: emp.emergencyContactPhone,
+    firstName: emp.firstName,
+    lastName: emp.lastName,
+    avatarUrl: emp.avatarUrl,
+    jobTitle: emp.jobTitle,
+    notes: emp.notes,
+    pendingTerminationAt: emp.pendingTerminationAt ?? null,
+    pendingTerminationReason: emp.pendingTerminationReason,
+    terminationUndoUntil: emp.terminationUndoUntil?.toISOString() ?? null,
+    createdAt: emp.createdAt.toISOString(),
+    updatedAt: emp.updatedAt.toISOString(),
+    address,
+  });
+}
+
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const admin = await getCurrentUser();
+  if (!admin) return NextResponse.json(apiError("unauthenticated", "Niet ingelogd"), { status: 401 });
+  if (admin.role !== "admin") return NextResponse.json(apiError("forbidden", "Geen toegang"), { status: 403 });
+
+  const { id } = await params;
+  if (!id) return NextResponse.json(apiError("invalid_id", "Ongeldig medewerker-ID"), { status: 400 });
 
   let body: unknown;
-  try { body = await req.json(); } catch { return NextResponse.json({ error: "invalid_json" }, { status: 400 }); }
+  try { body = await req.json(); } catch { return NextResponse.json(apiError("invalid_json", "Ongeldig JSON-formaat"), { status: 400 }); }
 
   let input;
   try {
     // Force the URL id to override any body.id; merge then parse.
     input = updateEmployeeSchema.parse({ ...(typeof body === "object" && body !== null ? body : {}), id });
   } catch (err) {
-    if (err instanceof ZodError) return NextResponse.json({ error: "validation_error", issues: err.flatten() }, { status: 400 });
+    if (err instanceof ZodError) return NextResponse.json(apiError("validation_error", "Ongeldige invoer", err.issues), { status: 400 });
     throw err;
   }
+
+  const ifMatchHeader = req.headers.get("If-Match");
 
   const db = getDb();
   const result = await db.transaction(async (tx) => {
     const [before] = await tx.select().from(schema.employees).where(eq(schema.employees.id, input.id));
-    if (!before) return { notFound: true } as const;
+    if (!before) return { kind: "not-found" } as const;
+
+    // Optimistic concurrency: client-supplied If-Match holds the ISO version
+    // it last observed. Compare via getTime() so JS-Date ms-precision matches
+    // on both sides (Postgres stores microseconds, but the API surface only
+    // ever exposes ISO-with-ms — round-trips stay deterministic).
+    if (ifMatchHeader) {
+      const clientVersion = new Date(ifMatchHeader).getTime();
+      const serverVersion = before.updatedAt.getTime();
+      if (Number.isNaN(clientVersion) || clientVersion !== serverVersion) {
+        await auditMutation(tx, {
+          actorUserId: admin.id,
+          action: "employees.update_conflict",
+          resourceType: "employees",
+          resourceId: input.id,
+          changesJson: {
+            ifMatch: ifMatchHeader,
+            currentUpdatedAt: before.updatedAt.toISOString(),
+          },
+        });
+        return { kind: "conflict" } as const;
+      }
+    }
 
     const homeAddressId = "homeAddress" in input
       ? input.homeAddress
@@ -69,10 +160,21 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       changesJson: { before, patch },
     });
 
-    return { ok: true } as const;
+    return { kind: "ok" } as const;
   });
 
-  if ("notFound" in result) return NextResponse.json({ error: "not_found" }, { status: 404 });
+  if (result.kind === "not-found") {
+    return NextResponse.json(apiError("not_found", "Medewerker niet gevonden"), { status: 404 });
+  }
+  if (result.kind === "conflict") {
+    return NextResponse.json(
+      apiError(
+        "version_conflict",
+        "Een andere sessie heeft deze medewerker aangepast — herlaad om verder te bewerken",
+      ),
+      { status: 409 },
+    );
+  }
 
   revalidatePath("/admin/medewerkers");
   return NextResponse.json({ ok: true });

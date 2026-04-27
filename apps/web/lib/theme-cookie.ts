@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+
 import { THEME_COOKIE, type ThemePreference } from "./theme-cookie-shared";
 
 export { THEME_COOKIE } from "./theme-cookie-shared";

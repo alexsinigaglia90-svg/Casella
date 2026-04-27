@@ -1,17 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import Link from "next/link";
+import { Search, ArrowUp, ArrowDown, MoreHorizontal } from "lucide-react";
 import type { Route } from "next";
-import { Download, Plus, Search, ArrowUp, ArrowDown, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
+
+import { ListTweaksDock } from "./list-tweaks-dock";
+
+import type { EmployeeListRow, EmployeeStatusCounts } from "@/app/(admin)/admin/medewerkers/queries";
 import { EmployeeAvatar } from "@/components/employees/employee-avatar";
 import { EmploymentBadge } from "@/components/employees/employment-badge";
-import { ListTweaksDock } from "./list-tweaks-dock";
-import { useListPrefs } from "@/lib/use-list-prefs";
-import type { EmployeeListRow, EmployeeStatusCounts } from "@/app/(admin)/admin/medewerkers/queries";
+import { useEmployeeListCache } from "@/features/admin-shell/breadcrumb-switcher/employee-list-cache-context";
 import type { ListPrefs } from "@/lib/list-prefs-cookie-shared";
+import { useListPrefs } from "@/lib/use-list-prefs";
 
 const NL_MONTHS = ["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"];
 
@@ -44,7 +47,7 @@ interface EmployeesListShellProps {
 export function EmployeesListShell({
   rows,
   counts,
-  nextCursor,
+  nextCursor: _nextCursor,
   currentQuery,
   currentStatus,
   currentSort,
@@ -55,6 +58,17 @@ export function EmployeesListShell({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { prefs, setPrefs } = useListPrefs(initialPrefs);
+  const { setEmployees } = useEmployeeListCache();
+
+  useEffect(() => {
+    setEmployees(
+      rows.map((r) => ({
+        id: r.id,
+        displayName: r.displayName,
+        jobTitle: r.jobTitle,
+      })),
+    );
+  }, [rows, setEmployees]);
 
   const [searchValue, setSearchValue] = useState(currentQuery);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -103,41 +117,20 @@ export function EmployeesListShell({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <header className="flex items-end justify-between gap-4">
-        <div>
-          <div
-            className="mb-1 font-mono text-[11px] uppercase tracking-wider"
-            style={{ color: "var(--text-tertiary)" }}
-          >
-            Admin
-          </div>
-          <h1 className="font-display text-display leading-none">
-            <span>Mede</span>
-            <em>werkers</em>
-          </h1>
-          <p className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
-            {rows.length} van {counts.all} · laatste synchronisatie zojuist
-          </p>
+      <header className="space-y-2">
+        <div
+          className="mb-1 font-mono text-[11px] uppercase tracking-wider"
+          style={{ color: "var(--fg-tertiary)" }}
+        >
+          Admin
         </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={() => toast.info("Export volgt in 1.1b")}
-            className="inline-flex h-9 items-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors hover:bg-surface-lift"
-            style={{ borderColor: "var(--border-subtle)" }}
-          >
-            <Download size={14} /> Export
-          </button>
-          <Link
-            href={`/admin/medewerkers?new=1${searchParams.toString() ? `&${searchParams.toString()}` : ""}` as Route}
-            className="inline-flex h-9 items-center gap-2 rounded-md px-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
-            style={{
-              background: "var(--aurora-violet, #7b5cff)",
-              boxShadow: "0 4px 20px var(--glow-violet, rgba(123,92,255,0.35))",
-            }}
-          >
-            <Plus size={14} /> Nieuwe medewerker
-          </Link>
-        </div>
+        <h1 className="font-display text-display leading-none">
+          <span>Mede</span>
+          <em>werkers</em>
+        </h1>
+        <p className="mt-2 text-sm" style={{ color: "var(--fg-secondary)" }}>
+          {rows.length} van {counts.all} · laatste synchronisatie zojuist
+        </p>
       </header>
 
       {/* Filter bar */}
@@ -146,16 +139,16 @@ export function EmployeesListShell({
           className="relative flex h-9 min-w-[260px] flex-1 items-center gap-2 rounded-md border px-3"
           style={{ borderColor: "var(--border-subtle)", background: "var(--surface-lift)" }}
         >
-          <Search size={14} style={{ color: "var(--text-tertiary)", flexShrink: 0 }} />
+          <Search size={14} style={{ color: "var(--fg-tertiary)", flexShrink: 0 }} />
           <input
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Zoek op naam, e-mail of project…"
-            className="flex-1 bg-transparent text-sm outline-none placeholder:text-text-tertiary"
+            className="flex-1 bg-transparent text-sm outline-none placeholder:text-fg-tertiary"
           />
           <kbd
             className="rounded border px-1.5 py-0.5 font-mono text-[10px]"
-            style={{ borderColor: "var(--border-subtle)", color: "var(--text-tertiary)" }}
+            style={{ borderColor: "var(--border-subtle)", color: "var(--fg-tertiary)" }}
           >
             ⌘K
           </kbd>
@@ -174,14 +167,14 @@ export function EmployeesListShell({
                 className="flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors"
                 style={{
                   background: on ? "var(--surface-base)" : "transparent",
-                  color: on ? "var(--text-primary)" : "var(--text-secondary)",
+                  color: on ? "var(--fg-primary)" : "var(--fg-secondary)",
                   boxShadow: on ? "0 1px 2px rgba(0,0,0,0.04)" : "none",
                 }}
               >
                 {f.label}
                 <span
                   className="rounded-full px-1.5 font-mono text-[10px]"
-                  style={{ background: "var(--ink-5, rgba(0,0,0,0.06))", color: "var(--text-tertiary)" }}
+                  style={{ background: "var(--ink-5, rgba(0,0,0,0.06))", color: "var(--fg-tertiary)" }}
                 >
                   {counts[f.key as keyof typeof counts]}
                 </span>
@@ -200,7 +193,7 @@ export function EmployeesListShell({
           <thead>
             <tr
               className="border-b text-xs uppercase tracking-wide"
-              style={{ borderColor: "var(--border-subtle)", color: "var(--text-tertiary)" }}
+              style={{ borderColor: "var(--border-subtle)", color: "var(--fg-tertiary)" }}
             >
               <th className="p-3 text-left font-medium">
                 <SortableHeader
@@ -256,13 +249,13 @@ export function EmployeesListShell({
                       )}
                       <div>
                         <Link
-                          href={`/admin/medewerkers?id=${emp.id}` as Route}
+                          href={`/admin/medewerkers/${emp.id}` as Route}
                           className="font-medium hover:underline"
                         >
                           {emp.displayName}
                         </Link>
                         {prefs.density !== "compact" && emp.city && (
-                          <div className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+                          <div className="text-xs" style={{ color: "var(--fg-tertiary)" }}>
                             {emp.city}
                           </div>
                         )}
@@ -272,13 +265,13 @@ export function EmployeesListShell({
                   {prefs.columns.email && (
                     <td
                       className={`p-3 font-mono text-xs ${rowPad}`}
-                      style={{ color: "var(--text-secondary)" }}
+                      style={{ color: "var(--fg-secondary)" }}
                     >
                       {emp.email}
                     </td>
                   )}
                   {prefs.columns.function && (
-                    <td className={`p-3 ${rowPad}`} style={{ color: "var(--text-secondary)" }}>
+                    <td className={`p-3 ${rowPad}`} style={{ color: "var(--fg-secondary)" }}>
                       {emp.jobTitle ?? "—"}
                     </td>
                   )}
@@ -290,7 +283,7 @@ export function EmployeesListShell({
                   {prefs.columns.startDate && (
                     <td
                       className={`p-3 font-mono text-xs tabular-nums ${rowPad}`}
-                      style={{ color: "var(--text-secondary)" }}
+                      style={{ color: "var(--fg-secondary)" }}
                     >
                       {fmtDate(emp.startDate)}
                     </td>
@@ -317,7 +310,7 @@ export function EmployeesListShell({
                         onClick={() => toast.info("Acties volgt in 1.1b")}
                         aria-label="Meer opties"
                       >
-                        <MoreHorizontal size={16} style={{ color: "var(--text-secondary)" }} />
+                        <MoreHorizontal size={16} style={{ color: "var(--fg-secondary)" }} />
                       </button>
                     </div>
                   </td>
@@ -332,7 +325,7 @@ export function EmployeesListShell({
             <p className="font-display" style={{ fontSize: "var(--text-title)" }}>
               Niets <em>gevonden</em>
             </p>
-            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-sm" style={{ color: "var(--fg-secondary)" }}>
               Pas je filter aan of ruim je zoekopdracht op.
             </p>
           </div>
@@ -342,7 +335,7 @@ export function EmployeesListShell({
       {/* Footer line */}
       <div
         className="flex items-center justify-between text-xs"
-        style={{ color: "var(--text-tertiary)" }}
+        style={{ color: "var(--fg-tertiary)" }}
       >
         <span>
           Toont {rows.length} · sorteer op {currentSort}
@@ -373,8 +366,8 @@ function SortableHeader({
   return (
     <button
       onClick={() => onSort(sortKey)}
-      className="inline-flex items-center gap-1 uppercase tracking-wide transition-colors hover:text-text-primary"
-      style={{ color: active ? "var(--text-primary)" : "inherit" }}
+      className="inline-flex items-center gap-1 uppercase tracking-wide transition-colors hover:text-fg-primary"
+      style={{ color: active ? "var(--fg-primary)" : "inherit" }}
     >
       {label}
       {active &&

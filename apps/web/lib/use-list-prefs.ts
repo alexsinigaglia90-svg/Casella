@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import { LIST_PREFS_COOKIE, DEFAULT_LIST_PREFS, type ListPrefs } from "./list-prefs-cookie-shared";
 
 export function useListPrefs(initial: ListPrefs = DEFAULT_LIST_PREFS) {

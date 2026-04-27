@@ -30,7 +30,7 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Estimated cost**: 2–4 hours.
 - **Impact if skipped**: RN app re-types every hex/rgb value by hand; every palette change needs two-file sync; design drift likely.
 - **Plan**: Create `packages/design-tokens/src/index.ts` exporting pure TS objects for palette, motion, type-scale, glow, density. Have `globals.css` and `tailwind.config.ts` derive from it (runtime `var(--*)` stays for the CSS side; Tailwind config imports TS directly; future RN imports TS directly).
-- **Status**: open
+- **Status**: done — Plan 1.1b Task 2 commits `4babdd8` (lift) + `f228880` (codemod follow-up). `packages/design-tokens` is source-of-truth in TS; CSS-vars generated to `globals.css` between markers; Tailwind imports TS directly. Light + dark variants preserved. CI tokens-drift gate prevents un-synced edits.
 
 ### ML-2 — Use Route Handlers (not Server Actions) for all admin mutations
 - **Category**: Mobile-alignment
@@ -40,7 +40,7 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Estimated cost**: ~4 hours over three tasks, vs plan-snippet baseline.
 - **Impact if skipped**: Every admin mutation needs a second implementation for mobile. Also blocks external integrations (AstraSign, future public API).
 - **Plan**: At dispatch of Task 16, rewrite the snippet to build `app/api/admin/employees/**/route.ts` with zod body-validation, cookie/session auth, and JSON responses. Web forms POST via `fetch`. Same pattern for Task 20 (drawer submit) and Task 25 (terminate).
-- **Status**: in-progress (scheduled for Task 16+)
+- **Status**: done — discipline maintained throughout 1.1a + 1.1b. All admin mutations zijn Route Handlers met admin-role guard + apiError shape. New 1.1b endpoints: GET/PATCH `/api/admin/employees/[id]`, GET/POST `/api/admin/audit/{recent,mark-seen}`, GET/POST/DELETE `/api/admin/pins`, GET `/api/admin/search`, GET `/api/admin/presence/[entityType]/[entityId]`. Mobile-ready.
 
 ### ML-3 — Evaluate NativeWind for Tailwind-class portability
 - **Category**: Mobile-alignment
@@ -76,7 +76,7 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: When building mobile login, or as polish on Task 21 (invite-flow Auth.js changes).
 - **Estimated cost**: ~1 hour — read `users.theme_preference` in the JWT callback, set cookie on initial login.
 - **Impact if skipped**: Web: cosmetic only. Mobile: must implement theme-from-DB anyway, so design once.
-- **Status**: open
+- **Status**: done — Plan 1.1b Task 6 commit `6d150ed`. JWT callback reads `users.themePreference` on signIn → token → session; middleware writes cookie when non-system + no existing cookie. Mobile (Fase 3) consumes same pattern.
 
 ---
 
@@ -89,7 +89,71 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: Plan 1.1b, task 1.
 - **Estimated cost**: 2–3 hours (flat config for Next 15 + React 19 + TypeScript + monorepo; wire CI step; fix any violations).
 - **Impact if skipped**: No linting at all. Style drift, bug-prone patterns slip through, accessibility misses (jsx-a11y).
-- **Status**: open — Plan 1.1b task TBD
+- **Status**: done — Plan 1.1b Task 8, see Done section
+
+### TD-1-FOLLOWUP — Vitest collects e2e Playwright specs (pre-existing tooling drift)
+- **Category**: Tech-debt (test tooling)
+- **Discovered during**: Plan 1.1b Task 8 (TD-1) verification — `pnpm test` in `apps/web` fails with "Playwright Test did not expect test.describe() to be called here" against 4 files in `e2e/`.
+- **Why deferred**: Pre-existing on HEAD `c305520`. Verified via `git stash` test on the unmodified branch — same 4 failures. Vitest config in `apps/web` has no `test.exclude` for `e2e/**`, so `vitest run` picks up Playwright specs and fails. Out of scope for T8 (lint setup).
+- **Pickup trigger**: Next test-related task, OR before relying on `pnpm test` as a green-bar gate locally.
+- **Estimated cost**: 10–15 min — add `apps/web/vitest.config.ts` with `test: { exclude: ['e2e/**', 'node_modules/**'] }` (or `include` whitelist for `**/*.test.{ts,tsx}` if any unit tests get added).
+- **Impact if skipped**: `pnpm test` is red locally. CI is unaffected today because root `pnpm test` may not gate on this currently — verify CI behavior before next test step is added.
+- **Status**: done in commit `c34ee7c` — `apps/web/vitest.config.ts` excludes `e2e/**`, `node_modules/**`, `.next/**`. `pnpm -r test` green.
+
+### TD-1-FOLLOWUPS — Code-review nits from T8 (low-priority polish)
+- **Category**: Tech-debt
+- **Discovered during**: Plan 1.1b Task 8 (TD-1) code-quality review (commit `a350297`).
+- **Why deferred**: All three are NIT/LOW severity per reviewer. T8 verdict was APPROVE; nits are polish, not correctness.
+- **Pickup trigger**: Next time touching the affected files, OR a dedicated polish-pass before 1.1b PR open.
+- **Estimated cost**: ~15 min total.
+- **Items**:
+  1. **`apps/web/components/theme/theme-toggle.tsx:65`** — replace `tabIndex={-1}` on radiogroup container with per-line `// eslint-disable-next-line jsx-a11y/interactive-supports-focus -- WAI-ARIA APG: radiogroup is composite role; roving tabindex on children handles focus`. Update Playwright spec to focus the active radio child instead of the container. WAI-ARIA APG explicitly says the radiogroup container is non-focusable.
+  2. **`apps/web/features/employees/list/employees-list-shell.tsx`** — add a `TODO(plan-1.2)` comment near `_nextCursor` documenting that cursor-based pagination is not yet wired to the shell UI (carry-over from 1.1a). Prevents the rename from looking like dead code.
+  3. **`apps/web/eslint.config.mjs`** — add `out/**` to ignores defensively (in case a future task adds Next.js static export).
+- **Impact if skipped**: Cosmetic only. No functional break.
+- **Status**: open
+
+### B-1-FOLLOWUPS — Code-review nits from T11 (EmployeeWizard mode-aware)
+- **Category**: Mixed (UX + TS + Product + Test)
+- **Discovered during**: Plan 1.1b Task 11 (B-1) full-pad review (commit `70588f3`).
+- **Why deferred**: T11 verdict was APPROVE-WITH-NITS; geen blocker, geen high. 5 polish-items waarvan 2 MEDIUM (UX + product), 3 LOW (TS + test).
+- **Pickup trigger**: B-1-FOLLOWUP-1 zodra opnieuw aan stepper wordt gewerkt; B-1-FOLLOWUP-3 bij eerste user-feedback over invite-email confusion; rest bij polish-pass voor 1.1b PR open.
+- **Estimated cost**: ~1.5h totaal.
+- **Items**:
+  1. **[UX/MEDIUM] `apps/web/features/employees/drawer/wizard/components/stepper.tsx:18`** — Stepper-pill leest "Stuur" in zowel create als edit-mode; in edit-mode toont header al "Wijzigingen — Controleer voor opslaan" via `EDIT_STEPS`. Refactor: `<Stepper>` accepteert een `steps?: typeof STEPS` prop; `EditWizard` geeft `EDIT_STEPS` mee. ~15 regels.
+  2. **[TS/LOW] `apps/web/app/api/admin/employees/[id]/route.ts:38`** — `addr.country as "NL"` cast. Tighten zodra non-NL-adressen daadwerkelijk in scope komen (BE/DE cross-border). Voor nu pragmatic; runtime-check (`addr.country === "NL" ? "NL" : ...`) als alternatief.
+  3. **[Product/MEDIUM]** Beslissen of `inviteEmail` UI-read-only moet worden in edit-mode na eerste activatie (`userId !== null`). Huidig: editable. PATCH triggert geen re-invite, audit-trail dekt het, dus geen direct risico — alleen ambiguity in welke email "the invite" was. Beslissing kan via product-discussion of bij eerste user-feedback.
+  4. **[Test/LOW]** Unit-tests toevoegen voor `diffForm()` en `pdokAddressToAddressInput`/`addressInputToPdokAddress` round-trip in `apps/web/features/employees/drawer/wizard/helpers/employee-mapping.ts`. Pure functions, behavior-rich, niet covered.
+  5. **[Test/LOW]** Manual smoke voor T11 is overgeslagen door implementer; T12 e2e (`apps/web/e2e/edit-employee.spec.ts`) is de juiste plek voor full edit-flow coverage.
+- **Impact if skipped**: B-1-FOLLOWUP-1 = zichtbaar UX-mismatch. B-1-FOLLOWUP-3 = mogelijk product-confusion. Rest = polish + maintainability.
+- **Status**: open
+
+### B-2-FOLLOWUPS — Code-review nits from T12 (intercepting routes)
+- **Category**: Mixed (UX + Tech-debt + Test)
+- **Discovered during**: Plan 1.1b Task 12 (B-2) full-pad review (commit `fec033a`).
+- **Why deferred**: T12 verdict was APPROVE-WITH-NITS; geen blocker. 1× HIGH-latent (geen current call-site), 2× MEDIUM, 4× LOW/NIT.
+- **Pickup trigger**: Items 1-2 bij volgende auto-save iteratie (C-12); item 3 vóór map-werk in T13+; item 4 zodra deep-link-entry naar intercepted modal bestaat; item 5 zodra auth-fixture er is; item 6 vóór branch merge.
+- **Estimated cost**: ~2h totaal.
+- **Items**:
+  1. **[Tech-debt/MEDIUM] Double `router.refresh()` na edit-save** — `EditWizard.submit()` (`employee-wizard.tsx:459`) doet `router.refresh()`; daarna roept het `onSaved?.()` aan dat in zowel `InterceptedEditDrawer:46` als `EmployeeDetailFallback` ook `router.refresh()` is. Twee server-renders per save = wasted DB roundtrip. Fix: kies één locatie en strip de andere.
+  2. **[Tech-debt/LOW] DTO mapper duplicatie** — `apps/web/lib/employees/get-by-id.ts` en `apps/web/app/api/admin/employees/[id]/route.ts:29-75` bevatten near-identical employee+address → `EmployeeWithAddress` mapping (incl. `addr.country as "NL"`, `addr.lat ?? 0`, ISO normalisatie). Extract naar `apps/web/lib/employees/_dto.ts` zodat one-source-of-truth.
+  3. **[Data-correctness/LOW] `addr.lat ?? 0` / `addr.lng ?? 0` produces Atlantic-Ocean coords** voor legacy address-rows met null lat/lng. Pre-existing pattern (al in T11 GET-endpoint). Fix vóór map-routes/route-cache: `AddressInput.lat` nullable maken OF backfill via PDOK OR skip-render-when-coords-missing.
+  4. **[Architecture/HIGH-latent] `router.back()` durability** — `intercepted-edit-drawer.tsx:25` en wizard's Esc-handler gebruiken `router.back()`. Werkt vandaag prima omdat alle entry-points via list-row-click gaan. Risico: zodra ander deel van app `router.push("/admin/medewerkers/[id]")` doet, sluit de drawer naar de verkeerde plek. Fix: referrer-aware `handleClose` (try `back()` → check pathname → fallback `push("/admin/medewerkers")`).
+  5. **[Test/LOW] E2E selectors in `apps/web/e2e/edit-employee.spec.ts`** — `page.getByRole('row').nth(1).click()` mist de hot-zone (alleen `<Link>` om naam is clickable, hele rij heeft geen onClick). Fix: target `getByRole('link', { name: <name> })` OF maak hele rij click-target (UX-beslissing). Spec is `describe.skip` totdat auth-fixture er is.
+  6. **[Verification/risk] Manual smoke voor T12 is geskipped** door implementer. Build + typecheck + Next 15 routing-validatie geven hoge zekerheid, maar slide-in animatie / scroll-position behoud / Esc UX zijn nooit eyeball-getest. Run `pnpm -F @casella/web dev`, click first row, Esc, refresh, direct-link voor T14 sanity.
+  7. **[UX/NIT] Save → close-then-refresh order kan stale data flashen** — drawer sluit (`router.back()`) vóór `router.refresh()` paint klaar is. Cosmetic; fix bij server-actions migratie.
+  8. **[A11y/NIT] DialogTitle in `intercepted-edit-drawer.tsx:42-44`** kan `"  bewerken"` (twee spaces) renderen als beide names null zijn. Fallback-string toevoegen.
+- **Impact if skipped**: B-2-FOLLOWUP-1 = wasted DB roundtrips. B-2-FOLLOWUP-3 = wrong-coords visible bij map-render. B-2-FOLLOWUP-4 = latent UX-bug. Rest = polish.
+- **Status**: open
+
+### PROFILE-PAGE-STUB — `/admin/profile` placeholder
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.1b Task 20 (C-5 UserMenu, 2026-04-27)
+- **Why deferred**: User-menu needs een "Mijn profiel" landing; echte page (theme-pref UI in plaats van sidebar, account-settings, taal, notification-prefs) is Fase 1.2 scope. Placeholder route stopt 404 vanuit user-menu.
+- **Pickup trigger**: Fase 1.2 planning, OR wanneer eerste user-settings beyond theme wordt aangevraagd.
+- **Estimated cost**: ~3 hours.
+- **Impact if skipped**: User-menu navigeert naar placeholder, niet echte settings page.
+- **Status**: open
 
 ### TD-2 — Test coverage for `apps/web` UI + API routes
 - **Category**: Test-coverage
@@ -147,7 +211,7 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: If a developer new to the codebase reports confusion, or during Plan 1.1b writeup (chance to rename once before more components exist).
 - **Estimated cost**: ~30 min — rename token group, codemod all usages, update plan files.
 - **Impact if skipped**: Ugly but works. Risk: future dev types `text-primary` expecting ink, gets violet.
-- **Status**: open
+- **Status**: done — Plan 1.1b Task 2 commits `4babdd8` + `f228880`. Tokens lift codemod hernoemde `text.text` → `text.fg` in tokens TS-source. ALL `text-text-*` className usages én `var(--text-*)` inline-style usages werden via codemod naar `text-fg-*` / `var(--fg-*)` omgezet (94 occurrences total). Geen lingering stutter.
 
 ### DD-2 — Status amber (`--status-warning`) contrast on surface-base
 - **Category**: Design-debt
@@ -165,16 +229,16 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: Plan 1.1b (alongside Clients/Projects CRUDs which will likely also need manager pickers).
 - **Estimated cost**: ~1.5 hour — define managers query in `apps/web/lib/employees/managers.ts`, server-fetch in the wizard or pass down from the page, replace the 3 SelectItems with a mapped list, send the real UUID as `managerId` in the POST body, drop the TODO comments.
 - **Impact if skipped**: Admin can't actually pick a manager during create — has to edit the employee later (and edit-mode is also deferred to 1.1b). Combined: no manager assignment in 1.1a at all.
-- **Status**: open — TODO comments in `apps/web/features/employees/drawer/wizard/steps/step-dienstverband.tsx` mark the spot
+- **Status**: abandoned (Plan 1.1b T10 / B-3 scope decision — no manager-role UI in 1.1b; manager-select removed from wizard. `managerId` blijft optional in `createEmployeeSchema` als hidden API surface voor mobile/Nmbrs sync. Real picker komt mogelijk in Fase 1.1c CRUDs.)
 
-### DD-3 — Consider `role="group"` + keyboard arrow-nav on ThemeToggle (radiogroup polish)
+### DD-3 — DONE: ThemeToggle arrow-key navigation (radiogroup polish)
 - **Category**: UX-polish
 - **Deferred from**: Task 7 fix-up scope (2026-04-23)
 - **Why deferred**: Implemented `role="radiogroup"` + `role="radio"` + `aria-checked` — correct semantics. Missing: arrow-key navigation between options (standard radio-group keyboard behavior).
 - **Pickup trigger**: Accessibility audit pass, Plan 1.1b final polish.
 - **Estimated cost**: 30 min.
 - **Impact if skipped**: Keyboard users tab through each button individually instead of arrow-navigating within group. Functional, not optimal.
-- **Status**: open
+- **Status**: done — Plan 1.1b Task 7 commits `76c900b` (arrow-key handler + Playwright spec) + `c305520` (focus-timing fix-up). ArrowRight/Down → next, ArrowLeft/Up → previous, Home/End → first/last. Roving tabindex pattern (active=0, others=-1). e2e spec parked behind `describe.skip` until auth fixture lands.
 
 ---
 
@@ -205,6 +269,69 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: Plan 1.1b polish, after collecting feedback on column relevance from admin users.
 - **Estimated cost**: 2–3 hours — extend `ListPrefs` interface with `columns` bitmask + `statusVariant`, update `list-prefs-cookie-shared.ts`, add toggles to `ListTweaksDock`, thread visibility props through `EmployeesListShell` table headers/cells.
 - **Impact if skipped**: Users can't hide irrelevant columns. Acceptable for admin-only alpha; would degrade UX if list grows to 100+ employees.
+- **Status**: done — landed in Plan 1.1a Claude Design handoff (commit `5b1e3b2`). `ListPrefs` has `columns` (5 fields incl. `project`) + `statusVariant` (pill/dot/text). `ListTweaksDock` exposes "Kolommen" + "Status-stijl" popovers. `EmploymentBadge` supports all 3 variants. `EmployeesListShell` honors `prefs.columns.*` conditionals + threads `statusVariant` to badge. Plan 1.1b Task 13 added Playwright spec (`apps/web/e2e/column-toggles.spec.ts`, `describe.skip` until auth-fixture lands).
+
+### ML-5-FOLLOWUPS — Polish items uit spec-review van Plan 1.1b Task 6
+- **Category**: Tech-debt
+- **Deferred from**: Plan 1.1b Task 6 spec-review (2026-04-26)
+- **Why deferred**: Niet-blokkerende cosmetische nits in `feat(auth): bootstrap theme cookie from DB on first login` (commit `6d150ed`). Geen runtime-impact.
+- **Pickup trigger**: Voor 1.1c start OR bij next-edit van auth package.
+- **Estimated cost**: ~15 min totaal.
+- **Items**:
+  1. `packages/auth/package.json:19-21` — `next` as peerDependency added but no file in `packages/auth` imports anything from `next/*` (speculative). Remove dead metadata. Web app already provides `next` transitively.
+  2. `packages/auth/src/config.ts` — `readThemeFromDb` returns `'system'` value verbatim; the no-op decision is enforced downstream in middleware (`themePref !== "system"`) instead of at source. Slightly bloats JWT token payload. Move guard into helper for cleaner separation of concerns.
+- **Status**: open
+
+### ML-1-FOLLOWUPS — Polish items uit code-review van Plan 1.1b Task 2
+- **Category**: Tech-debt + UX-polish
+- **Deferred from**: Plan 1.1b Task 2 code-quality review (2026-04-26)
+- **Why deferred**: Niet-blokkerende nits gevonden tijdens code-review van ML-1 tokens-lift. Geen visuele of correctness-impact in 1.1b runtime. Gebundeld als één entry voor efficiency.
+- **Pickup trigger**: Voor 1.1c start (foundation-hardening sweep) OR bij eerstvolgende design-tokens wijziging.
+- **Estimated cost**: ~2 uur totaal — alle 6 items zijn klein.
+- **Items**:
+  1. **HIGH** — `pnpm tokens:check` schrijft naar `globals.css` als drift-check; CI runt dit voor typecheck en kan dirty tree achterlaten. Voorstel: voeg `--check-only` mode toe aan `scripts/generate-css-vars.ts` die zonder write de gegenereerde output vergelijkt met file-content en exit 1 op verschil. Vermijdt filesystem-writes in CI volledig.
+  2. **MEDIUM** — `paletteHex.ink.{a68,a45,a22,a10}` bevatten rgba-strings ondanks naam "paletteHex". Ofwel object hernoemen naar `palette` (mixed format), ofwel opacity-varianten in een aparte structuur splitten. Naming-concern voor RN consumers.
+  3. **MEDIUM** — `tailwind.config.ts:137` `status-pulse` keyframe `50%` gebruikt hardcoded `rgba(61, 216, 168, 0)` terwijl `0%/100%` `glowLight.teal` gebruikt. Risico op drift als teal-kleur verandert. Voorstel: extract `aurora.teal` rgba-componenten in helper of in design-tokens package.
+  4. **LOW** — `apps/web/package.json:18` gebruikt `workspace:^` voor `@casella/design-tokens`; alle andere workspace-deps gebruiken `workspace:*`. Inconsistent maar functioneel identiek in pnpm. Wijzig naar `workspace:*`.
+  5. **LOW** — `packages/design-tokens/` heeft geen README. Documenteer: doel van pakket, hoe tokens toevoegen, generation-workflow, CI gate.
+  6. **LOW** — CI step ordering: `Tokens drift check` staat VOOR `Typecheck`. Plan vroeg om "after". Mode-functioneel identiek — beide gates moeten passeren — maar plan-intent matchen geeft schonere telemetry. Verplaats step na typecheck.
+- **Impact if skipped**: Gemak / consistency-issues bij latere wijzigingen; geen runtime-impact.
+- **Status**: open
+
+### FAVORITES-FULL-VIEW — Sidebar shows top 5; full view deferred
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.1b Task 30 (C-14, 2026-04-27)
+- **Why deferred**: Sidebar fits 5 pinned entities cleanly; >5 needs een dedicated view (`/admin/favorieten` of vergelijkbaar).
+- **Pickup trigger**: Wanneer >5 pins regel wordt OR Fase 1.2 polish.
+- **Estimated cost**: ~2 hours.
+- **Impact if skipped**: Users kunnen 6+ pinnen maar zien alleen 5 in sidebar; rest accessible via palette `@` scope of detail-pages.
+- **Status**: open
+
+### PRESENCE-MULTI-USER-POLISH — Real-multi-user validation deferred to Fase 2
+- **Category**: UX-polish (also Fase 2 prep)
+- **Deferred from**: Plan 1.1b Task 32 (C-16, 2026-04-27)
+- **Why deferred**: Solo-admin context limits multi-user testing. Self-presence (2 tabs) werkt; cross-user gedrag heeft >1 admin nodig.
+- **Pickup trigger**: Wanneer Ascentra een 2e admin toevoegt OR Fase 2 (production) brings real concurrency.
+- **Estimated cost**: 1 dag testing + UX polish (presence-tooltips, "viewing-since" copy, channel scaling).
+- **Impact if skipped**: Infrastructure works; UX-polish deferred.
+- **Status**: open
+
+### T32-REALTIME — Wire Supabase Realtime channel for true push presence
+- **Category**: Tech-debt (also Mobile-alignment)
+- **Deferred from**: Plan 1.1b Task 32 (C-16, 2026-04-27) — pragmatic polling-only ship
+- **Why deferred**: @supabase/supabase-js niet geinstalleerd, NEXT_PUBLIC_SUPABASE_URL + ANON_KEY env-vars niet gezet, solo-admin context maakt 5s polling acceptabel. Realtime-pad blijft architecturaal (PresenceAvatarStack consumeert generic useEntityPresence — Realtime is een niet-zichtbare upgrade-pad in de hook).
+- **Pickup trigger**: Fase 2 productie-infra (Supabase prod URL + anon key in env) OR multi-admin in Ascentra.
+- **Estimated cost**: ~2 hours — install package, add env-validatie, wire Realtime channel met fallback-cleanup, smoke-test cross-tab presence.
+- **Impact if skipped**: 5s update-latency in plaats van real-time push. Echt-multi-admin presence-feel iets minder snappy maar functioneel correct.
+- **Status**: open
+
+### COACHING-DASHBOARD — Consolidated "learnings" view in user-menu
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.1b Task 29 (C-13, 2026-04-27)
+- **Why deferred**: 1.1b ships ad-hoc tip-toasts. Long-term: een "Mijn voortgang" page in user-menu showing welke shortcuts user heeft ontdekt, welke tips zijn dismissed, totaal-counts per actie, etc. Zelf-coaching transparency.
+- **Pickup trigger**: Na 4-6 weeks van solo-admin usage om te peilen of learnings-dashboard waarde toevoegt, OR wanneer 2e admin wordt onboarded.
+- **Estimated cost**: 4 hours.
+- **Impact if skipped**: Tips werken, maar geen overview/retrospective voor de user.
 - **Status**: open
 
 ---
@@ -230,3 +357,8 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Status**: done, commit `4a99caf`
 - **Category**: Architecture (client/server boundary)
 - **Resolved**: 2026-04-23
+
+### DONE — Task 8 ESLint v9 flat config + CI gate (TD-1)
+- **Status**: done, see Plan 1.1b Task 8 commit
+- **Category**: Tech-debt
+- **Resolved**: 2026-04-27

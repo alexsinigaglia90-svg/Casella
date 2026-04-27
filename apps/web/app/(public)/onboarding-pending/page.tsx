@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/current-user";
+
 import { getCurrentEmployee } from "@/lib/current-employee";
+import { getCurrentUser } from "@/lib/current-user";
 
 export default async function OnboardingPending() {
   const user = await getCurrentUser();
@@ -13,7 +14,7 @@ export default async function OnboardingPending() {
       <h1 className="font-display text-hero">
         Welkom, <em>{user.displayName.split(" ")[0]}</em>
       </h1>
-      <p className="max-w-md text-text-secondary">
+      <p className="max-w-md text-fg-secondary">
         Je account is aangemeld bij Ascentra HR. Zodra je wordt geactiveerd krijg
         je een bevestiging per e-mail. Deze pagina kun je gewoon laten openstaan
         — zodra je bent gekoppeld ga je automatisch door.

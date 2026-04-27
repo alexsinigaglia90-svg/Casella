@@ -1,7 +1,8 @@
-import { auth } from "@/auth";
 import { eq, getDb, schema } from "@casella/db";
 import type { Role } from "@casella/types";
 import { cache } from "react";
+
+import { auth } from "@/auth";
 
 export interface CurrentUser {
   id: string;

@@ -1,9 +1,10 @@
 "use client";
 
 import { Check } from "lucide-react";
+
 import { STEPS } from "../types";
-import { isStepValid } from "../validation";
 import type { CreateEmployeeFormValues } from "../types";
+import { isStepValid } from "../validation";
 
 interface StepperProps {
   step: number;
@@ -40,7 +41,7 @@ export function Stepper({ step, form, onJump }: StepperProps) {
               <span
                 className="whitespace-nowrap text-[11px] font-medium uppercase tracking-wider"
                 style={{
-                  color: isActive ? "var(--text-primary)" : "var(--text-tertiary)",
+                  color: isActive ? "var(--fg-primary)" : "var(--fg-tertiary)",
                 }}
               >
                 {s.label}
@@ -92,7 +93,7 @@ function StepDot({
             ? "var(--aurora-violet)"
             : "transparent",
         border: !done && !active ? "1.5px solid var(--ink-4)" : "none",
-        color: done || active ? "#fff" : "var(--text-tertiary)",
+        color: done || active ? "#fff" : "var(--fg-tertiary)",
         boxShadow: active ? "0 0 0 4px rgba(123, 92, 255, 0.18)" : "none",
       }}
     >

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
 import { Sparkles, AlertCircle } from "lucide-react";
+import { useState, type ReactNode } from "react";
 
 interface FieldWrapProps {
   label: string;
@@ -31,7 +31,7 @@ export function FieldWrap({
       <label htmlFor={htmlFor} className="mb-1.5 flex items-baseline justify-between gap-2">
         <span
           className="whitespace-nowrap text-[11px] font-medium uppercase tracking-wider"
-          style={{ color: "var(--text-tertiary)" }}
+          style={{ color: "var(--fg-tertiary)" }}
         >
           {label}
         </span>
@@ -66,7 +66,7 @@ export function FieldWrap({
         }}
       >
         {icon && (
-          <span style={{ color: focused ? "var(--aurora-violet)" : "var(--text-tertiary)" }}>
+          <span style={{ color: focused ? "var(--aurora-violet)" : "var(--fg-tertiary)" }}>
             {icon}
           </span>
         )}
@@ -80,7 +80,7 @@ export function FieldWrap({
           <AlertCircle size={11} /> {error}
         </div>
       ) : hint ? (
-        <div className="mt-1 text-[11px]" style={{ color: "var(--text-tertiary)" }}>
+        <div className="mt-1 text-[11px]" style={{ color: "var(--fg-tertiary)" }}>
           {hint}
         </div>
       ) : null}

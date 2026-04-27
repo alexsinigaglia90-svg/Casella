@@ -1,26 +1,28 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { getCurrentUser } from "@/lib/current-user";
 import { getDb, schema, auditMutation } from "@casella/db";
-import { createEmployeeSchema } from "@casella/types";
-import { upsertAddress } from "@/lib/employees/upsert-address";
 import { sendEmail, welcomeEmail } from "@casella/email";
+import { apiError } from "@casella/types";
+import { createEmployeeSchema } from "@casella/types";
 import { revalidatePath } from "next/cache";
+import { NextResponse, type NextRequest } from "next/server";
 import { ZodError } from "zod";
+
+import { getCurrentUser } from "@/lib/current-user";
+import { upsertAddress } from "@/lib/employees/upsert-address";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   const admin = await getCurrentUser();
-  if (!admin) return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
-  if (admin.role !== "admin") return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!admin) return NextResponse.json(apiError("unauthenticated", "Niet ingelogd"), { status: 401 });
+  if (admin.role !== "admin") return NextResponse.json(apiError("forbidden", "Geen toegang"), { status: 403 });
 
   let body: unknown;
-  try { body = await req.json(); } catch { return NextResponse.json({ error: "invalid_json" }, { status: 400 }); }
+  try { body = await req.json(); } catch { return NextResponse.json(apiError("invalid_json", "Ongeldig JSON-formaat"), { status: 400 }); }
 
   let input;
   try { input = createEmployeeSchema.parse(body); }
   catch (err) {
-    if (err instanceof ZodError) return NextResponse.json({ error: "validation_error", issues: err.flatten() }, { status: 400 });
+    if (err instanceof ZodError) return NextResponse.json(apiError("validation_error", "Ongeldige invoer", err.issues), { status: 400 });
     throw err;
   }
 

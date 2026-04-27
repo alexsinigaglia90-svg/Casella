@@ -1,6 +1,7 @@
 "use client";
 
 import { Mail, Phone, Briefcase } from "lucide-react";
+
 import { FieldWrap } from "../components/field-wrap";
 import type { CreateEmployeeFormValues } from "../types";
 
@@ -44,7 +45,8 @@ export function StepWie({
           }}
           placeholder="naam@ascentra.nl"
           className="w-full bg-transparent py-2 text-[15px] outline-none placeholder:opacity-60"
-          style={{ color: "var(--text-primary)" }}
+          style={{ color: "var(--fg-primary)" }}
+          // eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: first field of multi-step wizard receives focus on mount for keyboard-first UX
           autoFocus
         />
       </FieldWrap>
@@ -63,7 +65,7 @@ export function StepWie({
           onBlur={() => setTouch("firstName")}
           placeholder="Esmée"
           className="w-full bg-transparent py-2 text-[15px] outline-none placeholder:opacity-60"
-          style={{ color: "var(--text-primary)" }}
+          style={{ color: "var(--fg-primary)" }}
         />
       </FieldWrap>
 
@@ -81,7 +83,7 @@ export function StepWie({
           onBlur={() => setTouch("lastName")}
           placeholder="van der Velden"
           className="w-full bg-transparent py-2 text-[15px] outline-none placeholder:opacity-60"
-          style={{ color: "var(--text-primary)" }}
+          style={{ color: "var(--fg-primary)" }}
         />
       </FieldWrap>
 
@@ -101,7 +103,7 @@ export function StepWie({
           onBlur={() => setTouch("jobTitle")}
           placeholder="Senior Supply Chain Consultant"
           className="w-full bg-transparent py-2 text-[15px] outline-none placeholder:opacity-60"
-          style={{ color: "var(--text-primary)" }}
+          style={{ color: "var(--fg-primary)" }}
         />
       </FieldWrap>
 
@@ -120,7 +122,7 @@ export function StepWie({
           onBlur={() => setTouch("phone")}
           placeholder="+31 6 1234 5678"
           className="w-full bg-transparent py-2 text-[15px] outline-none placeholder:opacity-60"
-          style={{ color: "var(--text-primary)" }}
+          style={{ color: "var(--fg-primary)" }}
         />
       </FieldWrap>
     </div>

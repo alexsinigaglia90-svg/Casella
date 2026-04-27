@@ -1,7 +1,9 @@
-import { signIn, auth } from "@/auth";
-import { redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import type { Route } from "next";
+import { redirect } from "next/navigation";
+
+import { signIn, auth } from "@/auth";
+import { Button } from "@/components/ui/button";
+
 
 // `/dashboard` does not exist yet (Task 15 adds it). Cast via Route<string> so
 // Next.js `typedRoutes` doesn't reject the unknown route at build time.

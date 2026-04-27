@@ -13,7 +13,7 @@ export function KbdHint({ k, label }: KbdHintProps) {
         style={{
           background: "var(--surface-base)",
           border: "1px solid var(--border-subtle)",
-          color: "var(--text-secondary)",
+          color: "var(--fg-secondary)",
         }}
       >
         {k}

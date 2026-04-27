@@ -1,4 +1,4 @@
-import { getDb, schema, and, asc, desc, eq, isNull, or, ilike, sql } from "@casella/db";
+import { getDb, schema, and, asc, desc, eq, or, ilike, sql } from "@casella/db";
 import type { EmploymentStatus } from "@casella/types";
 
 export interface EmployeeListRow {
@@ -54,15 +54,23 @@ export async function listEmployees(params: EmployeeListParams): Promise<{
 
   // NB: cursor pagination assumes default sort (createdAt desc); sort=name|start resets to first page.
   if (params.cursor && !params.sort) {
-    conditions.push(
-      or(
-        sql`${schema.employees.createdAt} < (SELECT created_at FROM employees WHERE id = ${params.cursor})`,
-        and(
-          sql`${schema.employees.createdAt} = (SELECT created_at FROM employees WHERE id = ${params.cursor})`,
-          sql`${schema.employees.id} < ${params.cursor}`,
-        ),
-      )
-    );
+    const [cursorRow] = await db
+      .select({ createdAt: schema.employees.createdAt })
+      .from(schema.employees)
+      .where(eq(schema.employees.id, params.cursor))
+      .limit(1);
+    const cursorDate = cursorRow?.createdAt;
+    if (cursorDate) {
+      conditions.push(
+        or(
+          sql`${schema.employees.createdAt} < ${cursorDate}`,
+          and(
+            sql`${schema.employees.createdAt} = ${cursorDate}`,
+            sql`${schema.employees.id} < ${params.cursor}`,
+          ),
+        )
+      );
+    }
   }
 
   // Build orderBy based on sort key

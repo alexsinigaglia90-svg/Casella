@@ -63,6 +63,46 @@ export const initiateTerminateSchema = z.object({
 export type InitiateTerminateInput = z.infer<typeof initiateTerminateSchema>;
 
 /**
+ * Employee row shape as returned by the API. Mirrors the Drizzle `employees`
+ * table, with Date columns serialized as ISO strings (JSON-over-the-wire).
+ */
+export interface Employee {
+  id: string;
+  userId: string | null;
+  inviteEmail: string | null;
+  nmbrsEmployeeId: string | null;
+  homeAddressId: string | null;
+  employmentStatus: EmploymentStatus;
+  startDate: string | null;
+  endDate: string | null;
+  defaultKmRateCents: number;
+  compensationType: CompensationType;
+  contractedHoursPerWeek: number;
+  managerId: string | null;
+  phone: string | null;
+  emergencyContactName: string | null;
+  emergencyContactPhone: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  avatarUrl: string | null;
+  jobTitle: string | null;
+  notes: string | null;
+  pendingTerminationAt: string | null;
+  pendingTerminationReason: string | null;
+  terminationUndoUntil: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Enriched response shape for GET /api/admin/employees/[id] — includes the
+ * joined home address (or null if the employee has none yet).
+ */
+export interface EmployeeWithAddress extends Employee {
+  address: AddressInput | null;
+}
+
+/**
  * Fields that the new-employee wizard treats as REQUIRED at the UI level.
  * The Zod schema itself stays permissive so mobile / AstraSign / Nmbrs sync
  * can post partial records — but every web/mobile create-form should validate

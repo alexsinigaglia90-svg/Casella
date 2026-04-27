@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { THEME_COOKIE, type ThemePreference } from "./theme-cookie-shared";
 
 function readCookie(): ThemePreference {

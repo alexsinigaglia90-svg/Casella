@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
+import type { Metadata } from "next";
 import { Cormorant_Garamond } from "next/font/google";
+
 import "./globals.css";
 import { HeadThemeScript } from "./head-theme-script";
+
 import { Toaster } from "@/components/toast/toaster";
-import { CommandPalette } from "@/components/command-palette/command-palette";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -37,7 +38,6 @@ export default function RootLayout({
       <body>
         {children}
         <Toaster />
-        <CommandPalette />
       </body>
     </html>
   );

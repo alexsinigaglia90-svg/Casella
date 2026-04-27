@@ -1,15 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import type { Route } from "next";
-import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import { Users, Briefcase, Folders, UserCheck, Home, FileText, Clock, Calendar, Wallet } from "lucide-react";
+import type { Route } from "next";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import { Brand } from "./brand";
-import { EnvBadge } from "./env-badge";
+
 import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { cn } from "@/lib/utils";
+import { FavoritesSection } from "@/features/admin-shell/pins/favorites-section";
 import type { CurrentUser } from "@/lib/current-user";
+import { cn } from "@/lib/utils";
 
 interface NavLink {
   href: Route;
@@ -39,10 +41,11 @@ export function Sidebar({ user, mode }: { user: CurrentUser; mode: "employee" | 
 
   return (
     <nav className="flex h-screen w-64 flex-col border-r border-border glass">
-      <div className="flex items-center justify-between p-4">
+      <div className="flex items-center p-4">
         <Brand />
-        <EnvBadge />
       </div>
+
+      {mode === "admin" && <FavoritesSection />}
 
       <ul className="flex-1 space-y-0.5 px-3 py-2">
         {links.map((link) => {
@@ -55,8 +58,8 @@ export function Sidebar({ user, mode }: { user: CurrentUser; mode: "employee" | 
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-quick ease-standard",
                   active
-                    ? "bg-surface-base shadow-sm text-text-primary"
-                    : "text-text-secondary hover:bg-surface-lift hover:text-text-primary"
+                    ? "bg-surface-base shadow-sm text-fg-primary"
+                    : "text-fg-secondary hover:bg-surface-lift hover:text-fg-primary"
                 )}
               >
                 <Icon className="h-4 w-4" aria-hidden />

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import type { PdokAddress, PdokSuggestion } from "@casella/maps";
+import type { ApiError } from "@casella/types";
 import {
   Command,
   CommandEmpty,
@@ -10,31 +11,19 @@ import {
   CommandList,
 } from "cmdk";
 import { MapPin } from "lucide-react";
-import { cn } from "@/lib/utils";
-import type { PdokAddress, PdokSuggestion } from "@casella/maps";
+import { useEffect, useRef, useState } from "react";
+
+
 import { useDebounce } from "./use-debounce";
 
-class HttpError extends Error {
-  readonly status: number;
-  constructor(status: number, message?: string) {
-    super(message ?? `HTTP ${status}`);
-    this.name = "HttpError";
-    this.status = status;
-  }
-}
+import { mapAddressError } from "@/features/address-input/error-mapper";
+import { cn } from "@/lib/utils";
 
 interface Props {
   value: PdokAddress | null;
   onChange: (v: PdokAddress | null) => void;
   placeholder?: string;
   disabled?: boolean;
-}
-
-function mapHttpErrorMessage(status: number, isLookup = false): string {
-  if (status === 504) return "Adresservice reageert niet, probeer opnieuw";
-  if (status === 502) return "Adresservice tijdelijk niet beschikbaar";
-  if (status === 404 && isLookup) return "Adres niet gevonden";
-  return "Er ging iets mis bij het zoeken";
 }
 
 export function AddressInput({
@@ -82,8 +71,11 @@ export function AddressInput({
     })
       .then(async (r) => {
         if (!r.ok) {
-          const body = (await r.json().catch(() => ({}))) as { error?: string };
-          throw new HttpError(r.status, body.error);
+          const body = (await r.json().catch(() => ({}))) as Partial<ApiError>;
+          const mapped = body.error && body.message
+            ? mapAddressError(body as ApiError)
+            : "Er ging iets mis bij het zoeken";
+          throw new Error(mapped);
         }
         return r.json() as Promise<{ results: PdokSuggestion[] }>;
       })
@@ -99,11 +91,7 @@ export function AddressInput({
         )
           return;
         setSuggestions([]);
-        if (err instanceof HttpError) {
-          setErrorMessage(mapHttpErrorMessage(err.status));
-        } else {
-          setErrorMessage("Er ging iets mis bij het zoeken");
-        }
+        setErrorMessage(err instanceof Error ? err.message : "Er ging iets mis bij het zoeken");
       })
       .finally(() => {
         if (!ctl.signal.aborted) setLoading(false);
@@ -120,8 +108,11 @@ export function AddressInput({
     try {
       const r = await fetch(`/api/pdok/lookup/${encodeURIComponent(suggestion.id)}`);
       if (!r.ok) {
-        const body = (await r.json().catch(() => ({}))) as { error?: string };
-        throw new HttpError(r.status, body.error);
+        const body = (await r.json().catch(() => ({}))) as Partial<ApiError>;
+        const mapped = body.error && body.message
+          ? mapAddressError(body as ApiError)
+          : "Er ging iets mis bij het zoeken";
+        throw new Error(mapped);
       }
       const json = (await r.json().catch(() => ({}))) as { address?: PdokAddress };
       if (json.address) {
@@ -131,11 +122,7 @@ export function AddressInput({
         setOpen(false);
       }
     } catch (err) {
-      if (err instanceof HttpError) {
-        setErrorMessage(mapHttpErrorMessage(err.status, true));
-      } else {
-        setErrorMessage(mapHttpErrorMessage(0));
-      }
+      setErrorMessage(err instanceof Error ? err.message : "Er ging iets mis bij het zoeken");
       onChange(null);
     } finally {
       setLoading(false);
@@ -164,7 +151,7 @@ export function AddressInput({
         <div className="flex items-center gap-2 px-3">
           <MapPin
             aria-hidden
-            className="h-4 w-4 shrink-0 text-text-tertiary"
+            className="h-4 w-4 shrink-0 text-fg-tertiary"
           />
           <CommandInput
             value={query}
@@ -178,13 +165,13 @@ export function AddressInput({
             onBlur={() => setTimeout(() => setOpen(false), 150)}
             placeholder={placeholder}
             disabled={disabled}
-            className="flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-text-tertiary"
+            className="flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-fg-tertiary"
           />
           {value && !disabled && (
             <button
               type="button"
               onClick={handleClear}
-              className="text-xs text-text-tertiary hover:text-text-secondary"
+              className="text-xs text-fg-tertiary hover:text-fg-secondary"
             >
               Wissen
             </button>
@@ -195,13 +182,13 @@ export function AddressInput({
           <div className="absolute left-0 top-full z-50 mt-1 w-full rounded-md border border-border bg-surface-base shadow-md">
             <CommandList>
               {loading && (
-                <div className="px-4 py-2 text-sm text-text-tertiary">
+                <div className="px-4 py-2 text-sm text-fg-tertiary">
                   Laden…
                 </div>
               )}
 
               {showEmpty && (
-                <CommandEmpty className="px-4 py-2 text-sm text-text-tertiary">
+                <CommandEmpty className="px-4 py-2 text-sm text-fg-tertiary">
                   {debouncedQuery.length < 2
                     ? "Typ minimaal 2 tekens"
                     : "Geen resultaten"}
@@ -209,7 +196,7 @@ export function AddressInput({
               )}
 
               {!loading && debouncedQuery.length < 2 && (
-                <div className="px-4 py-2 text-sm text-text-tertiary">
+                <div className="px-4 py-2 text-sm text-fg-tertiary">
                   Typ minimaal 2 tekens
                 </div>
               )}

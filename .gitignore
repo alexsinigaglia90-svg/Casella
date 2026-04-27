@@ -37,3 +37,9 @@ pnpm-debug.log*
 coverage/
 .nyc_output/
 .playwright-mcp/
+
+# Playwright
+playwright-report/
+test-results/
+apps/web/playwright-report/
+apps/web/test-results/
