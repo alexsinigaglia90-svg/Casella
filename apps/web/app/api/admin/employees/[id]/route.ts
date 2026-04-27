@@ -95,10 +95,34 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     throw err;
   }
 
+  const ifMatchHeader = req.headers.get("If-Match");
+
   const db = getDb();
   const result = await db.transaction(async (tx) => {
     const [before] = await tx.select().from(schema.employees).where(eq(schema.employees.id, input.id));
-    if (!before) return { notFound: true } as const;
+    if (!before) return { kind: "not-found" } as const;
+
+    // Optimistic concurrency: client-supplied If-Match holds the ISO version
+    // it last observed. Compare via getTime() so JS-Date ms-precision matches
+    // on both sides (Postgres stores microseconds, but the API surface only
+    // ever exposes ISO-with-ms — round-trips stay deterministic).
+    if (ifMatchHeader) {
+      const clientVersion = new Date(ifMatchHeader).getTime();
+      const serverVersion = before.updatedAt.getTime();
+      if (Number.isNaN(clientVersion) || clientVersion !== serverVersion) {
+        await auditMutation(tx, {
+          actorUserId: admin.id,
+          action: "employees.update_conflict",
+          resourceType: "employees",
+          resourceId: input.id,
+          changesJson: {
+            ifMatch: ifMatchHeader,
+            currentUpdatedAt: before.updatedAt.toISOString(),
+          },
+        });
+        return { kind: "conflict" } as const;
+      }
+    }
 
     const homeAddressId = "homeAddress" in input
       ? input.homeAddress
@@ -136,10 +160,21 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       changesJson: { before, patch },
     });
 
-    return { ok: true } as const;
+    return { kind: "ok" } as const;
   });
 
-  if ("notFound" in result) return NextResponse.json(apiError("not_found", "Medewerker niet gevonden"), { status: 404 });
+  if (result.kind === "not-found") {
+    return NextResponse.json(apiError("not_found", "Medewerker niet gevonden"), { status: 404 });
+  }
+  if (result.kind === "conflict") {
+    return NextResponse.json(
+      apiError(
+        "version_conflict",
+        "Een andere sessie heeft deze medewerker aangepast — herlaad om verder te bewerken",
+      ),
+      { status: 409 },
+    );
+  }
 
   revalidatePath("/admin/medewerkers");
   return NextResponse.json({ ok: true });

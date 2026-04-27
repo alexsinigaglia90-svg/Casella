@@ -1,9 +1,10 @@
 "use client";
 
-import type { EmployeeWithAddress } from "@casella/types";
+import type { EmployeeWithAddress, UpdateEmployeeInput } from "@casella/types";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
+  useCallback,
   useState,
   useMemo,
   useEffect,
@@ -32,6 +33,12 @@ import type { CreateEmployeeFormValues } from "./types";
 import { STEPS, emptyForm } from "./types";
 import { validateStep, isStepValid } from "./validation";
 import { WizardDiffView } from "./wizard-diff-view";
+
+import { ConflictBanner } from "@/features/admin-shell/auto-save/conflict-banner";
+import { SavedIndicator } from "@/features/admin-shell/auto-save/saved-indicator";
+import { useAutoSave } from "@/features/admin-shell/auto-save/use-auto-save";
+
+type EmployeePatch = Omit<Partial<UpdateEmployeeInput>, "id">;
 
 type CreateModeProps = {
   mode: "create";
@@ -395,6 +402,26 @@ function EditWizard({ employee, onClose, onSaved }: EditModeProps) {
   const dirtyPatch = useMemo(() => diffForm(initialForm, form), [initialForm, form]);
   const hasChanges = Object.keys(dirtyPatch).length > 0;
 
+  // Auto-save: debounce 2s, dirty-only PATCH against the lastSaved snapshot
+  // owned by the hook (NOT against `initialForm`), so each round-trip resets
+  // the baseline and we never re-send the same diff.
+  const computePatch = useCallback(
+    (current: CreateEmployeeFormValues, lastSaved: CreateEmployeeFormValues): EmployeePatch | null => {
+      const dirty = diffForm(lastSaved, current);
+      return Object.keys(dirty).length > 0 ? dirty : null;
+    },
+    [],
+  );
+
+  const { state: saveState, markSaved } = useAutoSave<CreateEmployeeFormValues, EmployeePatch>({
+    data: form,
+    enabled: true,
+    ifMatch: employee.updatedAt,
+    delay: 2000,
+    endpoint: `/api/admin/employees/${employee.id}`,
+    computePatch,
+  });
+
   const headerName = [employee.firstName, employee.lastName]
     .filter(Boolean)
     .join(" ")
@@ -449,13 +476,19 @@ function EditWizard({ employee, onClose, onSaved }: EditModeProps) {
     try {
       const res = await fetch(`/api/admin/employees/${employee.id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "If-Match": employee.updatedAt,
+        },
         body: JSON.stringify(dirtyPatch),
       });
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as { message?: string };
         throw new Error(body.message ?? `HTTP ${res.status}`);
       }
+      // Sync the auto-save baseline so the indicator reflects the manual save
+      // and the hook does not re-send the same diff on the next tick.
+      markSaved(form);
       router.refresh();
       onSaved?.();
       toast.success("Wijzigingen opgeslagen.");
@@ -506,6 +539,9 @@ function EditWizard({ employee, onClose, onSaved }: EditModeProps) {
             <span style={{ fontStyle: "normal", fontWeight: 500 }}>{headerTitle} </span>
             <em style={{ fontWeight: 400 }}>bewerken</em>
           </h2>
+          <div className="mt-1.5">
+            <SavedIndicator state={saveState} />
+          </div>
         </div>
         <button
           onClick={onClose}
@@ -524,6 +560,11 @@ function EditWizard({ employee, onClose, onSaved }: EditModeProps) {
 
       {/* Scrollable step content */}
       <div className="min-h-0 flex-1 overflow-y-auto px-8 pb-6" key={`edit-step-${step}`}>
+        {saveState.status === "conflict" && (
+          <div className="mb-4">
+            <ConflictBanner onReload={() => router.refresh()} />
+          </div>
+        )}
         <div className="mb-6 step-enter">
           <h3
             className="font-display mb-1"
