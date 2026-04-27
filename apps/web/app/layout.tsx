@@ -6,7 +6,6 @@ import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { HeadThemeScript } from "./head-theme-script";
 
-import { CommandPalette } from "@/components/command-palette/command-palette";
 import { Toaster } from "@/components/toast/toaster";
 
 const cormorant = Cormorant_Garamond({
@@ -39,7 +38,6 @@ export default function RootLayout({
       <body>
         {children}
         <Toaster />
-        <CommandPalette />
       </body>
     </html>
   );

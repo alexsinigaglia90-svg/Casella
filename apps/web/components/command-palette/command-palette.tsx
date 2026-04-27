@@ -1,28 +1,18 @@
 "use client";
 
 import { Command } from "cmdk";
-import { Users, Briefcase, Folders, UserCheck, Plus, Settings } from "lucide-react";
+import { Users, Briefcase, Folders, UserCheck, Plus, Settings, Keyboard, LogOut } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { signOut } from "next-auth/react";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { usePalette } from "@/features/admin-shell/command-palette/palette-context";
 
 export function CommandPalette() {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen } = usePalette();
   const router = useRouter();
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setOpen((o) => !o);
-      }
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, []);
 
   function runCommand(cb: () => void) {
     setOpen(false);
@@ -73,6 +63,25 @@ export function CommandPalette() {
             <Command.Group heading="Instellingen">
               <CmdItem icon={Settings} onSelect={() => runCommand(() => router.push("/admin/settings" as Route))}>
                 Instellingen
+              </CmdItem>
+            </Command.Group>
+
+            <Command.Group heading="Hulp">
+              <CmdItem
+                icon={Keyboard}
+                onSelect={() =>
+                  runCommand(() => {
+                    console.log("[TODO C-4] open shortcuts overlay"); // stub — T21 wires shortcut overlay
+                  })
+                }
+              >
+                Toon sneltoetsen
+              </CmdItem>
+              <CmdItem
+                icon={LogOut}
+                onSelect={() => runCommand(() => signOut({ callbackUrl: "/" }))}
+              >
+                Afmelden
               </CmdItem>
             </Command.Group>
           </Command.List>

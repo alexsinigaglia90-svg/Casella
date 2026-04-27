@@ -1,10 +1,13 @@
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
+import { CommandPalette } from "@/components/command-palette/command-palette";
 import { EnvBadge } from "@/components/shell/env-badge";
 import { Sidebar } from "@/components/shell/sidebar";
 import { BreadcrumbProvider } from "@/features/admin-shell/breadcrumbs/breadcrumb-context";
 import { BreadcrumbTrail } from "@/features/admin-shell/breadcrumbs/breadcrumb-trail";
+import { PaletteProvider } from "@/features/admin-shell/command-palette/palette-context";
+import { CommandPill } from "@/features/admin-shell/command-pill/command-pill";
 import { TopBar } from "@/features/admin-shell/top-bar/top-bar";
 import { getCurrentUser } from "@/lib/current-user";
 
@@ -15,15 +18,26 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <BreadcrumbProvider>
-      <div className="flex min-h-screen">
-        <Sidebar user={user} mode="admin" />
-        <div className="flex flex-1 flex-col overflow-x-hidden">
-          <TopBar centerSlot={<BreadcrumbTrail />} rightSlot={<EnvBadge />} />
-          <main className="flex-1">
-            <div className="mx-auto max-w-[1180px] p-8">{children}</div>
-          </main>
+      <PaletteProvider>
+        <div className="flex min-h-screen">
+          <Sidebar user={user} mode="admin" />
+          <div className="flex flex-1 flex-col overflow-x-hidden">
+            <TopBar
+              centerSlot={<BreadcrumbTrail />}
+              rightSlot={
+                <>
+                  <CommandPill />
+                  <EnvBadge />
+                </>
+              }
+            />
+            <main className="flex-1">
+              <div className="mx-auto max-w-[1180px] p-8">{children}</div>
+            </main>
+          </div>
+          <CommandPalette />
         </div>
-      </div>
+      </PaletteProvider>
     </BreadcrumbProvider>
   );
 }
