@@ -11,6 +11,7 @@ import { PaletteProvider } from "@/features/admin-shell/command-palette/palette-
 import { CommandPill } from "@/features/admin-shell/command-pill/command-pill";
 import { ContextActions } from "@/features/admin-shell/context-actions/context-actions";
 import { TopBarActionsProvider } from "@/features/admin-shell/context-actions/context-actions-context";
+import { QuickCreateProvider } from "@/features/admin-shell/quick-create/quick-create-context";
 import { ShortcutsDialog } from "@/features/admin-shell/shortcuts-overlay/shortcuts-dialog";
 import { ShortcutsOverlayProvider } from "@/features/admin-shell/shortcuts-overlay/use-shortcuts-overlay";
 import { TopBar } from "@/features/admin-shell/top-bar/top-bar";
@@ -27,6 +28,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <EmployeeListCacheProvider>
       <PaletteProvider>
         <TopBarActionsProvider>
+          <QuickCreateProvider>
           <ShortcutsOverlayProvider>
           <div className="flex min-h-screen">
             <Sidebar user={user} mode="admin" />
@@ -54,6 +56,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <ShortcutsDialog />
           </div>
           </ShortcutsOverlayProvider>
+          </QuickCreateProvider>
         </TopBarActionsProvider>
       </PaletteProvider>
       </EmployeeListCacheProvider>
