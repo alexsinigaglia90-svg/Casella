@@ -13,6 +13,7 @@ import { usePalette } from "@/features/admin-shell/command-palette/palette-conte
 import { ScopeChip } from "@/features/admin-shell/palette-scopes/scope-chip";
 import { useCommandScope } from "@/features/admin-shell/palette-scopes/use-command-scope";
 import type { CommandScope } from "@/features/admin-shell/palette-scopes/use-command-scope";
+import { useServerSearch } from "@/features/admin-shell/search/use-server-search";
 import { SHORTCUT_SECTIONS } from "@/features/admin-shell/shortcuts-overlay/shortcuts-data";
 import { useShortcutsOverlay } from "@/features/admin-shell/shortcuts-overlay/use-shortcuts-overlay";
 
@@ -76,7 +77,9 @@ export function CommandPalette() {
             {scope === "commands" && (
               <CommandsScopeContent runCommand={runCommand} setShortcutsOpen={setShortcutsOpen} />
             )}
-            {scope === "employees" && <EmployeesScopeContent runCommand={runCommand} />}
+            {scope === "employees" && (
+              <EmployeesScopeContent runCommand={runCommand} query={query} />
+            )}
             {scope === "projects" && <ProjectsScopeContent />}
             {scope === "help" && <HelpScopeContent />}
           </Command.List>
@@ -182,10 +185,38 @@ function ActionGroups({ runCommand, setShortcutsOpen }: CommandsScopeProps) {
   );
 }
 
-function EmployeesScopeContent({ runCommand }: { runCommand: RunCommand }) {
+function EmployeesScopeContent({
+  runCommand,
+  query,
+}: {
+  runCommand: RunCommand;
+  query: string;
+}) {
   const router = useRouter();
-  const { employees } = useEmployeeListCache();
-  if (employees.length === 0) {
+  const { employees: cached } = useEmployeeListCache();
+  const trimmed = query.trim();
+  const { results: serverResults, loading } = useServerSearch(
+    query,
+    trimmed.length > 0,
+  );
+
+  const cachedFiltered = trimmed
+    ? cached.filter((e) =>
+        `${e.displayName} ${e.jobTitle ?? ""}`
+          .toLowerCase()
+          .includes(trimmed.toLowerCase()),
+      )
+    : cached;
+  const cachedIds = new Set(cached.map((e) => e.id));
+  const serverOnly = serverResults.filter((r) => !cachedIds.has(r.entityId));
+
+  if (
+    cachedFiltered.length === 0 &&
+    serverOnly.length === 0 &&
+    !loading &&
+    cached.length === 0 &&
+    trimmed.length === 0
+  ) {
     return (
       <Command.Empty
         className="p-4 text-center text-sm"
@@ -195,25 +226,79 @@ function EmployeesScopeContent({ runCommand }: { runCommand: RunCommand }) {
       </Command.Empty>
     );
   }
+
+  if (cachedFiltered.length === 0 && serverOnly.length === 0 && !loading) {
+    return (
+      <Command.Empty
+        className="p-4 text-center text-sm"
+        style={{ color: "var(--fg-tertiary)" }}
+      >
+        Geen medewerkers gevonden.
+      </Command.Empty>
+    );
+  }
+
   return (
-    <Command.Group heading="Medewerkers">
-      {employees.map((e) => (
-        <CmdItem
-          key={e.id}
-          icon={Users}
-          onSelect={() =>
-            runCommand(() => router.push(`/admin/medewerkers/${e.id}` as Route))
-          }
+    <>
+      {cachedFiltered.length > 0 && (
+        <Command.Group heading="Op deze pagina">
+          {cachedFiltered.map((e) => (
+            <CmdItem
+              key={e.id}
+              icon={Users}
+              onSelect={() =>
+                runCommand(() =>
+                  router.push(`/admin/medewerkers/${e.id}` as Route),
+                )
+              }
+            >
+              {e.displayName}
+              {e.jobTitle && (
+                <span
+                  className="ml-auto text-xs"
+                  style={{ color: "var(--fg-tertiary)" }}
+                >
+                  {e.jobTitle}
+                </span>
+              )}
+            </CmdItem>
+          ))}
+        </Command.Group>
+      )}
+      {serverOnly.length > 0 && (
+        <Command.Group heading="Server-zoekresultaten">
+          {serverOnly.map((r) => (
+            <CmdItem
+              key={r.entityId}
+              icon={Users}
+              onSelect={() =>
+                runCommand(() =>
+                  router.push(`/admin/medewerkers/${r.entityId}` as Route),
+                )
+              }
+            >
+              {r.title}
+              {r.subtitle && (
+                <span
+                  className="ml-auto text-xs"
+                  style={{ color: "var(--fg-tertiary)" }}
+                >
+                  {r.subtitle}
+                </span>
+              )}
+            </CmdItem>
+          ))}
+        </Command.Group>
+      )}
+      {loading && (
+        <div
+          className="px-4 py-2 text-xs"
+          style={{ color: "var(--fg-tertiary)" }}
         >
-          {e.displayName}
-          {e.jobTitle && (
-            <span className="ml-auto text-xs" style={{ color: "var(--fg-tertiary)" }}>
-              {e.jobTitle}
-            </span>
-          )}
-        </CmdItem>
-      ))}
-    </Command.Group>
+          Server-zoeken…
+        </div>
+      )}
+    </>
   );
 }
 

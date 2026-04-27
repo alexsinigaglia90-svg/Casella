@@ -6,3 +6,7 @@ export { listRecentAuditEvents, type AuditEvent } from "./audit/list-recent";
 export { listUserPins, type PinRow } from "./pins/list";
 export { createPin } from "./pins/create";
 export { deletePin } from "./pins/delete";
+export {
+  searchEmployees,
+  type EmployeeSearchResult,
+} from "./search/employees";
