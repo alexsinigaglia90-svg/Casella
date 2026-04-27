@@ -16,3 +16,7 @@ export {
   sickSubmittedAdminEmail,
   type SickSubmittedAdminInput,
 } from "./templates/sick";
+export {
+  expenseSubmittedAdminEmail,
+  expenseDecidedEmployeeEmail,
+} from "./templates/expense";
