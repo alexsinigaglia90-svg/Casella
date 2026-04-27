@@ -7,13 +7,19 @@ export function validateClientStep(
   const errs: Record<string, string> = {};
 
   if (step === 0) {
+    // Bedrijf
     if (!f.name.trim()) errs.name = "Hoe heet de klant?";
+  }
+
+  if (step === 1) {
+    // Contact
     if (f.contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.contactEmail)) {
       errs.contactEmail = "Dit e-mailadres ziet er nog niet compleet uit.";
     }
   }
 
-  if (step === 1) {
+  if (step === 2) {
+    // Adres
     if (!f.address) {
       errs.address = "We hebben een vestigingsadres nodig.";
     }
