@@ -1,7 +1,7 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import { Users, Briefcase, Folders, UserCheck, Home, FileText, Clock, Calendar, Wallet } from "lucide-react";
+import { Users, Briefcase, Folders, UserCheck, Home, FileText, Clock, Calendar, Wallet, Activity } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -34,6 +34,7 @@ const ADMIN_LINKS: NavLink[] = [
   { href: "/admin/projecten" as Route, label: "Projecten", icon: Folders },
   { href: "/admin/toewijzingen" as Route, label: "Toewijzingen", icon: UserCheck },
   { href: "/admin/uren" as Route, label: "Uren goedkeuren", icon: Clock },
+  { href: "/admin/nmbrs" as Route, label: "Nmbrs sync", icon: Activity },
 ];
 
 export function Sidebar({ user, mode }: { user: CurrentUser; mode: "employee" | "admin" }) {

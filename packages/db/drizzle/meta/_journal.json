@@ -50,6 +50,13 @@
       "when": 1777300000000,
       "tag": "0006_employees_search_tsvector",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1777400000000,
+      "tag": "0007_nmbrs_sync_runs",
+      "breakpoints": true
     }
   ]
 }

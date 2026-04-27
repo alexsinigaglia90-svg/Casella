@@ -19,6 +19,7 @@
     "@casella/design-tokens": "workspace:^",
     "@casella/email": "workspace:*",
     "@casella/maps": "workspace:*",
+    "@casella/nmbrs": "workspace:*",
     "@casella/types": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-dialog": "^1.1.15",
