@@ -8,6 +8,8 @@ import { BreadcrumbProvider } from "@/features/admin-shell/breadcrumbs/breadcrum
 import { BreadcrumbTrail } from "@/features/admin-shell/breadcrumbs/breadcrumb-trail";
 import { PaletteProvider } from "@/features/admin-shell/command-palette/palette-context";
 import { CommandPill } from "@/features/admin-shell/command-pill/command-pill";
+import { ShortcutsDialog } from "@/features/admin-shell/shortcuts-overlay/shortcuts-dialog";
+import { ShortcutsOverlayProvider } from "@/features/admin-shell/shortcuts-overlay/use-shortcuts-overlay";
 import { TopBar } from "@/features/admin-shell/top-bar/top-bar";
 import { UserMenu } from "@/features/admin-shell/user-menu/user-menu";
 import { getCurrentUser } from "@/lib/current-user";
@@ -20,6 +22,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <BreadcrumbProvider>
       <PaletteProvider>
+        <ShortcutsOverlayProvider>
         <div className="flex min-h-screen">
           <Sidebar user={user} mode="admin" />
           <div className="flex flex-1 flex-col overflow-x-hidden">
@@ -38,7 +41,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </main>
           </div>
           <CommandPalette />
+          <ShortcutsDialog />
         </div>
+        </ShortcutsOverlayProvider>
       </PaletteProvider>
     </BreadcrumbProvider>
   );

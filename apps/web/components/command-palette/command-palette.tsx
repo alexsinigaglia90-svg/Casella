@@ -9,9 +9,11 @@ import { signOut } from "next-auth/react";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { usePalette } from "@/features/admin-shell/command-palette/palette-context";
+import { useShortcutsOverlay } from "@/features/admin-shell/shortcuts-overlay/use-shortcuts-overlay";
 
 export function CommandPalette() {
   const { open, setOpen } = usePalette();
+  const { setOpen: setShortcutsOpen } = useShortcutsOverlay();
   const router = useRouter();
 
   function runCommand(cb: () => void) {
@@ -69,11 +71,7 @@ export function CommandPalette() {
             <Command.Group heading="Hulp">
               <CmdItem
                 icon={Keyboard}
-                onSelect={() =>
-                  runCommand(() => {
-                    console.log("[TODO C-4] open shortcuts overlay"); // stub — T21 wires shortcut overlay
-                  })
-                }
+                onSelect={() => runCommand(() => setShortcutsOpen(true))}
               >
                 Toon sneltoetsen
               </CmdItem>
