@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { EmployeeDetailActions } from "@/features/employees/detail/employee-detail-actions";
 import { EmployeeDetailCrumbs } from "@/features/employees/drawer/employee-detail-crumbs";
 import { InterceptedEditDrawer } from "@/features/employees/drawer/intercepted-edit-drawer";
 import { getEmployeeById } from "@/lib/employees/get-by-id";
@@ -15,6 +16,7 @@ export default async function InterceptedEmployeePage({
   return (
     <>
       <EmployeeDetailCrumbs firstName={employee.firstName} lastName={employee.lastName} />
+      <EmployeeDetailActions />
       <InterceptedEditDrawer employee={employee} />
     </>
   );

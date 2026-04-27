@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, Plus, Search, ArrowUp, ArrowDown, MoreHorizontal } from "lucide-react";
+import { Search, ArrowUp, ArrowDown, MoreHorizontal } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -105,41 +105,20 @@ export function EmployeesListShell({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <header className="flex items-end justify-between gap-4">
-        <div>
-          <div
-            className="mb-1 font-mono text-[11px] uppercase tracking-wider"
-            style={{ color: "var(--fg-tertiary)" }}
-          >
-            Admin
-          </div>
-          <h1 className="font-display text-display leading-none">
-            <span>Mede</span>
-            <em>werkers</em>
-          </h1>
-          <p className="mt-2 text-sm" style={{ color: "var(--fg-secondary)" }}>
-            {rows.length} van {counts.all} · laatste synchronisatie zojuist
-          </p>
+      <header className="space-y-2">
+        <div
+          className="mb-1 font-mono text-[11px] uppercase tracking-wider"
+          style={{ color: "var(--fg-tertiary)" }}
+        >
+          Admin
         </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={() => toast.info("Export volgt in 1.1b")}
-            className="inline-flex h-9 items-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors hover:bg-surface-lift"
-            style={{ borderColor: "var(--border-subtle)" }}
-          >
-            <Download size={14} /> Export
-          </button>
-          <Link
-            href={`/admin/medewerkers?new=1${searchParams.toString() ? `&${searchParams.toString()}` : ""}` as Route}
-            className="inline-flex h-9 items-center gap-2 rounded-md px-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
-            style={{
-              background: "var(--aurora-violet, #7b5cff)",
-              boxShadow: "0 4px 20px var(--glow-violet, rgba(123,92,255,0.35))",
-            }}
-          >
-            <Plus size={14} /> Nieuwe medewerker
-          </Link>
-        </div>
+        <h1 className="font-display text-display leading-none">
+          <span>Mede</span>
+          <em>werkers</em>
+        </h1>
+        <p className="mt-2 text-sm" style={{ color: "var(--fg-secondary)" }}>
+          {rows.length} van {counts.all} · laatste synchronisatie zojuist
+        </p>
       </header>
 
       {/* Filter bar */}
