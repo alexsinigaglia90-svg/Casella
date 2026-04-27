@@ -1,19 +1,20 @@
 "use client";
 
-import { Search, ArrowUp, ArrowDown, MoreHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import type { Route } from "next";
-import Link from "next/link";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { toast } from "sonner";
 
-import { AssignmentStateBadge } from "./assignment-state-badge";
+import { AssignmentsTimeline } from "./timeline/assignments-timeline";
+import { AssignmentsTweaksDock } from "./timeline/assignments-tweaks-dock";
 
 import type {
   AssignmentFilter,
   AssignmentListRow,
   AssignmentStatusCounts,
 } from "@/app/(admin)/admin/toewijzingen/queries";
+import type { AssignmentsListPrefs } from "@/lib/list-prefs-cookie-shared-assignments";
+import { useAssignmentsListPrefs } from "@/lib/use-assignments-list-prefs";
 
 const FILTER_TABS = [
   { key: "current", label: "Lopend" },
@@ -30,31 +31,7 @@ interface AssignmentsListShellProps {
   currentFilter: AssignmentFilter;
   currentSort: string;
   currentDir: string;
-}
-
-function fmtDate(iso: string | null): string {
-  if (!iso) return "—";
-  return iso;
-}
-
-function periodLabel(start: string | null, end: string | null): string {
-  if (!start && !end) return "—";
-  return `${fmtDate(start)} → ${fmtDate(end)}`;
-}
-
-function overrideLabel(
-  kmRateCents: number | null,
-  compensationType: "auto" | "ov" | "none" | null,
-): string | null {
-  const parts: string[] = [];
-  if (compensationType) {
-    const map = { auto: "Auto", ov: "OV", none: "Geen" };
-    parts.push(map[compensationType]);
-  }
-  if (kmRateCents !== null && kmRateCents !== undefined) {
-    parts.push(`${(kmRateCents / 100).toFixed(2)} €/km`);
-  }
-  return parts.length > 0 ? parts.join(" · ") : null;
+  initialPrefs: AssignmentsListPrefs;
 }
 
 export function AssignmentsListShell({
@@ -63,15 +40,16 @@ export function AssignmentsListShell({
   nextCursor: _nextCursor,
   currentQuery,
   currentFilter,
-  currentSort,
-  currentDir,
+  currentSort: _currentSort,
+  currentDir: _currentDir,
+  initialPrefs,
 }: AssignmentsListShellProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const { prefs, setPrefs } = useAssignmentsListPrefs(initialPrefs);
 
   const [searchValue, setSearchValue] = useState(currentQuery);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   function updateParam(key: string, value: string | null) {
     const params = new URLSearchParams(searchParams.toString());
@@ -93,18 +71,6 @@ export function AssignmentsListShell({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue]);
 
-  function handleSort(key: string) {
-    if (currentSort === key) {
-      updateParam("dir", currentDir === "asc" ? "desc" : "asc");
-    } else {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("sort", key);
-      params.set("dir", "asc");
-      params.delete("cursor");
-      router.replace(`${pathname}?${params.toString()}` as Route);
-    }
-  }
-
   function countFor(key: AssignmentFilter): number {
     return counts[key];
   }
@@ -124,7 +90,7 @@ export function AssignmentsListShell({
           <em>gen</em>
         </h1>
         <p className="mt-2 text-sm" style={{ color: "var(--fg-secondary)" }}>
-          {rows.length} van {counts.all} · laatste synchronisatie zojuist
+          {rows.length} van {counts.all} · sleep blokken om te plannen
         </p>
       </header>
 
@@ -191,181 +157,36 @@ export function AssignmentsListShell({
         </div>
       </div>
 
-      {/* Table */}
-      <div
-        className="overflow-hidden rounded-xl border glass-card"
-        style={{ borderColor: "var(--border-subtle)" }}
-      >
-        <table className="w-full text-sm">
-          <thead>
-            <tr
-              className="border-b text-xs uppercase tracking-wide"
-              style={{
-                borderColor: "var(--border-subtle)",
-                color: "var(--fg-tertiary)",
-              }}
-            >
-              <th className="p-3 text-left font-medium">
-                <SortableHeader
-                  label="Medewerker"
-                  sortKey="employee"
-                  currentSort={currentSort}
-                  currentDir={currentDir}
-                  onSort={handleSort}
-                />
-              </th>
-              <th className="p-3 text-left font-medium">
-                <SortableHeader
-                  label="Project"
-                  sortKey="project"
-                  currentSort={currentSort}
-                  currentDir={currentDir}
-                  onSort={handleSort}
-                />
-              </th>
-              <th className="p-3 text-left font-medium">Klant</th>
-              <th className="p-3 text-left font-medium">
-                <SortableHeader
-                  label="Periode"
-                  sortKey="start"
-                  currentSort={currentSort}
-                  currentDir={currentDir}
-                  onSort={handleSort}
-                />
-              </th>
-              <th className="p-3 text-left font-medium">Override</th>
-              <th className="p-3 text-left font-medium">Status</th>
-              <th className="w-10 p-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((a) => {
-              const hov = hoveredId === a.id;
-              const ovr = overrideLabel(a.kmRateCents, a.compensationType);
-              return (
-                <tr
-                  key={a.id}
-                  onMouseEnter={() => setHoveredId(a.id)}
-                  onMouseLeave={() => setHoveredId(null)}
-                  className="cursor-pointer border-b transition-colors last:border-0"
-                  style={{
-                    borderColor: "var(--border-subtle)",
-                    background: hov ? "var(--surface-lift)" : "transparent",
-                  }}
-                >
-                  <td className="pl-3 pr-3 py-3">
-                    <Link
-                      href={`/admin/toewijzingen/${a.id}` as Route}
-                      className="font-medium hover:underline"
-                    >
-                      {a.employeeName}
-                    </Link>
-                  </td>
-                  <td className="p-3" style={{ color: "var(--fg-secondary)" }}>
-                    {a.projectName}
-                  </td>
-                  <td
-                    className="p-3 text-xs"
-                    style={{ color: "var(--fg-tertiary)" }}
-                  >
-                    {a.clientName}
-                  </td>
-                  <td
-                    className="p-3 font-mono text-xs"
-                    style={{ color: "var(--fg-secondary)" }}
-                  >
-                    {periodLabel(a.startDate, a.endDate)}
-                  </td>
-                  <td className="p-3">
-                    {ovr ? (
-                      <span
-                        className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium"
-                        style={{
-                          background: "rgba(123, 92, 255, 0.10)",
-                          color: "var(--aurora-violet)",
-                        }}
-                      >
-                        {ovr}
-                      </span>
-                    ) : (
-                      <span style={{ color: "var(--fg-tertiary)" }}>—</span>
-                    )}
-                  </td>
-                  <td className="p-3">
-                    <AssignmentStateBadge state={a.state} />
-                  </td>
-                  <td className="p-3">
-                    <div
-                      className="flex items-center justify-end gap-1"
-                      style={{ opacity: hov ? 1 : 0.2 }}
-                    >
-                      <button
-                        className="rounded p-1 transition-colors hover:bg-surface-base"
-                        onClick={() => toast.info("Acties volgt later")}
-                        aria-label="Meer opties"
-                      >
-                        <MoreHorizontal
-                          size={16}
-                          style={{ color: "var(--fg-secondary)" }}
-                        />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      {/* Timeline */}
+      <AssignmentsTimeline
+        assignments={rows}
+        axis={prefs.axis}
+        horizon={prefs.horizon}
+        palette={prefs.palette}
+        showCapBar={prefs.showCapBar}
+        showGhost={prefs.showGhost}
+        showRevenue={prefs.showRevenue}
+        magnetic={prefs.magnetic}
+      />
 
-        {rows.length === 0 && (
-          <div className="flex flex-col items-center gap-3 p-12 text-center">
-            <p className="font-display" style={{ fontSize: "var(--text-title)" }}>
-              Niets <em>gevonden</em>
-            </p>
-            <p className="text-sm" style={{ color: "var(--fg-secondary)" }}>
-              Pas je filter aan of ruim je zoekopdracht op.
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Footer line */}
+      {/* Footer */}
       <div
         className="flex items-center justify-between text-xs"
         style={{ color: "var(--fg-tertiary)" }}
       >
         <span>
-          Toont {rows.length} · sorteer op {currentSort}
+          {rows.length} toewijzingen · {prefs.axis === "people" ? "per mens" : "per project"} ·{" "}
+          {prefs.horizon === "week"
+            ? "6 weken"
+            : prefs.horizon === "month"
+              ? "16 weken"
+              : "28 weken"}
         </span>
-        <span className="font-mono">⌘K om te zoeken · N voor nieuw</span>
+        <span className="font-mono">⌘K om te zoeken · N voor nieuw · ←/→ om te shiften</span>
       </div>
-    </div>
-  );
-}
 
-function SortableHeader({
-  label,
-  sortKey,
-  currentSort,
-  currentDir,
-  onSort,
-}: {
-  label: string;
-  sortKey: string;
-  currentSort: string;
-  currentDir: string;
-  onSort: (key: string) => void;
-}) {
-  const active = currentSort === sortKey;
-  return (
-    <button
-      onClick={() => onSort(sortKey)}
-      className="inline-flex items-center gap-1 uppercase tracking-wide transition-colors hover:text-fg-primary"
-      style={{ color: active ? "var(--fg-primary)" : "inherit" }}
-    >
-      {label}
-      {active &&
-        (currentDir === "asc" ? <ArrowUp size={10} /> : <ArrowDown size={10} />)}
-    </button>
+      {/* Tweaks dock */}
+      <AssignmentsTweaksDock prefs={prefs} onChange={setPrefs} />
+    </div>
   );
 }
