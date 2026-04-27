@@ -26,3 +26,4 @@ export {
   changeRequestSubmittedAdminEmail,
   changeRequestDecidedEmployeeEmail,
 } from "./templates/profile";
+export { broadcastEmployeeEmail } from "./templates/broadcast";
