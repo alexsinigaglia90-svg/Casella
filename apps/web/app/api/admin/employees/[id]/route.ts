@@ -10,6 +10,71 @@ import { upsertAddress } from "@/lib/employees/upsert-address";
 
 export const dynamic = "force-dynamic";
 
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const admin = await getCurrentUser();
+  if (!admin) return NextResponse.json(apiError("unauthenticated", "Niet ingelogd"), { status: 401 });
+  if (admin.role !== "admin") return NextResponse.json(apiError("forbidden", "Geen toegang"), { status: 403 });
+
+  const { id } = await params;
+  if (!id) return NextResponse.json(apiError("invalid_id", "Ongeldig medewerker-ID"), { status: 400 });
+
+  const db = getDb();
+  const [emp] = await db.select().from(schema.employees).where(eq(schema.employees.id, id));
+  if (!emp) return NextResponse.json(apiError("not_found", "Medewerker niet gevonden"), { status: 404 });
+
+  let address: import("@casella/types").AddressInput | null = null;
+  if (emp.homeAddressId) {
+    const [addr] = await db.select().from(schema.addresses).where(eq(schema.addresses.id, emp.homeAddressId));
+    if (addr) {
+      address = {
+        pdokId: addr.pdokId ?? "",
+        street: addr.street,
+        houseNumber: addr.houseNumber,
+        houseNumberAddition: addr.houseNumberAddition,
+        postalCode: addr.postalCode,
+        city: addr.city,
+        municipality: addr.municipality,
+        province: addr.province,
+        country: (addr.country as "NL"),
+        lat: addr.lat ?? 0,
+        lng: addr.lng ?? 0,
+        rdX: addr.rdX,
+        rdY: addr.rdY,
+        fullDisplay: addr.fullAddressDisplay ?? "",
+      };
+    }
+  }
+
+  return NextResponse.json({
+    id: emp.id,
+    userId: emp.userId,
+    inviteEmail: emp.inviteEmail,
+    nmbrsEmployeeId: emp.nmbrsEmployeeId,
+    homeAddressId: emp.homeAddressId,
+    employmentStatus: emp.employmentStatus,
+    startDate: emp.startDate ?? null,
+    endDate: emp.endDate ?? null,
+    defaultKmRateCents: emp.defaultKmRateCents,
+    compensationType: emp.compensationType,
+    contractedHoursPerWeek: emp.contractedHoursPerWeek,
+    managerId: emp.managerId,
+    phone: emp.phone,
+    emergencyContactName: emp.emergencyContactName,
+    emergencyContactPhone: emp.emergencyContactPhone,
+    firstName: emp.firstName,
+    lastName: emp.lastName,
+    avatarUrl: emp.avatarUrl,
+    jobTitle: emp.jobTitle,
+    notes: emp.notes,
+    pendingTerminationAt: emp.pendingTerminationAt ?? null,
+    pendingTerminationReason: emp.pendingTerminationReason,
+    terminationUndoUntil: emp.terminationUndoUntil?.toISOString() ?? null,
+    createdAt: emp.createdAt.toISOString(),
+    updatedAt: emp.updatedAt.toISOString(),
+    address,
+  });
+}
+
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const admin = await getCurrentUser();
   if (!admin) return NextResponse.json(apiError("unauthenticated", "Niet ingelogd"), { status: 401 });
