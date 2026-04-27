@@ -30,7 +30,7 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Estimated cost**: 2–4 hours.
 - **Impact if skipped**: RN app re-types every hex/rgb value by hand; every palette change needs two-file sync; design drift likely.
 - **Plan**: Create `packages/design-tokens/src/index.ts` exporting pure TS objects for palette, motion, type-scale, glow, density. Have `globals.css` and `tailwind.config.ts` derive from it (runtime `var(--*)` stays for the CSS side; Tailwind config imports TS directly; future RN imports TS directly).
-- **Status**: open
+- **Status**: done — Plan 1.1b Task 2 commits `4babdd8` (lift) + `f228880` (codemod follow-up). `packages/design-tokens` is source-of-truth in TS; CSS-vars generated to `globals.css` between markers; Tailwind imports TS directly. Light + dark variants preserved. CI tokens-drift gate prevents un-synced edits.
 
 ### ML-2 — Use Route Handlers (not Server Actions) for all admin mutations
 - **Category**: Mobile-alignment
@@ -40,7 +40,7 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Estimated cost**: ~4 hours over three tasks, vs plan-snippet baseline.
 - **Impact if skipped**: Every admin mutation needs a second implementation for mobile. Also blocks external integrations (AstraSign, future public API).
 - **Plan**: At dispatch of Task 16, rewrite the snippet to build `app/api/admin/employees/**/route.ts` with zod body-validation, cookie/session auth, and JSON responses. Web forms POST via `fetch`. Same pattern for Task 20 (drawer submit) and Task 25 (terminate).
-- **Status**: in-progress (scheduled for Task 16+)
+- **Status**: done — discipline maintained throughout 1.1a + 1.1b. All admin mutations zijn Route Handlers met admin-role guard + apiError shape. New 1.1b endpoints: GET/PATCH `/api/admin/employees/[id]`, GET/POST `/api/admin/audit/{recent,mark-seen}`, GET/POST/DELETE `/api/admin/pins`, GET `/api/admin/search`, GET `/api/admin/presence/[entityType]/[entityId]`. Mobile-ready.
 
 ### ML-3 — Evaluate NativeWind for Tailwind-class portability
 - **Category**: Mobile-alignment
@@ -76,7 +76,7 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: When building mobile login, or as polish on Task 21 (invite-flow Auth.js changes).
 - **Estimated cost**: ~1 hour — read `users.theme_preference` in the JWT callback, set cookie on initial login.
 - **Impact if skipped**: Web: cosmetic only. Mobile: must implement theme-from-DB anyway, so design once.
-- **Status**: open
+- **Status**: done — Plan 1.1b Task 6 commit `6d150ed`. JWT callback reads `users.themePreference` on signIn → token → session; middleware writes cookie when non-system + no existing cookie. Mobile (Fase 3) consumes same pattern.
 
 ---
 
@@ -211,7 +211,7 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: If a developer new to the codebase reports confusion, or during Plan 1.1b writeup (chance to rename once before more components exist).
 - **Estimated cost**: ~30 min — rename token group, codemod all usages, update plan files.
 - **Impact if skipped**: Ugly but works. Risk: future dev types `text-primary` expecting ink, gets violet.
-- **Status**: open
+- **Status**: done — Plan 1.1b Task 2 commits `4babdd8` + `f228880`. Tokens lift codemod hernoemde `text.text` → `text.fg` in tokens TS-source. ALL `text-text-*` className usages én `var(--text-*)` inline-style usages werden via codemod naar `text-fg-*` / `var(--fg-*)` omgezet (94 occurrences total). Geen lingering stutter.
 
 ### DD-2 — Status amber (`--status-warning`) contrast on surface-base
 - **Category**: Design-debt
@@ -231,14 +231,14 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: Admin can't actually pick a manager during create — has to edit the employee later (and edit-mode is also deferred to 1.1b). Combined: no manager assignment in 1.1a at all.
 - **Status**: abandoned (Plan 1.1b T10 / B-3 scope decision — no manager-role UI in 1.1b; manager-select removed from wizard. `managerId` blijft optional in `createEmployeeSchema` als hidden API surface voor mobile/Nmbrs sync. Real picker komt mogelijk in Fase 1.1c CRUDs.)
 
-### DD-3 — Consider `role="group"` + keyboard arrow-nav on ThemeToggle (radiogroup polish)
+### DD-3 — DONE: ThemeToggle arrow-key navigation (radiogroup polish)
 - **Category**: UX-polish
 - **Deferred from**: Task 7 fix-up scope (2026-04-23)
 - **Why deferred**: Implemented `role="radiogroup"` + `role="radio"` + `aria-checked` — correct semantics. Missing: arrow-key navigation between options (standard radio-group keyboard behavior).
 - **Pickup trigger**: Accessibility audit pass, Plan 1.1b final polish.
 - **Estimated cost**: 30 min.
 - **Impact if skipped**: Keyboard users tab through each button individually instead of arrow-navigating within group. Functional, not optimal.
-- **Status**: open
+- **Status**: done — Plan 1.1b Task 7 commits `76c900b` (arrow-key handler + Playwright spec) + `c305520` (focus-timing fix-up). ArrowRight/Down → next, ArrowLeft/Up → previous, Home/End → first/last. Roving tabindex pattern (active=0, others=-1). e2e spec parked behind `describe.skip` until auth fixture lands.
 
 ---
 
@@ -323,6 +323,15 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Pickup trigger**: Fase 2 productie-infra (Supabase prod URL + anon key in env) OR multi-admin in Ascentra.
 - **Estimated cost**: ~2 hours — install package, add env-validatie, wire Realtime channel met fallback-cleanup, smoke-test cross-tab presence.
 - **Impact if skipped**: 5s update-latency in plaats van real-time push. Echt-multi-admin presence-feel iets minder snappy maar functioneel correct.
+- **Status**: open
+
+### COACHING-DASHBOARD — Consolidated "learnings" view in user-menu
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.1b Task 29 (C-13, 2026-04-27)
+- **Why deferred**: 1.1b ships ad-hoc tip-toasts. Long-term: een "Mijn voortgang" page in user-menu showing welke shortcuts user heeft ontdekt, welke tips zijn dismissed, totaal-counts per actie, etc. Zelf-coaching transparency.
+- **Pickup trigger**: Na 4-6 weeks van solo-admin usage om te peilen of learnings-dashboard waarde toevoegt, OR wanneer 2e admin wordt onboarded.
+- **Estimated cost**: 4 hours.
+- **Impact if skipped**: Tips werken, maar geen overview/retrospective voor de user.
 - **Status**: open
 
 ---
