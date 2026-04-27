@@ -128,6 +128,24 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: B-1-FOLLOWUP-1 = zichtbaar UX-mismatch. B-1-FOLLOWUP-3 = mogelijk product-confusion. Rest = polish + maintainability.
 - **Status**: open
 
+### B-2-FOLLOWUPS — Code-review nits from T12 (intercepting routes)
+- **Category**: Mixed (UX + Tech-debt + Test)
+- **Discovered during**: Plan 1.1b Task 12 (B-2) full-pad review (commit `fec033a`).
+- **Why deferred**: T12 verdict was APPROVE-WITH-NITS; geen blocker. 1× HIGH-latent (geen current call-site), 2× MEDIUM, 4× LOW/NIT.
+- **Pickup trigger**: Items 1-2 bij volgende auto-save iteratie (C-12); item 3 vóór map-werk in T13+; item 4 zodra deep-link-entry naar intercepted modal bestaat; item 5 zodra auth-fixture er is; item 6 vóór branch merge.
+- **Estimated cost**: ~2h totaal.
+- **Items**:
+  1. **[Tech-debt/MEDIUM] Double `router.refresh()` na edit-save** — `EditWizard.submit()` (`employee-wizard.tsx:459`) doet `router.refresh()`; daarna roept het `onSaved?.()` aan dat in zowel `InterceptedEditDrawer:46` als `EmployeeDetailFallback` ook `router.refresh()` is. Twee server-renders per save = wasted DB roundtrip. Fix: kies één locatie en strip de andere.
+  2. **[Tech-debt/LOW] DTO mapper duplicatie** — `apps/web/lib/employees/get-by-id.ts` en `apps/web/app/api/admin/employees/[id]/route.ts:29-75` bevatten near-identical employee+address → `EmployeeWithAddress` mapping (incl. `addr.country as "NL"`, `addr.lat ?? 0`, ISO normalisatie). Extract naar `apps/web/lib/employees/_dto.ts` zodat one-source-of-truth.
+  3. **[Data-correctness/LOW] `addr.lat ?? 0` / `addr.lng ?? 0` produces Atlantic-Ocean coords** voor legacy address-rows met null lat/lng. Pre-existing pattern (al in T11 GET-endpoint). Fix vóór map-routes/route-cache: `AddressInput.lat` nullable maken OF backfill via PDOK OR skip-render-when-coords-missing.
+  4. **[Architecture/HIGH-latent] `router.back()` durability** — `intercepted-edit-drawer.tsx:25` en wizard's Esc-handler gebruiken `router.back()`. Werkt vandaag prima omdat alle entry-points via list-row-click gaan. Risico: zodra ander deel van app `router.push("/admin/medewerkers/[id]")` doet, sluit de drawer naar de verkeerde plek. Fix: referrer-aware `handleClose` (try `back()` → check pathname → fallback `push("/admin/medewerkers")`).
+  5. **[Test/LOW] E2E selectors in `apps/web/e2e/edit-employee.spec.ts`** — `page.getByRole('row').nth(1).click()` mist de hot-zone (alleen `<Link>` om naam is clickable, hele rij heeft geen onClick). Fix: target `getByRole('link', { name: <name> })` OF maak hele rij click-target (UX-beslissing). Spec is `describe.skip` totdat auth-fixture er is.
+  6. **[Verification/risk] Manual smoke voor T12 is geskipped** door implementer. Build + typecheck + Next 15 routing-validatie geven hoge zekerheid, maar slide-in animatie / scroll-position behoud / Esc UX zijn nooit eyeball-getest. Run `pnpm -F @casella/web dev`, click first row, Esc, refresh, direct-link voor T14 sanity.
+  7. **[UX/NIT] Save → close-then-refresh order kan stale data flashen** — drawer sluit (`router.back()`) vóór `router.refresh()` paint klaar is. Cosmetic; fix bij server-actions migratie.
+  8. **[A11y/NIT] DialogTitle in `intercepted-edit-drawer.tsx:42-44`** kan `"  bewerken"` (twee spaces) renderen als beide names null zijn. Fallback-string toevoegen.
+- **Impact if skipped**: B-2-FOLLOWUP-1 = wasted DB roundtrips. B-2-FOLLOWUP-3 = wrong-coords visible bij map-render. B-2-FOLLOWUP-4 = latent UX-bug. Rest = polish.
+- **Status**: open
+
 ### TD-2 — Test coverage for `apps/web` UI + API routes
 - **Category**: Test-coverage
 - **Deferred from**: Plan 1.1a (scope decision — smoke test in Task 31 only)
