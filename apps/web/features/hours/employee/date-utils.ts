@@ -77,3 +77,20 @@ export function getWeekDays(weekStartIso: string): {
 export function formatHoursNl(n: number): string {
   return n.toFixed(2).replace(".", ",");
 }
+
+/**
+ * Return ISO 8601 week number (1..53) for the given date.
+ * ISO weeks are Monday-anchored; week 1 contains the first Thursday of the year.
+ */
+export function getIsoWeekNumber(d: Date): number {
+  const target = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  // Move to nearest Thursday: current date + 4 - current day number.
+  const dayNr = (target.getUTCDay() + 6) % 7;
+  target.setUTCDate(target.getUTCDate() - dayNr + 3);
+  const firstThursday = new Date(Date.UTC(target.getUTCFullYear(), 0, 4));
+  const firstDayNr = (firstThursday.getUTCDay() + 6) % 7;
+  firstThursday.setUTCDate(firstThursday.getUTCDate() - firstDayNr + 3);
+  return 1 + Math.round(
+    (target.getTime() - firstThursday.getTime()) / (7 * 24 * 60 * 60 * 1000),
+  );
+}
