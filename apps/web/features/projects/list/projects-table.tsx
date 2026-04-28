@@ -249,14 +249,17 @@ export function ProjectsTable({
                 <td className={`pl-3 pr-3 ${rowPad}`}>
                   <Link
                     href={`/admin/projecten/${p.id}` as Route}
-                    className="font-medium hover:underline"
+                    className="font-display hover:underline"
+                    style={{ fontSize: "1rem", lineHeight: 1.2 }}
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {p.name}
+                    <em style={{ fontWeight: 400 }}>{p.name}</em>
                   </Link>
                 </td>
-                <td className={`p-3 ${rowPad}`} style={{ color: "var(--fg-secondary)" }}>
-                  {p.clientName}
+                <td className={`p-3 ${rowPad}`}>
+                  <span className="font-mono text-[11px] uppercase tracking-wider" style={{ color: "var(--fg-tertiary)" }}>
+                    {p.clientName}
+                  </span>
                 </td>
                 {prefs.columns.bureau && (
                   <td className={`p-3 ${rowPad}`} style={{ color: "var(--fg-secondary)" }}>

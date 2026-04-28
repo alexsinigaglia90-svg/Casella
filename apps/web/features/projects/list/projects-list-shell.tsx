@@ -14,6 +14,7 @@ import type {
   ProjectListRow,
   ProjectStatusCounts,
 } from "@/app/(admin)/admin/projecten/queries";
+import { PassportStat } from "@/components/design";
 import type { ProjectListPrefs } from "@/lib/list-prefs-cookie-shared-projects";
 import { useProjectListPrefs } from "@/lib/use-project-list-prefs";
 
@@ -98,20 +99,40 @@ export function ProjectsListShell({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <header className="space-y-2">
-        <div
-          className="mb-1 font-mono text-[11px] uppercase tracking-wider"
-          style={{ color: "var(--fg-tertiary)" }}
-        >
-          Admin
+      <header className="space-y-4">
+        <div>
+          <div
+            className="mb-1 font-mono text-[11px] uppercase tracking-wider"
+            style={{ color: "var(--fg-tertiary)" }}
+          >
+            Admin
+          </div>
+          <h1 className="font-display text-display leading-none">
+            <span>Projec</span>
+            <em>ten</em>
+          </h1>
+          <p className="mt-1 font-mono text-[11px] uppercase tracking-wider" style={{ color: "var(--fg-tertiary)" }}>
+            PORTFOLIO · {counts.active} actief
+          </p>
         </div>
-        <h1 className="font-display text-display leading-none">
-          <span>Projec</span>
-          <em>ten</em>
-        </h1>
-        <p className="mt-2 text-sm" style={{ color: "var(--fg-secondary)" }}>
-          {rows.length} van {counts.all} · laatste synchronisatie zojuist
-        </p>
+        {/* PassportStat-trio */}
+        <div className="flex flex-wrap gap-8">
+          <PassportStat
+            label="Actief"
+            value={String(counts.active)}
+            sub="lopende projecten"
+          />
+          <PassportStat
+            label="Gepland"
+            value={String(counts.planned)}
+            sub="aankomend"
+          />
+          <PassportStat
+            label="Voltooid"
+            value={String(counts.completed)}
+            sub="afgerond"
+          />
+        </div>
       </header>
 
       {/* Filter bar */}
