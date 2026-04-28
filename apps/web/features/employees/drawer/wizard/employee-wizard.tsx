@@ -250,14 +250,14 @@ function CreateWizard({
             className="mb-1 text-[10px] font-mono uppercase tracking-[0.15em]"
             style={{ color: "var(--fg-tertiary)" }}
           >
-            {(STEPS as readonly (typeof STEPS)[number][])[step]!.kicker} / {STEPS.length}
+            STAP {step + 1} / {STEPS.length} · {(STEPS as readonly (typeof STEPS)[number][])[step]!.label}
           </div>
           <h2
             className="font-display whitespace-nowrap"
             style={{ fontSize: "1.6rem", lineHeight: 1.1 }}
           >
             <span style={{ fontStyle: "normal", fontWeight: 500 }}>Nieuwe </span>
-            <em style={{ fontWeight: 400 }}>collega</em>
+            <em style={{ fontWeight: 400 }}>medewerker</em>
           </h2>
         </div>
         <button
@@ -530,7 +530,7 @@ function EditWizard({ employee, onClose, onSaved }: EditModeProps) {
             className="mb-1 text-[10px] font-mono uppercase tracking-[0.15em]"
             style={{ color: "var(--fg-tertiary)" }}
           >
-            {EDIT_STEPS[step]!.kicker} / {EDIT_STEPS.length}
+            STAP {step + 1} / {EDIT_STEPS.length} · {EDIT_STEPS[step]!.label}
           </div>
           <h2
             className="font-display whitespace-nowrap"
