@@ -41,33 +41,92 @@ export default async function VerlofPage() {
     }));
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-6">
+    <div className="mx-auto max-w-5xl space-y-10 p-6">
       <header>
-        <h1
-          className="text-2xl font-semibold"
-          style={{ color: "var(--fg-primary)" }}
+        <div
+          className="mb-2 font-mono uppercase"
+          style={{
+            fontSize: 11,
+            letterSpacing: "0.18em",
+            color: "var(--fg-tertiary)",
+          }}
         >
-          Verlof
+          Mijn account · Verlof
+        </div>
+        <h1
+          className="font-display"
+          style={{
+            fontSize: "clamp(2.5rem, 4vw, 3.5rem)",
+            fontWeight: 500,
+            lineHeight: 1,
+            color: "var(--fg-primary)",
+          }}
+        >
+          <span>Mijn </span>
+          <em>verlof</em>
         </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--fg-secondary)" }}>
+        <p
+          className="mt-2"
+          style={{ fontSize: 14, color: "var(--fg-secondary)" }}
+        >
           Vraag verlof aan, bekijk je saldo en je geschiedenis.
         </p>
       </header>
 
-      <LeaveBalanceCards
-        balances={balances}
-        weeklyHours={employee.contractedHoursPerWeek ?? 40}
-      />
+      <section>
+        <div className="mb-4">
+          <div
+            className="font-mono uppercase"
+            style={{
+              fontSize: 10,
+              letterSpacing: "0.18em",
+              color: "var(--fg-tertiary)",
+            }}
+          >
+            Mijn saldo
+          </div>
+          <h2
+            className="mt-1.5 font-display"
+            style={{
+              fontSize: 24,
+              fontWeight: 500,
+              color: "var(--fg-primary)",
+            }}
+          >
+            Per type — uren over
+          </h2>
+        </div>
+        <LeaveBalanceCards
+          balances={balances}
+          weeklyHours={employee.contractedHoursPerWeek ?? 40}
+        />
+      </section>
 
       <LeaveForm />
 
       <section>
-        <h2
-          className="mb-3 text-sm font-semibold uppercase tracking-wider"
-          style={{ color: "var(--fg-tertiary)" }}
-        >
-          Mijn aanvragen
-        </h2>
+        <div className="mb-4">
+          <div
+            className="font-mono uppercase"
+            style={{
+              fontSize: 10,
+              letterSpacing: "0.18em",
+              color: "var(--fg-tertiary)",
+            }}
+          >
+            Geschiedenis
+          </div>
+          <h2
+            className="mt-1.5 font-display"
+            style={{
+              fontSize: 24,
+              fontWeight: 500,
+              color: "var(--fg-primary)",
+            }}
+          >
+            Mijn aanvragen
+          </h2>
+        </div>
         <LeaveList items={items} />
       </section>
     </div>
