@@ -1,11 +1,9 @@
 import { and, desc, eq, getDb, gte, lte, schema, sql } from "@casella/db";
 import { redirect } from "next/navigation";
 
-import {
-  BonusHistory,
-  type BonusHistoryRow,
-} from "@/features/bonus/employee/bonus-history";
-import { BonusSummary } from "@/features/bonus/employee/bonus-summary";
+import { BonusHero } from "@/features/bonus/employee/bonus-hero";
+import type { BonusHistoryRow } from "@/features/bonus/employee/bonus-history";
+import { BonusProjects } from "@/features/bonus/employee/bonus-projects";
 import { getCurrentEmployee } from "@/lib/current-employee";
 
 export const dynamic = "force-dynamic";
@@ -46,6 +44,11 @@ export default async function BonusPage() {
   const totalEarned = ytdAccrualCents + ytdAdjustmentCents;
   const outstandingCents = totalEarned - ytdPaidCents;
 
+  // Placeholder target. Echte target volgt uit BONUS-TARGET-AND-HISTORICAL-COMPARE
+  // (zie deferred-work). Wordt nu afgeleid uit (paid + outstanding + 5000 EUR buffer)
+  // als minimale rationale, valt terug op 500000 (€5k) als alles 0 is.
+  const targetCents = Math.max(500_000, totalEarned + 500_000);
+
   const history = await db
     .select({
       id: schema.bonusLedger.id,
@@ -83,35 +86,28 @@ export default async function BonusPage() {
   }));
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-6">
-      <header>
-        <h1
-          className="text-2xl font-semibold"
-          style={{ color: "var(--fg-primary)" }}
+    <div className="mx-auto max-w-5xl space-y-12 p-6">
+      <div>
+        <div
+          className="mb-3 font-mono uppercase"
+          style={{
+            fontSize: 11,
+            letterSpacing: "0.18em",
+            color: "var(--fg-tertiary)",
+          }}
         >
-          Mijn bonus
-        </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--fg-secondary)" }}>
-          Overzicht van je opgebouwde en uitbetaalde bonus dit jaar.
-        </p>
-      </header>
+          Mijn account · Bonus
+        </div>
+        <BonusHero
+          year={year}
+          totalEarnedCents={totalEarned}
+          ytdPaidCents={ytdPaidCents}
+          outstandingCents={outstandingCents}
+          targetCents={targetCents}
+        />
+      </div>
 
-      <BonusSummary
-        year={year}
-        ytdAccrualCents={totalEarned}
-        ytdPaidCents={ytdPaidCents}
-        outstandingCents={outstandingCents}
-      />
-
-      <section className="space-y-3">
-        <h2
-          className="text-lg font-semibold"
-          style={{ color: "var(--fg-primary)" }}
-        >
-          Historie
-        </h2>
-        <BonusHistory rows={rows} />
-      </section>
+      <BonusProjects rows={rows} />
     </div>
   );
 }
