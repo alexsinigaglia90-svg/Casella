@@ -35,8 +35,9 @@ export default async function DeclaratiesPage() {
     .orderBy(desc(schema.expenseClaims.submittedAt))
     .limit(100);
 
-  // Fetch project names for non-internal claims
-  const projectIds = [...new Set(claims.filter((c) => c.projectId).map((c) => c.projectId!))] ;
+  const projectIds = [
+    ...new Set(claims.filter((c) => c.projectId).map((c) => c.projectId!)),
+  ];
   const projectMap = new Map<string, string>();
   if (projectIds.length > 0) {
     const projects = await db
@@ -60,17 +61,37 @@ export default async function DeclaratiesPage() {
   }));
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-6">
-      <header className="flex items-start justify-between">
+    <div className="mx-auto max-w-5xl space-y-8 p-6">
+      <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1
-            className="text-2xl font-semibold"
-            style={{ color: "var(--fg-primary)" }}
+          <div
+            className="mb-2 font-mono uppercase"
+            style={{
+              fontSize: 11,
+              letterSpacing: "0.18em",
+              color: "var(--fg-tertiary)",
+            }}
           >
-            Declaraties
+            Mijn account · Declaraties
+          </div>
+          <h1
+            className="font-display"
+            style={{
+              fontSize: "clamp(2.5rem, 4vw, 3.5rem)",
+              fontWeight: 500,
+              lineHeight: 1,
+              color: "var(--fg-primary)",
+            }}
+          >
+            <span>De </span>
+            <em>stapel</em>
           </h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--fg-secondary)" }}>
-            Overzicht van jouw kostendeclaraties.
+          <p
+            className="mt-2"
+            style={{ fontSize: 14, color: "var(--fg-secondary)" }}
+          >
+            Bonnetjes als objecten — sleep nieuwe op de drop-zone of bekijk de
+            geschiedenis.
           </p>
         </div>
         <Link href="/declaraties/nieuw">
