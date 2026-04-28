@@ -59,6 +59,7 @@ export default [
       'features/dashboard/**',
       'features/notifications/employee/**',
       'features/payslips/**',
+      'features/assignments/**',
       'app/(authed)/**',
       'app/(admin)/admin/**',
     ],
