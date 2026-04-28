@@ -253,3 +253,10 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 .animate-spin-700 { animation: spin 700ms linear infinite; }
+
+@keyframes confetti-fly {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  50% { opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; }
+}
+.confetti-piece { animation: confetti-fly 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
