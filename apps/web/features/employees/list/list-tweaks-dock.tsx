@@ -444,7 +444,6 @@ export function ListTweaksDock({ prefs, onChange }: ListTweaksDockProps) {
         style={{ right: pos.right, bottom: pos.bottom }}
       >
         {/* Drag handle */}
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- visual-only drag affordance; dock is repositionable but not a primary interactive control (settings are reachable via icon buttons below which are properly focusable) */}
         <div className="tdock-handle" onMouseDown={onDragStart} title="Versleep">
           <svg viewBox="0 0 6 12" fill="currentColor">
             <circle cx="1.5" cy="2" r="1" />
@@ -483,7 +482,6 @@ export function ListTweaksDock({ prefs, onChange }: ListTweaksDockProps) {
 
         {/* Popover */}
         {section && (
-          // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- popover wrapper only stops mousedown propagation to prevent drag-handle from triggering when interacting with form controls inside; not itself interactive
           <div className="tdock-pop" onMouseDown={(e) => e.stopPropagation()}>
             <DockContent
               section={section}

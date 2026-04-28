@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { ListTweaksDock } from "./list-tweaks-dock";
 
 import type { EmployeeListRow, EmployeeStatusCounts } from "@/app/(admin)/admin/medewerkers/queries";
+import { PassportStat } from "@/components/design";
 import { EmployeeAvatar } from "@/components/employees/employee-avatar";
 import { EmploymentBadge } from "@/components/employees/employment-badge";
 import { useEmployeeListCache } from "@/features/admin-shell/breadcrumb-switcher/employee-list-cache-context";
@@ -117,20 +118,40 @@ export function EmployeesListShell({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <header className="space-y-2">
-        <div
-          className="mb-1 font-mono text-[11px] uppercase tracking-wider"
-          style={{ color: "var(--fg-tertiary)" }}
-        >
-          Admin
+      <header className="space-y-4">
+        <div>
+          <div
+            className="mb-1 font-mono text-[11px] uppercase tracking-wider"
+            style={{ color: "var(--fg-tertiary)" }}
+          >
+            Admin
+          </div>
+          <h1 className="font-display text-display leading-none">
+            <span>Mede</span>
+            <em>werkers</em>
+          </h1>
+          <p className="mt-1 font-mono text-[11px] uppercase tracking-wider" style={{ color: "var(--fg-tertiary)" }}>
+            TEAM · {counts.active} actief
+          </p>
         </div>
-        <h1 className="font-display text-display leading-none">
-          <span>Mede</span>
-          <em>werkers</em>
-        </h1>
-        <p className="mt-2 text-sm" style={{ color: "var(--fg-secondary)" }}>
-          {rows.length} van {counts.all} · laatste synchronisatie zojuist
-        </p>
+        {/* PassportStat-trio */}
+        <div className="flex flex-wrap gap-8">
+          <PassportStat
+            label="Totaal actief"
+            value={String(counts.active)}
+            sub="in dienst"
+          />
+          <PassportStat
+            label="Op uitnodiging"
+            value={String(counts.on_leave)}
+            sub="afwezig / verlof"
+          />
+          <PassportStat
+            label="Uit dienst"
+            value={String(counts.terminated)}
+            sub="vertrokken"
+          />
+        </div>
       </header>
 
       {/* Filter bar */}
@@ -245,6 +266,7 @@ export function EmployeesListShell({
                           lastName={lastName}
                           displayName={emp.displayName}
                           size={avatarSize}
+                          employeeId={emp.id}
                         />
                       )}
                       <div>

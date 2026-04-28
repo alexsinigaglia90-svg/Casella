@@ -5,9 +5,20 @@ interface EmployeeAvatarProps {
   lastName: string | null;
   displayName?: string | null;
   size?: number;
+  /** Pass employeeId for a deterministic per-record hue; falls back to name-hash */
+  employeeId?: string | null;
 }
 
-export function EmployeeAvatar({ firstName, lastName, displayName, size = 34 }: EmployeeAvatarProps) {
+/** Derive a stable hue [0,360) from a string (employeeId or name). */
+function deriveHue(seed: string): number {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = Math.imul(h * 31 + seed.charCodeAt(i), 2654435761) >>> 0;
+  }
+  return h % 360;
+}
+
+export function EmployeeAvatar({ firstName, lastName, displayName, size = 34, employeeId }: EmployeeAvatarProps) {
   const first = firstName ?? displayName?.split(" ")[0] ?? "";
   const last = lastName ?? displayName?.split(" ").slice(1).join(" ") ?? "";
   const initials = first && last
@@ -16,7 +27,9 @@ export function EmployeeAvatar({ firstName, lastName, displayName, size = 34 }: 
     ? first[0]?.toUpperCase() ?? "?"
     : "?";
 
-  const hue = ((first.length + last.length) * 23 + 180) % 360;
+  const hue = employeeId
+    ? deriveHue(employeeId)
+    : ((first.length + last.length) * 23 + 180) % 360;
   const hue2 = (hue + 35) % 360;
 
   return (
