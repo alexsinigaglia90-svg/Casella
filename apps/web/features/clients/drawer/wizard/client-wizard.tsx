@@ -243,14 +243,14 @@ function CreateClientWizard({
               className="mb-1 text-[10px] font-mono uppercase tracking-[0.15em]"
               style={{ color: "var(--fg-tertiary)" }}
             >
-              {CLIENT_STEPS[step]!.kicker} / {CLIENT_STEPS.length}
+              STAP {step + 1} / {CLIENT_STEPS.length} · {CLIENT_STEPS[step]!.label}
             </div>
             <h2
               className="font-display whitespace-nowrap"
               style={{ fontSize: "1.6rem", lineHeight: 1.1 }}
             >
-              <span style={{ fontStyle: "normal", fontWeight: 500 }}>Welke nieuwe </span>
-              <em style={{ fontWeight: 400 }}>relatie voeg je toe?</em>
+              <span style={{ fontStyle: "normal", fontWeight: 500 }}>Nieuwe </span>
+              <em style={{ fontWeight: 400 }}>klant</em>
             </h2>
           </div>
           <button

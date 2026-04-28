@@ -83,26 +83,27 @@ export function LivePreview({ form, step, kvkValidated = false }: LivePreviewPro
             {initials()}
           </div>
           <div className="min-w-0">
+            {/* Cormorant italic company name */}
             <div
-              className="truncate text-[16px] font-medium"
-              style={{ color: "var(--fg-primary)" }}
+              className="font-display truncate"
+              style={{ fontSize: "1.1rem", lineHeight: 1.2, color: "var(--fg-primary)" }}
             >
               {hasName ? (
-                form.name
+                <em style={{ fontWeight: 400 }}>{form.name}</em>
               ) : (
-                <span style={{ color: "var(--fg-quaternary)" }}>
+                <span style={{ color: "var(--fg-quaternary)", fontStyle: "italic" }}>
                   Bedrijfsnaam…
                 </span>
               )}
             </div>
             {form.kvk && (
               <div
-                className="flex items-center gap-1.5 truncate text-[12px] font-mono"
-                style={{ color: "var(--fg-tertiary)" }}
+                className="flex items-center gap-1.5 truncate font-mono text-[11px]"
+                style={{ color: "var(--fg-tertiary)", letterSpacing: "0.06em" }}
                 data-grow-in
               >
                 <Hash size={10} />
-                KvK {form.kvk}
+                KVK {form.kvk}
                 {kvkValidated && (
                   <span
                     className="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium"
