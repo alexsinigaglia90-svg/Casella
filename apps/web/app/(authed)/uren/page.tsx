@@ -6,9 +6,11 @@ import {
   getMondayIso,
   isValidWeekStart,
 } from "@/features/hours/employee/date-utils";
+import { UrenHero } from "@/features/hours/employee/uren-hero";
 import { WeekGrid, type WeekGridProject } from "@/features/hours/employee/week-grid";
 import { getCurrentEmployee } from "@/lib/current-employee";
 import {
+  getEmployeeHourStats,
   getEmployeeProjectsForWeek,
   getEmployeeWeek,
 } from "@/lib/hours/queries";
@@ -36,9 +38,10 @@ export default async function UrenPage({
     redirect(`/uren?week=${formatDateIso(new Date())}` as Route);
   }
 
-  const [weekData, rawProjects] = await Promise.all([
+  const [weekData, rawProjects, stats] = await Promise.all([
     getEmployeeWeek(employee.id, weekStart),
     getEmployeeProjectsForWeek(employee.id, weekStart),
+    getEmployeeHourStats(employee.id, weekStart),
   ]);
 
   const projects: WeekGridProject[] = rawProjects
@@ -57,12 +60,21 @@ export default async function UrenPage({
     weekData.entries.find((e) => e.status === "rejected")?.rejectionReason ?? null;
 
   return (
-    <WeekGrid
-      weekStart={weekStart}
-      initialEntries={weekData.entries}
-      projects={projects}
-      status={weekData.status}
-      rejectionReason={rejectionReason}
-    />
+    <div className="space-y-6">
+      <UrenHero
+        weekStart={weekStart}
+        weekTotal={stats.weekTotal}
+        toApprove={stats.toApprove}
+        approved={stats.approved}
+        status={weekData.status}
+      />
+      <WeekGrid
+        weekStart={weekStart}
+        initialEntries={weekData.entries}
+        projects={projects}
+        status={weekData.status}
+        rejectionReason={rejectionReason}
+      />
+    </div>
   );
 }

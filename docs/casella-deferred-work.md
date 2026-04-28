@@ -541,6 +541,24 @@ Living document. Every deliberately-deferred decision or task lands here so futu
 - **Impact if skipped**: Admin moet handmatig in DB schrijven om payouts vast te leggen.
 - **Status**: open
 
+### BONUS-TARGET-AND-HISTORICAL-COMPARE
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.7 Task 9
+- **Why deferred**: BonusHero (Plan 1.7) toont een meter "op koers voor X" met % van target. Geen `bonus_target_year`-tabel of forecast-engine bestaat — placeholder berekent target = `max(€5000, totalEarned + €5000)`. Vergelijkings-data van vorig jaar ontbreekt eveneens (mock toonde "vorig jaar: € 4.250").
+- **Pickup trigger**: Bonus-config refactor (e.g. yearly target per employee, KPI-formule per project) of bredere planning-tool.
+- **Est cost**: 4-6u.
+- **Impact if skipped**: Meter toont rationale maar geen echte target-tracking; geen YoY-trend op bonus-page.
+- **Status**: open
+
+### BONUS-IN-BEHANDELING-LEDGER
+- **Category**: UX-polish
+- **Deferred from**: Plan 1.7 Task 9
+- **Why deferred**: BonusHero (Plan 1.7) heeft 3 BreakdownStats: rijpend / klaar / onderweg. "Onderweg" (in behandeling) komt uit een nog-niet-bestaande state — `bonus_ledger.type` heeft alleen accrual/adjustment/payout. Wordt nu hardcoded 0.
+- **Pickup trigger**: Approval-flow voor bonus-payout requests.
+- **Est cost**: 2-3u.
+- **Impact if skipped**: "Onderweg"-stat altijd € 0; rest van breakdown werkt op echte data.
+- **Status**: open
+
 ### DASHBOARD-RECENT-PAYSLIPS-WIRING
 - **Category**: UX-polish
 - **Deferred from**: Plan 1.6 Task 27

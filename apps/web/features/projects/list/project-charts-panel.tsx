@@ -409,10 +409,11 @@ function ChartCard({ title, children }: { title: string; children: React.ReactNo
       style={{ borderColor: "var(--border-subtle)", padding: "14px 16px" }}
     >
       <div
+        className="font-mono"
         style={{
-          fontSize: 10,
+          fontSize: 9,
           fontWeight: 600,
-          letterSpacing: "0.06em",
+          letterSpacing: "0.10em",
           textTransform: "uppercase",
           color: "var(--fg-tertiary)",
           marginBottom: 10,
@@ -487,10 +488,11 @@ export function ProjectChartsPanel({ rows, selectedId, prefs }: ProjectChartsPan
       {/* Panel header */}
       <div style={{ paddingLeft: 4, paddingBottom: 4 }}>
         <div
+          className="font-mono"
           style={{
-            fontSize: 10,
+            fontSize: 9,
             fontWeight: 600,
-            letterSpacing: "0.06em",
+            letterSpacing: "0.10em",
             textTransform: "uppercase",
             color: "var(--fg-tertiary)",
             marginBottom: 2,
@@ -502,7 +504,16 @@ export function ProjectChartsPanel({ rows, selectedId, prefs }: ProjectChartsPan
           className="font-display"
           style={{ fontSize: "var(--text-title)", lineHeight: 1.2 }}
         >
-          {title}
+          {selected ? (
+            <>
+              <span style={{ fontStyle: "normal", fontWeight: 500 }}>
+                {title.split(" ").slice(0, -1).join(" ")}{title.split(" ").length > 1 ? " " : ""}
+              </span>
+              <em style={{ fontWeight: 400 }}>{title.split(" ").slice(-1)[0]}</em>
+            </>
+          ) : (
+            <em style={{ fontWeight: 400 }}>{title}</em>
+          )}
         </h2>
       </div>
 

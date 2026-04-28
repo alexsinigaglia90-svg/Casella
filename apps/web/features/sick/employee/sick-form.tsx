@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DOMAIN_HUES, oklchEmphasis, oklchSubtleBg } from "@/lib/design/oklch";
 
 type Availability = "home" | "unavailable" | "unknown";
 
@@ -25,6 +26,8 @@ export function SickForm() {
   const [expectedDays, setExpectedDays] = useState("");
   const [availability, setAvailability] = useState<Availability>("unknown");
   const [submitting, setSubmitting] = useState(false);
+
+  const hue = DOMAIN_HUES.cool;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -59,32 +62,52 @@ export function SickForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-xl border p-5 glass-card"
+      className="relative overflow-hidden rounded-2xl border p-6"
       style={{
-        borderColor: "var(--border-subtle)",
-        backgroundColor: "var(--surface-card)",
+        borderColor: `${oklchEmphasis(hue)}33`,
+        background: `linear-gradient(135deg, ${oklchSubtleBg(hue)} 0%, var(--surface-card) 70%)`,
       }}
     >
-      <h2
-        className="mb-1 text-lg font-semibold"
-        style={{ color: "var(--fg-primary)" }}
+      <div
+        className="font-mono uppercase"
+        style={{
+          fontSize: 10,
+          letterSpacing: "0.22em",
+          color: oklchEmphasis(hue),
+        }}
       >
-        Ziek melden
+        Ziek melden · vertrouwelijk
+      </div>
+      <h2
+        className="mt-2 font-display"
+        style={{
+          fontSize: "1.75rem",
+          fontWeight: 500,
+          lineHeight: 1.05,
+          color: "var(--fg-primary)",
+        }}
+      >
+        <em>Ik wens je beterschap</em>
       </h2>
-      <p className="mb-4 text-xs" style={{ color: "var(--fg-tertiary)" }}>
+      <p
+        className="mt-2 max-w-xl"
+        style={{ fontSize: 13, color: "var(--fg-secondary)" }}
+      >
         Conform AVG vragen we geen medische details. Alleen je beschikbaarheid
-        en verwachte duur.
+        en verwachte duur — voor je manager om mee te denken.
       </p>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label
-            className="mb-1.5 block text-sm font-medium"
-            style={{ color: "var(--fg-secondary)" }}
+            htmlFor="sick-start"
+            className="mb-1.5 block text-xs font-medium uppercase tracking-wider"
+            style={{ color: "var(--fg-tertiary)" }}
           >
             Startdatum
           </label>
           <Input
+            id="sick-start"
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
@@ -93,12 +116,14 @@ export function SickForm() {
         </div>
         <div>
           <label
-            className="mb-1.5 block text-sm font-medium"
-            style={{ color: "var(--fg-secondary)" }}
+            htmlFor="sick-expected"
+            className="mb-1.5 block text-xs font-medium uppercase tracking-wider"
+            style={{ color: "var(--fg-tertiary)" }}
           >
             Verwachte duur (dagen, optioneel)
           </label>
           <Input
+            id="sick-expected"
             type="number"
             min={1}
             max={365}
@@ -108,18 +133,28 @@ export function SickForm() {
           />
         </div>
         <div className="sm:col-span-2">
-          <label
-            className="mb-1.5 block text-sm font-medium"
-            style={{ color: "var(--fg-secondary)" }}
+          <span
+            className="mb-1.5 block text-xs font-medium uppercase tracking-wider"
+            style={{ color: "var(--fg-tertiary)" }}
           >
             Beschikbaarheid
-          </label>
+          </span>
           <div className="space-y-2">
             {(Object.keys(AVAILABILITY_LABEL) as Availability[]).map((opt) => (
               <label
                 key={opt}
-                className="flex items-center gap-2 text-sm"
-                style={{ color: "var(--fg-primary)" }}
+                className="flex items-center gap-2 rounded-lg border bg-white/40 px-3 py-2 text-sm transition-colors"
+                style={{
+                  color: "var(--fg-primary)",
+                  borderColor:
+                    availability === opt
+                      ? oklchEmphasis(hue)
+                      : "var(--border-subtle)",
+                  background:
+                    availability === opt
+                      ? oklchSubtleBg(hue)
+                      : "rgba(255,255,255,0.4)",
+                }}
               >
                 <input
                   type="radio"
@@ -135,13 +170,13 @@ export function SickForm() {
         </div>
       </div>
 
-      <div className="mt-5 flex justify-end">
+      <div className="mt-6 flex justify-end">
         <Button
           type="submit"
           disabled={submitting}
           style={{
-            backgroundColor: "var(--aurora-violet, #7c3aed)",
-            color: "#fff",
+            background: oklchEmphasis(hue),
+            color: "white",
           }}
         >
           {submitting ? "Versturen…" : "Ziek melden"}

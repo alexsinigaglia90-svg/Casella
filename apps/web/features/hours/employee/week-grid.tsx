@@ -455,50 +455,36 @@ function Header({
   onFillFromPrevWeek: () => void;
 }) {
   return (
-    <header className="space-y-4">
-      <div>
-        <div
-          className="mb-1 font-mono text-[11px] uppercase tracking-wider"
-          style={{ color: "var(--fg-tertiary)" }}
+    <header className="flex flex-wrap items-center justify-between gap-3">
+      <WeekPicker weekStart={weekStart} rangeLabel={rangeLabel} />
+      <div className="flex items-center gap-3">
+        {showFillButton && (
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={filling}
+            onClick={onFillFromPrevWeek}
+          >
+            <Copy className="size-3.5" />
+            {filling ? "Bezig…" : "Vul met vorige week"}
+          </Button>
+        )}
+        <span
+          className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
+          style={{ background: statusColor.bg, color: statusColor.fg }}
         >
-          Mijn uren
-        </div>
-        <h1 className="font-display text-display leading-none">
-          <span>Week</span>
-          <em>grid</em>
-        </h1>
-      </div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <WeekPicker weekStart={weekStart} rangeLabel={rangeLabel} />
-        <div className="flex items-center gap-3">
-          {showFillButton && (
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={filling}
-              onClick={onFillFromPrevWeek}
-            >
-              <Copy className="size-3.5" />
-              {filling ? "Bezig…" : "Vul met vorige week"}
-            </Button>
-          )}
-          <span
-            className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
-            style={{ background: statusColor.bg, color: statusColor.fg }}
-          >
-            {STATUS_LABELS[status]}
+          {STATUS_LABELS[status]}
+        </span>
+        <span
+          className="text-sm tabular-nums"
+          style={{ color: "var(--fg-secondary)" }}
+        >
+          Totaal:{" "}
+          <span style={{ color: "var(--fg-primary)" }}>
+            {weekTotal > 0 ? formatHoursNl(weekTotal) : "0,00"} u
           </span>
-          <span
-            className="text-sm tabular-nums"
-            style={{ color: "var(--fg-secondary)" }}
-          >
-            Totaal:{" "}
-            <span style={{ color: "var(--fg-primary)" }}>
-              {weekTotal > 0 ? formatHoursNl(weekTotal) : "0,00"} u
-            </span>
-          </span>
-          <SavedIndicator state={saveStatus} />
-        </div>
+        </span>
+        <SavedIndicator state={saveStatus} />
       </div>
     </header>
   );

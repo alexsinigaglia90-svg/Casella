@@ -520,7 +520,9 @@ function prepareRows(
 
     if (!rowMeta.has(groupKey)) {
       const tintHue = stringHue(groupKey);
-      const tint = `oklch(0.62 0.10 ${tintHue})`;
+      // OKLCH gradient avatar: subtle warm-to-deep band per row, hue-rotated
+      // 30deg for a duotone feel. Matches the design-handoff variation-A.
+      const tint = `linear-gradient(135deg, oklch(0.72 0.14 ${tintHue}) 0%, oklch(0.48 0.18 ${(tintHue + 30) % 360}) 100%)`;
       if (axis === "people") {
         rowMeta.set(groupKey, {
           label: a.employeeName,

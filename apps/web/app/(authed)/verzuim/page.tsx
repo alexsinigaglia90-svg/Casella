@@ -36,32 +36,54 @@ export default async function VerzuimPage() {
     customPayload: (r.customPayload as Record<string, unknown> | null) ?? null,
   }));
 
+  const hasActive = items.some((i) => i.endDate === null);
+
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-6">
+    <div className="mx-auto max-w-5xl space-y-8 p-6">
       <header>
-        <h1
-          className="text-2xl font-semibold"
-          style={{ color: "var(--fg-primary)" }}
+        <div
+          className="font-mono uppercase"
+          style={{
+            fontSize: 10,
+            letterSpacing: "0.22em",
+            color: "var(--fg-tertiary)",
+          }}
         >
-          Verzuim
+          Mijn verzuim · vertrouwelijk
+        </div>
+        <h1
+          className="mt-3 font-display"
+          style={{
+            fontSize: "clamp(2.4rem, 3vw, 3.5rem)",
+            fontWeight: 500,
+            lineHeight: 0.95,
+            color: "var(--fg-primary)",
+          }}
+        >
+          {hasActive ? (
+            <>
+              <span>Hoe gaat het </span>
+              <em>met je</em>?
+            </>
+          ) : (
+            <>
+              <span>Beterschap, </span>
+              <em>als het even moet</em>
+            </>
+          )}
         </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--fg-secondary)" }}>
+        <p
+          className="mt-3 max-w-2xl"
+          style={{ fontSize: 13, color: "var(--fg-secondary)" }}
+        >
           Meld je ziek of beter. We registreren alleen wat nodig is — geen
-          medische details (AVG).
+          medische details (AVG-compliant).
         </p>
       </header>
 
-      <SickForm />
+      <SickList items={items} />
 
-      <section>
-        <h2
-          className="mb-3 text-sm font-semibold uppercase tracking-wider"
-          style={{ color: "var(--fg-tertiary)" }}
-        >
-          Mijn ziekmeldingen
-        </h2>
-        <SickList items={items} />
-      </section>
+      {!hasActive && <SickForm />}
     </div>
   );
 }

@@ -383,7 +383,6 @@ export function ClientListTweaksDock({ prefs, onChange }: ClientListTweaksDockPr
         className={`ctdock${section ? " expanded" : ""}${isDark ? " dark" : ""}`}
         style={{ right: pos.right, bottom: pos.bottom }}
       >
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions -- visual-only drag affordance */}
         <div className="ctdock-handle" onMouseDown={onDragStart} title="Versleep">
           <svg viewBox="0 0 6 12" fill="currentColor">
             <circle cx="1.5" cy="2" r="1" />
@@ -419,7 +418,6 @@ export function ClientListTweaksDock({ prefs, onChange }: ClientListTweaksDockPr
         </button>
 
         {section && (
-          // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- popover wrapper
           <div className="ctdock-pop" onMouseDown={(e) => e.stopPropagation()}>
             <DockContent
               section={section}

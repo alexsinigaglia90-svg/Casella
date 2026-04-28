@@ -51,17 +51,42 @@ export default async function AdminVerzuimPage() {
     };
   });
 
+  const activeCount = items.filter((i) => !i.endDate).length;
+
   return (
-    <div className="mx-auto max-w-6xl space-y-6 p-6">
+    <div className="mx-auto max-w-6xl space-y-8 p-6">
       <header>
-        <h1
-          className="text-2xl font-semibold"
-          style={{ color: "var(--fg-primary)" }}
+        <div
+          className="font-mono uppercase"
+          style={{
+            fontSize: 10,
+            letterSpacing: "0.22em",
+            color: "var(--fg-tertiary)",
+          }}
         >
-          Verzuim overzicht
+          Admin · verzuim · Wet Poortwachter
+        </div>
+        <h1
+          className="mt-3 font-display"
+          style={{
+            fontSize: "clamp(2.4rem, 3vw, 3.5rem)",
+            fontWeight: 500,
+            lineHeight: 0.95,
+            color: "var(--fg-primary)",
+          }}
+        >
+          <span>Lopende </span>
+          <em>case-files</em>
         </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--fg-secondary)" }}>
-          Read-only overzicht. Conform AVG bevat dit geen medische details.
+        <p
+          className="mt-3 max-w-3xl text-sm"
+          style={{ color: "var(--fg-secondary)" }}
+        >
+          {activeCount === 0
+            ? "Geen lopende ziekmeldingen — fijn om te zien."
+            : `${activeCount} ${activeCount === 1 ? "case" : "cases"} actief.`}{" "}
+          Read-only overzicht. AVG-compliant: geen medische details, alleen
+          mijlpaal-tracking volgens Wet Poortwachter.
         </p>
       </header>
 

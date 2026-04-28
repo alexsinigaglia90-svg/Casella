@@ -28,25 +28,37 @@ export default async function NieuweDeclaratiePage() {
     .where(eq(schema.projectAssignments.employeeId, employee.id));
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6 p-6">
+    <div className="mx-auto max-w-3xl space-y-6 p-6">
       <header>
-        <div className="mb-1 flex items-center gap-2">
-          <Link
-            href="/declaraties"
-            className="text-sm"
-            style={{ color: "var(--fg-tertiary)" }}
-          >
-            ← Declaraties
-          </Link>
-        </div>
-        <h1
-          className="text-2xl font-semibold"
-          style={{ color: "var(--fg-primary)" }}
+        <Link
+          href="/declaraties"
+          className="font-mono uppercase"
+          style={{
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            color: "var(--fg-tertiary)",
+          }}
         >
-          Nieuwe declaratie
+          ← Declaraties
+        </Link>
+        <h1
+          className="mt-3 font-display"
+          style={{
+            fontSize: "clamp(2.25rem, 3.5vw, 3rem)",
+            fontWeight: 500,
+            lineHeight: 1,
+            color: "var(--fg-primary)",
+          }}
+        >
+          <span>Een nieuw </span>
+          <em>bonnetje</em>
         </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--fg-secondary)" }}>
-          Dien een kostendeclaratie in ter goedkeuring.
+        <p
+          className="mt-2"
+          style={{ fontSize: 14, color: "var(--fg-secondary)" }}
+        >
+          Sleep een foto van je bonnetje op de drop-zone of vul het formulier
+          handmatig in.
         </p>
       </header>
 

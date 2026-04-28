@@ -52,10 +52,12 @@ export function ConflictPopover({
           zIndex: 50,
           width: 320,
           padding: 14,
-          borderRadius: 12,
-          background: "var(--surface-lift)",
-          border: "1px solid var(--border-subtle)",
-          boxShadow: "0 12px 40px rgba(0,0,0,0.18)",
+          borderRadius: 16,
+          background:
+            "linear-gradient(135deg, oklch(0.97 0.04 25) 0%, var(--surface-card) 70%)",
+          border: "1px solid oklch(0.55 0.18 25 / 0.30)",
+          boxShadow:
+            "0 24px 48px -16px oklch(0.55 0.18 25 / 0.32), 0 1px 2px rgba(14,22,33,0.06)",
           animation: "conflict-pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       >

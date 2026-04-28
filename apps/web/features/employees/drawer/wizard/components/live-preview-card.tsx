@@ -17,9 +17,20 @@ const TIPS = [
   "Controleer de gegevens één keer — je kunt ze later altijd nog bijwerken in het profiel.",
 ];
 
+/** Deterministic hue from a seed string (used for OKLCH avatar gradient). */
+function deriveHue(seed: string): number {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = Math.imul(h * 31 + seed.charCodeAt(i), 2654435761) >>> 0;
+  }
+  return h % 360;
+}
+
 export function LivePreviewCard({ form, step }: LivePreviewCardProps) {
   const hasName = form.firstName || form.lastName;
-  const hue = (form.firstName.length + form.lastName.length) * 23 + 180;
+  const nameSeed = `${form.firstName}${form.lastName}` || "?";
+  const hue = hasName ? deriveHue(nameSeed) : 180;
+  const hue2 = (hue + 35) % 360;
 
   function initials() {
     const fi = form.firstName?.[0] ?? "";
@@ -80,22 +91,27 @@ export function LivePreviewCard({ form, step }: LivePreviewCardProps) {
           <div
             className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-lg font-medium text-white"
             style={{
-              background: `linear-gradient(135deg, oklch(0.72 0.17 ${hue}), oklch(0.55 0.20 ${(hue + 35) % 360}))`,
+              background: `linear-gradient(135deg, oklch(0.72 0.17 ${hue}), oklch(0.55 0.20 ${hue2}))`,
               letterSpacing: "-0.02em",
               textShadow: "0 1px 2px rgba(0,0,0,0.25)",
+              transition: "background 600ms ease",
             }}
           >
             {initials()}
           </div>
           <div className="min-w-0">
+            {/* Cormorant italic name */}
             <div
-              className="truncate text-[17px] font-medium"
-              style={{ color: "var(--fg-primary)" }}
+              className="font-display truncate"
+              style={{ fontSize: "1.1rem", lineHeight: 1.2, color: "var(--fg-primary)" }}
             >
               {hasName ? (
-                `${form.firstName} ${form.lastName}`.trim()
+                <>
+                  <span style={{ fontStyle: "normal", fontWeight: 500 }}>{form.firstName} </span>
+                  <em style={{ fontWeight: 400 }}>{form.lastName}</em>
+                </>
               ) : (
-                <span style={{ color: "var(--fg-quaternary)" }}>
+                <span style={{ color: "var(--fg-quaternary)", fontStyle: "italic" }}>
                   Naam verschijnt hier…
                 </span>
               )}

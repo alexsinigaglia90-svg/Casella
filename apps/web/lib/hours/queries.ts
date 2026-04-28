@@ -130,6 +130,61 @@ export async function getEmployeeProjectsForWeek(
     .orderBy(asc(schema.projects.name));
 }
 
+export interface EmployeeHourStats {
+  weekTotal: number;
+  toApprove: number;
+  approved: number;
+}
+
+/**
+ * Pull at-a-glance stats for the employee uren-hero:
+ * - weekTotal: hours entered (any status) for the requested week
+ * - toApprove: submitted hours awaiting admin approval (across the year)
+ * - approved: hours approved year-to-date
+ */
+export async function getEmployeeHourStats(
+  employeeId: string,
+  weekStartIso: string,
+): Promise<EmployeeHourStats> {
+  const db = getDb();
+  const start = new Date(weekStartIso);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 6);
+  const endIso = asIso(end);
+
+  const yearStart = `${start.getUTCFullYear()}-01-01`;
+  const yearEnd = `${start.getUTCFullYear()}-12-31`;
+
+  const rows = await db
+    .select({
+      hours: schema.hourEntries.hours,
+      status: schema.hourEntries.status,
+      workDate: schema.hourEntries.workDate,
+    })
+    .from(schema.hourEntries)
+    .where(
+      and(
+        eq(schema.hourEntries.employeeId, employeeId),
+        gte(schema.hourEntries.workDate, yearStart),
+        lte(schema.hourEntries.workDate, yearEnd),
+      ),
+    );
+
+  let weekTotal = 0;
+  let toApprove = 0;
+  let approved = 0;
+  for (const row of rows) {
+    const h = Number(row.hours);
+    if (row.workDate >= weekStartIso && row.workDate <= endIso) {
+      weekTotal += h;
+    }
+    if (row.status === "submitted") toApprove += h;
+    if (row.status === "approved") approved += h;
+  }
+
+  return { weekTotal, toApprove, approved };
+}
+
 export interface PendingApprovalRow {
   employeeId: string;
   employeeName: string;

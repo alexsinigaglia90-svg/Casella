@@ -133,10 +133,12 @@ export function TimelineRow({
         <div
           className="flex shrink-0 items-center justify-center rounded-full font-mono text-[10px] font-semibold"
           style={{
-            width: 28,
-            height: 28,
+            width: 30,
+            height: 30,
             background: avatarTint,
             color: "var(--surface-base)",
+            boxShadow:
+              "inset 0 1px 0 rgba(255,255,255,0.35), 0 1px 2px rgba(14,22,33,0.10)",
           }}
           aria-hidden
         >

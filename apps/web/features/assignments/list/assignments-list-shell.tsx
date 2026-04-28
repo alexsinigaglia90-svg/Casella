@@ -75,23 +75,51 @@ export function AssignmentsListShell({
     return counts[key];
   }
 
+  // Stat-row metrics: active assignment count, distinct employees with at
+  // least one block, distinct projects with at least one block.
+  const employeesUtilized = new Set(rows.map((r) => r.employeeId)).size;
+  const projectsWithTeam = new Set(rows.map((r) => r.projectId)).size;
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <header className="space-y-2">
-        <div
-          className="mb-1 font-mono text-[11px] uppercase tracking-wider"
-          style={{ color: "var(--fg-tertiary)" }}
-        >
-          Admin
+      <header className="grid gap-6 md:grid-cols-12">
+        <div className="md:col-span-7">
+          <div
+            className="font-mono uppercase"
+            style={{
+              fontSize: 10,
+              letterSpacing: "0.22em",
+              color: "var(--fg-tertiary)",
+            }}
+          >
+            Admin · planning · magnetic timeline
+          </div>
+          <h1
+            className="mt-3 font-display"
+            style={{
+              fontSize: "clamp(2.4rem, 3vw, 3.5rem)",
+              fontWeight: 500,
+              lineHeight: 0.95,
+              color: "var(--fg-primary)",
+            }}
+          >
+            <em>Toewijzingen</em>
+          </h1>
+          <p
+            className="mt-3 max-w-xl text-sm"
+            style={{ color: "var(--fg-secondary)" }}
+          >
+            {rows.length} van {counts.all} zichtbaar · sleep blokken om te
+            plannen, gebruik pijltjes voor fijn-verschuiven.
+          </p>
         </div>
-        <h1 className="font-display text-display leading-none">
-          <span>Toewijzin</span>
-          <em>gen</em>
-        </h1>
-        <p className="mt-2 text-sm" style={{ color: "var(--fg-secondary)" }}>
-          {rows.length} van {counts.all} · sleep blokken om te plannen
-        </p>
+
+        <div className="grid grid-cols-3 gap-4 md:col-span-5">
+          <StatBox label="Lopend" value={counts.current} />
+          <StatBox label="Mensen ingezet" value={employeesUtilized} />
+          <StatBox label="Projecten" value={projectsWithTeam} />
+        </div>
       </header>
 
       {/* Filter bar */}
@@ -187,6 +215,39 @@ export function AssignmentsListShell({
 
       {/* Tweaks dock */}
       <AssignmentsTweaksDock prefs={prefs} onChange={setPrefs} />
+    </div>
+  );
+}
+
+function StatBox({ label, value }: { label: string; value: number }) {
+  return (
+    <div
+      className="rounded-2xl border px-4 py-3"
+      style={{
+        borderColor: "var(--border-subtle)",
+        background: "var(--surface-card)",
+      }}
+    >
+      <div
+        className="font-mono uppercase"
+        style={{
+          fontSize: 9,
+          letterSpacing: "0.18em",
+          color: "var(--fg-tertiary)",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        className="mt-1 font-display tabular-nums leading-none"
+        style={{
+          fontSize: 28,
+          fontWeight: 500,
+          color: "var(--fg-primary)",
+        }}
+      >
+        {value}
+      </div>
     </div>
   );
 }
